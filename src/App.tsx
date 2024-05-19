@@ -1,11 +1,11 @@
 import { CgShapeSquare, CgShapeCircle, CgShapeHexagon } from "react-icons/cg";
 import { IoShapes } from "react-icons/io5";
 
-import { Camera } from "./components/Camera/Camera";
+import Camera from "./components/Camera/Camera";
 import Bar from "./components/Bar/Bar";
 import Button from "./components/Button/Button";
-import Gizmo from "./components/Gizmo/Gizmo";
 import Logo from "./components/Logo/Logo";
+import Gizmo from "./components/Gizmo/Gizmo";
 import Viewport from "./components/Viewport/Viewport";
 
 function App() {
