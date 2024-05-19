@@ -1,0 +1,23 @@
+:root {
+  --fg-primary: #fff;
+  --fg-secondary: #989898;
+
+  --bg-primary: #2d2d2d;
+  --bg-secondary: #1b1b1b;
+
+  --accent-primary: #5a6a8b;
+  --accent-secondary: #7c59ae;
+  --border-color: #444444;
+
+  --title-gradient: linear-gradient(90deg, #a6b7d8, #9d67e9);
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--bg-primary);
+}

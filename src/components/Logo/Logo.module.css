@@ -1,0 +1,11 @@
+.logo {
+  font-size: 1rem;
+  margin: 0 0.5rem;
+  font-family: "Fredoka One";
+  font-weight: 400;
+  background: var(--title-gradient);
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  user-select: none;
+}
