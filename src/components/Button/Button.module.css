@@ -13,3 +13,7 @@
 .button:hover {
   background-color: var(--accent-primary);
 }
+
+.button:active {
+  background-color: var(--accent-secondary);
+}

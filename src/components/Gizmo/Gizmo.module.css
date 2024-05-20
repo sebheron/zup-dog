@@ -9,6 +9,22 @@
   border-radius: 50%;
   overflow: hidden;
   z-index: 2;
+  transition: left 0.5s ease-in-out, transform 0.5s ease-in-out;
+}
+
+.illo {
+  position: absolute !important;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.hidden {
+  position: relative;
+  opacity: 0;
+  z-index: 2;
 }
 
 @media (max-width: 768px) {

@@ -9,9 +9,10 @@ const Viewport = ({ children }: PropsWithChildren) => {
   return (
     <div className={styles.viewport}>
       <Illustration pointerEvents element="canvas">
-        <Dolly controllable rotate translate zoom />
-        <Grid length={800} cellSize={100} />
-        {children}
+        <Dolly controllable canRotate canTranslate canZoom>
+          {children}
+          <Grid length={800} cellSize={100} />
+        </Dolly>
       </Illustration>
     </div>
   );

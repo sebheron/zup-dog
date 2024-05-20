@@ -1,3 +1,4 @@
+import { Fragment } from "react";
 import { Shape } from "react-zdog";
 
 interface Props {
@@ -7,9 +8,8 @@ interface Props {
 
 const Grid = ({ length, cellSize }: Props) => {
   return Array.from({ length: length / cellSize + 1 }, (_, i) => (
-    <>
+    <Fragment key={`row-${i}`}>
       <Shape
-        key={`row-${i}`}
         stroke={1}
         color="#989898"
         path={[
@@ -18,7 +18,6 @@ const Grid = ({ length, cellSize }: Props) => {
         ]}
       />
       <Shape
-        key={`col-${i}`}
         stroke={1}
         color="#989898"
         path={[
@@ -26,7 +25,7 @@ const Grid = ({ length, cellSize }: Props) => {
           { x: -length / 2 + i * cellSize, z: length / 2 },
         ]}
       />
-    </>
+    </Fragment>
   ));
 };
 

@@ -1,13 +1,17 @@
-import { createContext } from "react";
-import Vector3 from "../../types/Vector3";
+import { Dispatch, SetStateAction, createContext } from "react";
+
+import VectorType from "../../types/VectorType";
 
 interface CameraContextType {
-  position: Vector3;
-  rotation: Vector3;
+  animating: boolean;
+  position: VectorType;
+  rotation: VectorType;
   zoom: number;
-  updatePosition: React.Dispatch<React.SetStateAction<Vector3>>;
-  updateRotation: React.Dispatch<React.SetStateAction<Vector3>>;
-  updateZoom: React.Dispatch<React.SetStateAction<number>>;
+  setPosition: Dispatch<SetStateAction<VectorType>>;
+  setRotation: Dispatch<SetStateAction<VectorType>>;
+  setZoom: Dispatch<SetStateAction<number>>;
+  lerpRotation: (target: VectorType, time: number) => void;
+  lerpPosition: (target: VectorType, time: number) => void;
 }
 
 const CameraContext = createContext<CameraContextType | null>(null);
