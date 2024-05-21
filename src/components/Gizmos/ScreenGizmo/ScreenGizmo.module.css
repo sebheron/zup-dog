@@ -9,7 +9,9 @@
   border-radius: 50%;
   overflow: hidden;
   z-index: 2;
-  transition: left 0.5s ease-in-out, transform 0.5s ease-in-out;
+  transition:
+    left 0.5s ease-in-out,
+    transform 0.5s ease-in-out;
   transform: translateX(-50%);
 }
 

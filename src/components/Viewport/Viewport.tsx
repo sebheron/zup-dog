@@ -1,16 +1,23 @@
 import { PropsWithChildren } from "react";
 import { Illustration } from "react-zdog";
+import EntityType from "@/types/EntityType";
+import Grid from "@/components/Grid/Grid";
+import Dolly from "@/components/Dolly/Dolly";
+import Entity from "@/components/Entity/Entity";
 import styles from "./Viewport.module.css";
-import Grid from "../Grid/Grid";
-import Dolly from "../Dolly/Dolly";
 
-const Viewport = ({ children }: PropsWithChildren) => {
+interface Props extends PropsWithChildren {
+  entities: EntityType[];
+}
+
+const Viewport = ({ children, entities }: Props) => {
   return (
     <div className={styles.container}>
       <div className={styles.viewport}>
         <Illustration pointerEvents element="canvas">
           <Dolly controllable canRotate canTranslate canZoom>
             <Grid length={800} cellSize={100} />
+            <Entity entities={entities} />
           </Dolly>
         </Illustration>
         {children}

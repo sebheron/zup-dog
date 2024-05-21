@@ -29,14 +29,14 @@ const Toast = ({ children }: PropsWithChildren) => {
     (message: string, manualDismiss = false) => {
       toast({ message, manualDismiss, type: "info" });
     },
-    [toast]
+    [toast],
   );
 
   const success = useCallback(
     (message: string, manualDismiss = false) => {
       toast({ message, manualDismiss, type: "success" });
     },
-    [toast]
+    [toast],
   );
 
   const error = useCallback(
@@ -47,7 +47,7 @@ const Toast = ({ children }: PropsWithChildren) => {
         type: "error",
       });
     },
-    [toast]
+    [toast],
   );
 
   const toastContext = useMemo(
@@ -56,7 +56,7 @@ const Toast = ({ children }: PropsWithChildren) => {
       success,
       error,
     }),
-    [notify, success, error]
+    [notify, success, error],
   );
 
   return (

@@ -22,7 +22,8 @@
   position: absolute;
   top: 0;
   bottom: 0;
-  animation: 1s linear 0.5s infinite loadingLeft,
+  animation:
+    1s linear 0.5s infinite loadingLeft,
     2s linear 0s infinite alternate loadingWidth;
   background: var(--title-gradient);
   background-size: 8rem 0.2rem;

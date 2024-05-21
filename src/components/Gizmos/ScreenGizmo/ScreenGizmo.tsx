@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { Illustration, Shape } from "react-zdog";
 import { TAU } from "zdog";
-import useCamera from "../Camera/useCamera";
-import VectorType from "../../types/VectorType";
-import Dolly from "../Dolly/Dolly";
-import styles from "./Gizmo.module.css";
+import VectorType from "@/types/VectorType";
+import useCamera from "@/components/Camera/useCamera";
+import Dolly from "@/components/Dolly/Dolly";
+import styles from "./ScreenGizmo.module.css";
 
 type GizmoBall = {
   color: string;
@@ -13,7 +13,7 @@ type GizmoBall = {
   targetPosition?: VectorType;
 };
 
-const BALLS: GizmoBall[] = [
+const CAPS: GizmoBall[] = [
   { color: "#7c59ae" },
   {
     color: "#f00",
@@ -64,33 +64,33 @@ const Gizmo = () => {
           <Shape stroke={2} color={"#f00"} path={[{}, { x: 30 }]} />
           <Shape stroke={2} color={"#0f0"} path={[{}, { y: -30 }]} />
           <Shape stroke={2} color={"#4c41c8"} path={[{}, { z: 30 }]} />
-          {BALLS.map((ball, index) => (
+          {CAPS.map((cap, index) => (
             <Shape
               key={index}
               stroke={hoverIndex === index ? 14 : 10}
-              color={ball.color}
-              translate={ball.offset}
+              color={cap.color}
+              translate={cap.offset}
             />
           ))}
         </Dolly>
       </Illustration>
       <Illustration className={styles.hidden} pointerEvents element="canvas">
         <Dolly canRotate>
-          {BALLS.map(
-            (ball, index) =>
-              !!ball.targetRotation &&
-              !!ball.targetPosition && (
+          {CAPS.map(
+            (cap, index) =>
+              !!cap.targetRotation &&
+              !!cap.targetPosition && (
                 <Shape
                   key={index}
-                  stroke={25}
-                  translate={ball.offset}
+                  stroke={20}
+                  translate={cap.offset}
                   onPointerEnter={() => setHoverIndex(index)}
                   onPointerLeave={() => setHoverIndex(null)}
                   onClick={() =>
-                    lerpTo(ball.targetPosition!, ball.targetRotation!, 1000)
+                    lerpTo(cap.targetPosition!, cap.targetRotation!, 1000)
                   }
                 />
-              )
+              ),
           )}
         </Dolly>
       </Illustration>

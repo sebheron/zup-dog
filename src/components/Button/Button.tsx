@@ -16,7 +16,7 @@ const Button = forwardRef<HTMLButtonElement, Props>(
     >
       {children}
     </button>
-  )
+  ),
 );
 
 export default Button;

@@ -4,7 +4,7 @@ export const shift = (
   pos: VectorType,
   rot: VectorType,
   mouseX: number,
-  mouseY: number
+  mouseY: number,
 ) => {
   const right = {
     x: Math.cos(rot.y),

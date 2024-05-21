@@ -1,30 +1,44 @@
-import { Suspense, lazy } from "react";
+import { Suspense, lazy, useCallback, useState } from "react";
 import { CgShapeSquare, CgShapeCircle, CgShapeHexagon } from "react-icons/cg";
 import { IoShapes } from "react-icons/io5";
 import { BiSolidCameraMovie } from "react-icons/bi";
 import { Tooltip } from "react-tooltip";
+import { nanoid } from "nanoid";
+import Entities from "@/constants/Entities";
+import Bar from "@/components/Bar/Bar";
+import Button from "@/components/Button/Button";
+import Loading from "@/components/Loading/Loading";
+import Toast from "@/components/Toast/Toast";
+import Card from "@/components/Card/Card";
+import EntityType from "./types/EntityType";
 
-import Bar from "./components/Bar/Bar";
-import Button from "./components/Button/Button";
-import Loading from "./components/Loading/Loading";
-import Toast from "./components/Toast/Toast";
-import Card from "./components/Card/Card";
-const Camera = lazy(() => import("./components/Camera/Camera"));
-const Logo = lazy(() => import("./components/Logo/Logo"));
-const Gizmo = lazy(() => import("./components/Gizmo/Gizmo"));
-const Viewport = lazy(() => import("./components/Viewport/Viewport"));
+const Camera = lazy(() => import("@/components/Camera/Camera"));
+const Logo = lazy(() => import("@/components/Logo/Logo"));
+const Gizmo = lazy(() => import("@/components/Gizmos/ScreenGizmo/ScreenGizmo"));
+const Viewport = lazy(() => import("@/components/Viewport/Viewport"));
 
 function App() {
+  const [entities, setEntities] = useState<EntityType[]>([]);
+
+  const add = useCallback((entity: Omit<EntityType, "id">) => {
+    const entityWithId = {
+      ...entity,
+      id: nanoid(),
+      props: { ...entity.props },
+    };
+    setEntities((prev) => [...prev, entityWithId]);
+  }, []);
+
   return (
     <Suspense fallback={<Loading />}>
       <Tooltip />
       <Toast>
         <Camera>
-          <Viewport>
+          <Viewport entities={entities}>
             <Bar>
               <Logo />
               <Bar.Splitter />
-              <Button>
+              <Button onClick={() => add(Entities.BOX)}>
                 <CgShapeSquare />
               </Button>
               <Button>

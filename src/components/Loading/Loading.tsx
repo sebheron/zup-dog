@@ -1,4 +1,4 @@
-import Logo from "../Logo/Logo";
+import Logo from "@/components/Logo/Logo";
 import styles from "./Loading.module.css";
 
 const Loading = () => (

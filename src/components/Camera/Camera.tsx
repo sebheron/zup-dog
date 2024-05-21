@@ -8,7 +8,7 @@ import {
 } from "react";
 import { Vector } from "zdog";
 import { nanoid } from "nanoid";
-import VectorType from "../../types/VectorType";
+import VectorType from "@/types/VectorType";
 import CameraContext from "./CameraContext";
 
 const Camera = ({ children }: PropsWithChildren) => {
@@ -25,7 +25,7 @@ const Camera = ({ children }: PropsWithChildren) => {
   const lerpTo = async (
     targetPosition: VectorType,
     targetRotation: VectorType,
-    time: number
+    time: number,
   ) => {
     let startTime: number;
     const newPosition = new Vector(position);
@@ -75,7 +75,7 @@ const Camera = ({ children }: PropsWithChildren) => {
       setRotation: set(setRotation),
       lerpTo,
     }),
-    [animating, position, rotation, zoom]
+    [animating, position, rotation, zoom],
   );
 
   return (

@@ -1,8 +1,7 @@
 import { PropsWithChildren, useCallback, useEffect } from "react";
-import { useRender, Shape } from "react-zdog";
-import { shift, spin } from "../../utils/vector";
-import useCamera from "../Camera/useCamera";
-import useIllustration from "../../hooks/useIllustration";
+import { useRender, useZdog, Shape } from "react-zdog";
+import { shift, spin } from "@/utils/vector";
+import useCamera from "@/components/Camera/useCamera";
 
 interface Props extends PropsWithChildren {
   controllable?: boolean;
@@ -20,16 +19,16 @@ const Dolly = ({
 }: Props) => {
   const { position, rotation, zoom, setPosition, setRotation, setZoom } =
     useCamera();
-  const illo = useIllustration();
+  const { illu } = useZdog();
 
   const handleZoom = useCallback(
     (event: WheelEvent) => {
       if (event.buttons) return;
       setZoom((prevZoom) =>
-        Math.max(0.1, Math.min(prevZoom - event.deltaY / 1000, 5))
+        Math.max(0.1, Math.min(prevZoom - event.deltaY / 1000, 5)),
       );
     },
-    [setZoom]
+    [setZoom],
   );
 
   //TODO: Translate is broken, shift method gives back odd values when at the top of the view
@@ -41,21 +40,21 @@ const Dolly = ({
           position,
           rotation,
           event.movementX * 0.8 * (1 / zoom),
-          event.movementY * 0.8 * (1 / zoom)
-        )
+          event.movementY * 0.8 * (1 / zoom),
+        ),
       );
     },
-    [rotation, zoom, setPosition]
+    [rotation, zoom, setPosition],
   );
 
   const handleRotate = useCallback(
     (event: MouseEvent) => {
       event.preventDefault();
       setRotation((rotation) =>
-        spin(rotation, event.movementX / 600, event.movementY / 600)
+        spin(rotation, event.movementX / 600, event.movementY / 600),
       );
     },
-    [setRotation]
+    [setRotation],
   );
 
   const handleMove = useCallback(
@@ -63,7 +62,7 @@ const Dolly = ({
       if (event.buttons === 2) handleTranslate(event);
       else if (event.buttons === 4) handleRotate(event);
     },
-    [handleTranslate]
+    [handleTranslate, handleRotate],
   );
 
   const handleContextMenu = useCallback((event: MouseEvent) => {
@@ -72,7 +71,7 @@ const Dolly = ({
 
   useEffect(() => {
     if (!controllable) return;
-    const canvas = illo.element as HTMLCanvasElement;
+    const canvas = illu.element as HTMLCanvasElement;
     canvas.addEventListener("wheel", handleZoom);
     canvas.addEventListener("mousemove", handleMove);
     canvas.addEventListener("contextmenu", handleContextMenu);
@@ -81,10 +80,10 @@ const Dolly = ({
       canvas.removeEventListener("mousemove", handleMove);
       canvas.removeEventListener("contextmenu", handleContextMenu);
     };
-  }, [illo, controllable, handleMove, handleZoom, handleContextMenu]);
+  }, [illu, controllable, handleMove, handleZoom, handleContextMenu]);
 
   useRender(() => {
-    if (canZoom) illo.zoom = zoom;
+    if (canZoom) illu.zoom = zoom;
   }, [zoom, canZoom]);
 
   return (

@@ -11,7 +11,7 @@ interface CameraContextType {
   lerpTo: (
     targetPosition: VectorType,
     targetRotation: VectorType,
-    time: number
+    time: number,
   ) => void;
 }
 
