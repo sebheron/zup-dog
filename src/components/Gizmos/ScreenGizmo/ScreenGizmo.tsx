@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { Illustration, Shape } from "react-zdog";
 import { TAU } from "zdog";
-import VectorType from "@/types/VectorType";
 import useCamera from "@/components/Camera/useCamera";
 import Dolly from "@/components/Dolly/Dolly";
+import VectorType from "@/types/VectorType";
 import styles from "./ScreenGizmo.module.css";
 
 type GizmoBall = {

@@ -1,3 +1,4 @@
+import { nanoid } from "nanoid";
 import {
   Dispatch,
   PropsWithChildren,
@@ -7,7 +8,6 @@ import {
   useState,
 } from "react";
 import { Vector } from "zdog";
-import { nanoid } from "nanoid";
 import VectorType from "@/types/VectorType";
 import CameraContext from "./CameraContext";
 

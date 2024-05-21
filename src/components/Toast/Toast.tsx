@@ -1,8 +1,8 @@
-import { PropsWithChildren, useCallback, useMemo, useState } from "react";
-import { nanoid } from "nanoid";
 import clsx from "clsx";
-import ToastContext from "./ToastContext";
+import { nanoid } from "nanoid";
+import { PropsWithChildren, useCallback, useMemo, useState } from "react";
 import styles from "./Toast.module.css";
+import ToastContext from "./ToastContext";
 
 const TOAST_DURATION = 3000;
 

@@ -1,7 +1,7 @@
 import { PropsWithChildren, useCallback, useEffect } from "react";
-import { useRender, useZdog, Shape } from "react-zdog";
-import { shift, spin } from "@/utils/vector";
+import { Shape, useRender, useZdog } from "react-zdog";
 import useCamera from "@/components/Camera/useCamera";
+import { shift, spin } from "@/utils/vector";
 
 interface Props extends PropsWithChildren {
   controllable?: boolean;

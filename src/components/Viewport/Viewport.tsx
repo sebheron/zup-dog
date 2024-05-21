@@ -1,9 +1,9 @@
 import { PropsWithChildren } from "react";
 import { Illustration } from "react-zdog";
-import EntityType from "@/types/EntityType";
-import Grid from "@/components/Grid/Grid";
 import Dolly from "@/components/Dolly/Dolly";
 import Entity from "@/components/Entity/Entity";
+import Grid from "@/components/Grid/Grid";
+import EntityType from "@/types/EntityType";
 import styles from "./Viewport.module.css";
 
 interface Props extends PropsWithChildren {

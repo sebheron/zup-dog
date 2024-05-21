@@ -1,15 +1,15 @@
-import { Suspense, lazy, useCallback, useState } from "react";
-import { CgShapeSquare, CgShapeCircle, CgShapeHexagon } from "react-icons/cg";
-import { IoShapes } from "react-icons/io5";
-import { BiSolidCameraMovie } from "react-icons/bi";
-import { Tooltip } from "react-tooltip";
 import { nanoid } from "nanoid";
-import Entities from "@/constants/Entities";
+import { Suspense, lazy, useCallback, useState } from "react";
+import { BiSolidCameraMovie } from "react-icons/bi";
+import { CgShapeCircle, CgShapeHexagon, CgShapeSquare } from "react-icons/cg";
+import { IoShapes } from "react-icons/io5";
+import { Tooltip } from "react-tooltip";
 import Bar from "@/components/Bar/Bar";
 import Button from "@/components/Button/Button";
+import Card from "@/components/Card/Card";
 import Loading from "@/components/Loading/Loading";
 import Toast from "@/components/Toast/Toast";
-import Card from "@/components/Card/Card";
+import Entities from "@/constants/Entities";
 import EntityType from "./types/EntityType";
 
 const Camera = lazy(() => import("@/components/Camera/Camera"));
