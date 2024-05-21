@@ -10,10 +10,10 @@
   justify-content: center;
 }
 
-.button:hover {
+.default:hover {
   background-color: var(--accent-primary);
 }
 
-.button:active {
+.default:active {
   background-color: var(--accent-secondary);
 }

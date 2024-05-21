@@ -1,7 +1,7 @@
 .gizmo {
-  position: fixed;
+  position: absolute;
   bottom: 1rem;
-  left: 2rem;
+  left: 50%;
   width: 6rem;
   height: 6rem;
   background-color: var(--bg-secondary);
@@ -10,6 +10,7 @@
   overflow: hidden;
   z-index: 2;
   transition: left 0.5s ease-in-out, transform 0.5s ease-in-out;
+  transform: translateX(-50%);
 }
 
 .illo {

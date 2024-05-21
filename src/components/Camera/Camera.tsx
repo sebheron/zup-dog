@@ -1,11 +1,18 @@
-import { PropsWithChildren, useMemo, useState } from "react";
+import {
+  Dispatch,
+  PropsWithChildren,
+  SetStateAction,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { Vector } from "zdog";
-
+import { nanoid } from "nanoid";
 import VectorType from "../../types/VectorType";
 import CameraContext from "./CameraContext";
 
 const Camera = ({ children }: PropsWithChildren) => {
-  const [animating, setAnimating] = useState<boolean>(false);
+  const animating = useRef<string | null>(null);
   const [zoom, setZoom] = useState<number>(1);
   const [position, setPosition] = useState<VectorType>({ x: 0, y: 0, z: 0 });
   const [rotation, setRotation] = useState<VectorType>({
@@ -14,24 +21,35 @@ const Camera = ({ children }: PropsWithChildren) => {
     z: 0,
   });
 
-  //When animating the camera we'll switch to using the vector class
-  //Then by using the lerp method in the class, we can interpolate without rerendering
-  const lerpRotation = async (target: VectorType, time: number) => {
+  //Cheat lerping by switching to Vector class
+  const lerpTo = async (
+    targetPosition: VectorType,
+    targetRotation: VectorType,
+    time: number
+  ) => {
     let startTime: number;
+    const newPosition = new Vector(position);
     const newRotation = new Vector(rotation);
 
-    setAnimating(true);
+    const animationId = nanoid();
+    animating.current = animationId;
+    setPosition(newPosition);
     setRotation(newRotation);
 
     const step = (t: number) => {
+      if (animating.current !== animationId) return;
       if (!startTime) startTime = t;
       const elapsed = t - startTime;
-      const vector = newRotation.lerp(target, elapsed / time);
-      newRotation.set(vector);
+
+      const positionVector = newPosition.lerp(targetPosition, elapsed / time);
+      const rotationVector = newRotation.lerp(targetRotation, elapsed / time);
+      newPosition.set(positionVector);
+      newRotation.set(rotationVector);
 
       if (elapsed > time) {
-        setRotation(target);
-        setAnimating(false);
+        setPosition(targetPosition);
+        setRotation(targetRotation);
+        animating.current = null;
         return;
       }
       requestAnimationFrame(step);
@@ -39,41 +57,23 @@ const Camera = ({ children }: PropsWithChildren) => {
     requestAnimationFrame(step);
   };
 
-  //Same for position
-  const lerpPosition = async (target: VectorType, time: number) => {
-    let startTime: number;
-    const newPosition = new Vector(position);
-
-    setAnimating(true);
-    setPosition(newPosition);
-
-    const step = (t: number) => {
-      if (!startTime) startTime = t;
-      const elapsed = t - startTime;
-      const vector = newPosition.lerp(target, elapsed / time);
-      newPosition.set(vector);
-
-      if (elapsed > time) {
-        setPosition(target);
-        setAnimating(false);
-        return;
-      }
-      requestAnimationFrame(step);
+  //Curried function to set state and reset animation
+  const set =
+    <T,>(setter: Dispatch<SetStateAction<T>>) =>
+    (value: SetStateAction<T>) => {
+      animating.current = null;
+      setter(value);
     };
-    requestAnimationFrame(step);
-  };
 
   const cameraContext = useMemo(
     () => ({
-      animating,
       position,
       rotation,
       zoom,
-      setZoom,
-      setPosition,
-      setRotation,
-      lerpRotation,
-      lerpPosition,
+      setZoom: set(setZoom),
+      setPosition: set(setPosition),
+      setRotation: set(setRotation),
+      lerpTo,
     }),
     [animating, position, rotation, zoom]
   );

@@ -1,0 +1,25 @@
+.card {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  width: max(10rem, 15%);
+  height: 95%;
+  color: var(--fg-primary);
+  overflow: auto;
+  z-index: 4;
+  top: 50%;
+  transform: translateY(-50%);
+  border: 1px solid var(--border-color);
+  border-radius: 0.8rem;
+  background-color: var(--bg-secondary);
+  box-shadow: 0 0 0.5rem 0.25rem var(--shadow-color);
+  backdrop-filter: blur(0.4rem) brightness(0.8);
+}
+
+.left {
+  left: 0.5rem;
+}
+
+.right {
+  right: 0.5rem;
+}

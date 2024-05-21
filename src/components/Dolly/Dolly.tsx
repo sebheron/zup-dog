@@ -1,9 +1,8 @@
 import { PropsWithChildren, useCallback, useEffect } from "react";
 import { useRender, Shape } from "react-zdog";
-
+import { shift, spin } from "../../utils/vector";
 import useCamera from "../Camera/useCamera";
 import useIllustration from "../../hooks/useIllustration";
-import { shift, spin } from "../../utils/vector";
 
 interface Props extends PropsWithChildren {
   controllable?: boolean;
@@ -19,15 +18,8 @@ const Dolly = ({
   canZoom,
   children,
 }: Props) => {
-  const {
-    animating,
-    position,
-    rotation,
-    zoom,
-    setPosition,
-    setRotation,
-    setZoom,
-  } = useCamera();
+  const { position, rotation, zoom, setPosition, setRotation, setZoom } =
+    useCamera();
   const illo = useIllustration();
 
   const handleZoom = useCallback(
@@ -79,7 +71,7 @@ const Dolly = ({
   }, []);
 
   useEffect(() => {
-    if (!controllable || animating) return;
+    if (!controllable) return;
     const canvas = illo.element as HTMLCanvasElement;
     canvas.addEventListener("wheel", handleZoom);
     canvas.addEventListener("mousemove", handleMove);
@@ -89,14 +81,7 @@ const Dolly = ({
       canvas.removeEventListener("mousemove", handleMove);
       canvas.removeEventListener("contextmenu", handleContextMenu);
     };
-  }, [
-    illo,
-    controllable,
-    animating,
-    handleMove,
-    handleZoom,
-    handleContextMenu,
-  ]);
+  }, [illo, controllable, handleMove, handleZoom, handleContextMenu]);
 
   useRender(() => {
     if (canZoom) illo.zoom = zoom;

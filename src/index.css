@@ -2,8 +2,9 @@
   --fg-primary: #fff;
   --fg-secondary: #989898;
 
-  --bg-primary: #2d2d2d;
-  --bg-secondary: #1b1b1b;
+  --bg-primary: #111111;
+  --bg-secondary: #1b1b1bc2;
+  --bg-tertiary: #2d2d2d;
 
   --accent-primary: #5a6a8b;
   --accent-secondary: #615276;
@@ -13,7 +14,8 @@
 }
 
 html,
-body {
+body,
+#root {
   margin: 0;
   padding: 0;
   width: 100%;
@@ -22,4 +24,10 @@ body {
 
 body {
   background-color: var(--bg-primary);
+  overflow: hidden;
+}
+
+* {
+  font-family: "Nunito Sans";
+  box-sizing: border-box;
 }

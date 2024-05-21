@@ -1,0 +1,87 @@
+.container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: flex-end;
+  z-index: 4;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.toast {
+  position: absolute;
+  right: 0.8rem;
+  bottom: 0;
+  translate: 0 -1rem;
+  width: max-content;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem;
+  border: 2px solid var(--border-color);
+  background-color: var(--bg-secondary);
+  color: var(--fg-primary);
+  border-radius: 0.8rem;
+  gap: 0.5rem;
+  animation: inAndOut 3000ms forwards;
+  transition: bottom 300ms ease-in-out;
+}
+
+.info {
+  color: #b0a2d3;
+}
+
+.error {
+  color: #f7b7a3;
+}
+
+.success {
+  color: #a0f7a9;
+}
+
+.toast::before {
+  content: "";
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 0.8rem;
+  width: 0.8rem;
+  border-radius: 50%;
+  background-size: cover;
+}
+
+.info::before {
+  background: radial-gradient(circle, #b0a2d3, #444481);
+}
+
+.error::before {
+  background: radial-gradient(circle, #f7b7a3, #c22f2f);
+}
+
+.success::before {
+  background: radial-gradient(circle, #a0f7a9, #1e912e);
+}
+
+@keyframes inAndOut {
+  0% {
+    transform: translateY(0.4rem) scale(0.9);
+    opacity: 0;
+  }
+  10% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  90% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-0.4rem) scale(0.9);
+    opacity: 0;
+  }
+}

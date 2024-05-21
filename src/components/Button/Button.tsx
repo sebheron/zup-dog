@@ -1,3 +1,4 @@
+import { forwardRef } from "react";
 import clsx from "clsx";
 import styles from "./Button.module.css";
 
@@ -6,10 +7,16 @@ interface Props
   variant?: "default" | "important" | "primary" | "secondary";
 }
 
-const Button = ({ children, variant = "default", ...props }: Props) => (
-  <button className={clsx(styles.button, styles[variant])} {...props}>
-    {children}
-  </button>
+const Button = forwardRef<HTMLButtonElement, Props>(
+  ({ children, variant = "default", ...props }, ref) => (
+    <button
+      className={clsx(styles.button, styles[variant])}
+      {...props}
+      ref={ref}
+    >
+      {children}
+    </button>
+  )
 );
 
 export default Button;
