@@ -1,27 +1,19 @@
 import VectorType from "../types/VectorType";
 
-export const shift = (
-  pos: VectorType,
-  rot: VectorType,
-  mouseX: number,
-  mouseY: number,
-) => {
-  const right = {
-    x: Math.cos(rot.y),
-    y: 0,
-    z: -Math.sin(rot.y),
-  };
-  const up = {
-    x: Math.sin(rot.x) * Math.sin(rot.y),
-    y: Math.cos(rot.x),
-    z: Math.sin(rot.x) * Math.cos(rot.y),
-  };
-  return {
-    x: pos.x + right.x * mouseX + up.x * mouseY,
-    y: pos.y + right.y * mouseX + up.y * mouseY,
-    z: pos.z + right.z * mouseX + up.z * mouseY,
-  };
-};
+export const add = (
+  a?: Partial<VectorType> | null,
+  b?: Partial<VectorType> | null,
+) => ({
+  x: (a?.x ?? 0) + (b?.x ?? 0),
+  y: (a?.y ?? 0) + (b?.y ?? 0),
+  z: (a?.z ?? 0) + (b?.z ?? 0),
+});
+
+export const shift = (pos: VectorType, mouseX: number, mouseY: number) => ({
+  x: pos.x + mouseX,
+  y: pos.y + mouseY,
+  z: pos.z,
+});
 
 export const spin = (rot: VectorType, mouseX: number, mouseY: number) => ({
   x: rot.x + mouseY * Math.PI * -1,
