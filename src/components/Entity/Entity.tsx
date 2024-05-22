@@ -1,6 +1,6 @@
 import { Fragment, useCallback } from "react";
 import useScene from "@/components/Scene/useScene";
-import EntityDeclaration from "@/types/EntityType";
+import EntityDeclaration from "@/types/EntityDeclaration";
 
 interface Props {
   entities: EntityDeclaration[];

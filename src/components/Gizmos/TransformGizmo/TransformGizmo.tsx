@@ -1,7 +1,7 @@
 import { useCallback, useState } from "react";
 import { Cone, Shape } from "react-zdog";
 import Colors from "@/constants/Colors";
-import EntityDeclaration from "@/types/EntityType";
+import EntityDeclaration from "@/types/EntityDeclaration";
 
 interface Props {
   entity: EntityDeclaration;
