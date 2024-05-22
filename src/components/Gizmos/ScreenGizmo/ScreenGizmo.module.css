@@ -24,12 +24,6 @@
   z-index: 1;
 }
 
-.hidden {
-  position: relative;
-  opacity: 0;
-  z-index: 2;
-}
-
 @media (max-width: 768px) {
   .gizmo {
     left: 50%;
