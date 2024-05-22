@@ -1,5 +1,5 @@
 import { PropsWithChildren, useCallback, useEffect } from "react";
-import { Shape, useRender, useZdog } from "react-zdog";
+import { Shape, useZdog } from "react-zdog";
 import useCamera from "@/components/Camera/useCamera";
 import { shift, spin } from "@/utils/vector";
 
@@ -7,16 +7,9 @@ interface Props extends PropsWithChildren {
   controllable?: boolean;
   canRotate?: boolean;
   canTranslate?: boolean;
-  canZoom?: boolean;
 }
 
-const Dolly = ({
-  controllable,
-  canRotate,
-  canTranslate,
-  canZoom,
-  children,
-}: Props) => {
+const Dolly = ({ controllable, canRotate, canTranslate, children }: Props) => {
   const { position, rotation, zoom, setPosition, setRotation, setZoom } =
     useCamera();
   const { illu } = useZdog();
@@ -38,7 +31,6 @@ const Dolly = ({
       setPosition((position) =>
         shift(
           position,
-          rotation,
           event.movementX * 0.8 * (1 / zoom),
           event.movementY * 0.8 * (1 / zoom),
         ),
@@ -82,13 +74,9 @@ const Dolly = ({
     };
   }, [illu, controllable, handleMove, handleZoom, handleContextMenu]);
 
-  useRender(() => {
-    if (canZoom) illu.zoom = zoom;
-  }, [zoom, canZoom]);
-
   return (
-    <Shape rotate={canRotate ? rotation : undefined}>
-      <Shape translate={canTranslate ? position : undefined}>{children}</Shape>
+    <Shape translate={canTranslate ? position : undefined}>
+      <Shape rotate={canRotate ? rotation : undefined}>{children}</Shape>
     </Shape>
   );
 };
