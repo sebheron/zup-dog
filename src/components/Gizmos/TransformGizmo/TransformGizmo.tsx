@@ -1,5 +1,6 @@
 import { useCallback, useState } from "react";
 import { Cone, Shape } from "react-zdog";
+import { TAU } from "zdog";
 import Colors from "@/constants/Colors";
 import EntityDeclaration from "@/types/EntityDeclaration";
 
@@ -61,7 +62,7 @@ const TransformGizmo = ({ entity }: Props) => {
         onPointerLeave={() => setInteractable(null)}
         onClick={handleConeClick}
         translate={{ x: 50 }}
-        rotate={{ y: -Math.PI / 2 }}
+        rotate={{ y: -TAU / 4 }}
         diameter={10}
         length={20}
         color={Colors.XAXIS}
@@ -72,7 +73,7 @@ const TransformGizmo = ({ entity }: Props) => {
         onPointerLeave={() => setInteractable(null)}
         onClick={handleConeClick}
         translate={{ y: -50 }}
-        rotate={{ x: Math.PI / 2 }}
+        rotate={{ x: TAU / 4 }}
         diameter={10}
         length={20}
         color={Colors.YAXIS}
