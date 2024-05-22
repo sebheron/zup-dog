@@ -24,7 +24,7 @@ import {
   RoundedRectOptions,
   ShapeOptions,
 } from "zdog";
-import EntityType from "../types/EntityType";
+import EntityType from "@/types/EntityType";
 import MustDeclare from "../types/MustDeclare";
 
 const DEFAULT_ANCHOR: MustDeclare<AnchorOptions> = {
@@ -60,16 +60,17 @@ const DEFAULT_ELLIPSE: MustDeclare<EllipseOptions> = {
   quarters: 4,
 };
 
-const SHAPE: Omit<EntityType<typeof Shape, ShapeOptions>, "id"> = {
-  name: "Shape",
+const SHAPE: EntityType<typeof Shape, ShapeOptions> = {
+  shape: "Shape",
   component: Shape,
   props: {
     ...DEFAULT_SHAPE,
+    stroke: 64,
   },
 };
 
-const BOX: Omit<EntityType<typeof Box, BoxOptions>, "id"> = {
-  name: "Box",
+const BOX: EntityType<typeof Box, BoxOptions> = {
+  shape: "Box",
   component: Box,
   props: {
     ...DEFAULT_RECT,
@@ -83,8 +84,8 @@ const BOX: Omit<EntityType<typeof Box, BoxOptions>, "id"> = {
   },
 };
 
-const CONE: Omit<EntityType<typeof Cone, ConeOptions>, "id"> = {
-  name: "Cone",
+const CONE: EntityType<typeof Cone, ConeOptions> = {
+  shape: "Cone",
   component: Cone,
   props: {
     ...DEFAULT_ELLIPSE,
@@ -92,16 +93,16 @@ const CONE: Omit<EntityType<typeof Cone, ConeOptions>, "id"> = {
   },
 };
 
-const RECT: Omit<EntityType<typeof Rect, RectOptions>, "id"> = {
-  name: "Rect",
+const RECT: EntityType<typeof Rect, RectOptions> = {
+  shape: "Rectangle",
   component: Rect,
   props: {
     ...DEFAULT_RECT,
   },
 };
 
-const GROUP: Omit<EntityType<typeof Group, GroupOptions>, "id"> = {
-  name: "Group",
+const GROUP: EntityType<typeof Group, GroupOptions> = {
+  shape: "Group",
   component: Group,
   props: {
     ...DEFAULT_ANCHOR,
@@ -110,22 +111,22 @@ const GROUP: Omit<EntityType<typeof Group, GroupOptions>, "id"> = {
   },
 };
 
-const ANCHOR: Omit<EntityType<typeof Anchor, AnchorOptions>, "id"> = {
-  name: "Anchor",
+const ANCHOR: EntityType<typeof Anchor, AnchorOptions> = {
+  shape: "Anchor",
   component: Anchor,
   props: {
     ...DEFAULT_ANCHOR,
   },
 };
 
-const ELLIPSE: Omit<EntityType<typeof Ellipse, EllipseOptions>, "id"> = {
-  name: "Ellipse",
+const ELLIPSE: EntityType<typeof Ellipse, EllipseOptions> = {
+  shape: "Ellipse",
   component: Ellipse,
   props: { ...DEFAULT_ELLIPSE },
 };
 
-const POLYGON: Omit<EntityType<typeof Polygon, PolygonOptions>, "id"> = {
-  name: "Polygon",
+const POLYGON: EntityType<typeof Polygon, PolygonOptions> = {
+  shape: "Polygon",
   component: Polygon,
   props: {
     ...DEFAULT_SHAPE,
@@ -134,8 +135,8 @@ const POLYGON: Omit<EntityType<typeof Polygon, PolygonOptions>, "id"> = {
   },
 };
 
-const CYLINDER: Omit<EntityType<typeof Cylinder, CylinderOptions>, "id"> = {
-  name: "Cylinder",
+const CYLINDER: EntityType<typeof Cylinder, CylinderOptions> = {
+  shape: "Cylinder",
   component: Cylinder,
   props: {
     ...DEFAULT_SHAPE,
@@ -145,22 +146,16 @@ const CYLINDER: Omit<EntityType<typeof Cylinder, CylinderOptions>, "id"> = {
   },
 };
 
-const HEMISPHERE: Omit<
-  EntityType<typeof Hemisphere, HemisphereOptions>,
-  "id"
-> = {
-  name: "Hemisphere",
+const HEMISPHERE: EntityType<typeof Hemisphere, HemisphereOptions> = {
+  shape: "Hemisphere",
   component: Hemisphere,
   props: {
     ...DEFAULT_ELLIPSE,
   },
 };
 
-const ROUNDED_RECT: Omit<
-  EntityType<typeof RoundedRect, RoundedRectOptions>,
-  "id"
-> = {
-  name: "RoundedRect",
+const ROUNDED_RECT: EntityType<typeof RoundedRect, RoundedRectOptions> = {
+  shape: "Rounded Rectangle",
   component: RoundedRect,
   props: {
     ...DEFAULT_SHAPE,
@@ -170,18 +165,18 @@ const ROUNDED_RECT: Omit<
   },
 };
 
-const Entities = {
+const Entities = [
   SHAPE,
   BOX,
   CONE,
-  RECT,
-  GROUP,
-  ANCHOR,
-  ELLIPSE,
-  POLYGON,
   CYLINDER,
   HEMISPHERE,
+  RECT,
   ROUNDED_RECT,
-};
+  ELLIPSE,
+  POLYGON,
+  ANCHOR,
+  GROUP,
+];
 
 export default Entities;
