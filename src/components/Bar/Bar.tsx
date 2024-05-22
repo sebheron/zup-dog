@@ -7,7 +7,4 @@ const Bar = ({ children }: PropsWithChildren) => (
   </div>
 );
 
-const Splitter = () => <div className={styles.splitter}></div>;
-
-Bar.Splitter = Splitter;
 export default Bar;
