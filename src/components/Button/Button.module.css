@@ -1,13 +1,10 @@
 .button {
   background-color: transparent;
   border-radius: 0.5rem;
-  padding: 0.5rem;
   border: none;
   color: var(--fg-primary);
-  font-size: 1rem;
   display: flex;
   align-items: center;
-  justify-content: center;
 }
 
 .default:hover {
@@ -16,4 +13,34 @@
 
 .default:active {
   background-color: var(--accent-secondary);
+}
+
+.small {
+  font-size: 0.8rem;
+  line-height: 1.2rem;
+}
+
+.medium {
+  font-size: 1rem;
+  line-height: 1.5rem;
+}
+
+.large {
+  font-size: 1.2rem;
+  line-height: 1.8rem;
+}
+
+.left {
+  justify-content: flex-start;
+  padding: 0.5rem 0.8rem;
+}
+
+.center {
+  justify-content: center;
+  padding: 0.5rem;
+}
+
+.right {
+  justify-content: flex-end;
+  padding: 0.5rem 0.8rem;
 }

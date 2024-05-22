@@ -5,14 +5,30 @@ import styles from "./Button.module.css";
 interface Props
   extends Omit<React.HTMLAttributes<HTMLButtonElement>, "className"> {
   variant?: "default" | "important" | "primary" | "secondary";
+  size?: "small" | "medium" | "large";
+  alignment?: "left" | "center" | "right";
 }
 
 const Button = forwardRef<HTMLButtonElement, Props>(
-  ({ children, variant = "default", ...props }, ref) => (
+  (
+    {
+      children,
+      variant = "default",
+      size = "medium",
+      alignment = "center",
+      ...props
+    },
+    ref,
+  ) => (
     <button
-      className={clsx(styles.button, styles[variant])}
-      {...props}
       ref={ref}
+      className={clsx(
+        styles.button,
+        styles[variant],
+        styles[size],
+        styles[alignment],
+      )}
+      {...props}
     >
       {children}
     </button>
