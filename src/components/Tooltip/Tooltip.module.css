@@ -1,0 +1,9 @@
+.tooltip {
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 0.6rem;
+  z-index: 5;
+  color: var(--fg-primary);
+  padding: 0.5rem;
+  font-size: 0.8rem;
+}
