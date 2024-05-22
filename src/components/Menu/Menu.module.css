@@ -1,0 +1,29 @@
+.menu {
+  position: relative;
+}
+
+.items {
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  padding: 0.5rem;
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 0.8rem;
+  min-width: 8rem;
+  max-height: 14rem;
+  translate: -0.5rem 0.8rem;
+  overflow: auto;
+}
+
+.transition {
+  transition: opacity 0.2s ease-in-out;
+}
+
+.hidden {
+  opacity: 0;
+}
+
+.visible {
+  opacity: 1;
+}
