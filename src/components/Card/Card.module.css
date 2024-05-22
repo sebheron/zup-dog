@@ -2,8 +2,8 @@
   position: absolute;
   display: flex;
   flex-direction: column;
-  width: max(10rem, 15%);
-  height: 95%;
+  width: max(12rem, 15%);
+  height: calc(100% - 1rem);
   color: var(--fg-primary);
   overflow: auto;
   z-index: 4;
