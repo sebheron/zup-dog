@@ -6,11 +6,11 @@ import Entity from "@/components/Entity/Entity";
 import TransformGizmo from "@/components/Gizmos/TransformGizmo/TransformGizmo";
 import Grid from "@/components/Grid/Grid";
 import useScene from "@/components/Scene/useScene";
-import EntityType from "@/types/EntityType";
+import EntityDeclaration from "@/types/EntityDeclaration";
 import styles from "./Viewport.module.css";
 
 interface Props extends PropsWithChildren {
-  entities: EntityType[];
+  entities: EntityDeclaration[];
 }
 
 const Viewport = ({ children, entities }: Props) => {
