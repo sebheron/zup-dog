@@ -1,22 +1,11 @@
-import { FC, PropsWithChildren } from "react";
+import { FC } from "react";
 import { AnchorOptions } from "zdog";
-import MustDeclare from "./MustDeclare";
-
-interface BaseType extends PropsWithChildren {
-  onClick?: (e: React.MouseEvent<HTMLElement>) => void;
-  onPointerEnter?: () => void;
-  onPointerLeave?: () => void;
-}
+import EntityBase from "./EntityBase";
+import EntityDeclaration from "./EntityDeclaration";
 
 type EntityType<
-  C extends FC<BaseType> = FC<BaseType>,
+  C extends FC<EntityBase> = FC<EntityBase>,
   O extends object = Record<string, unknown> & AnchorOptions,
-> = {
-  id: string;
-  name: string;
-  component: C;
-  props: MustDeclare<O>;
-  children?: EntityType[];
-};
+> = Omit<EntityDeclaration<C, O>, "id" | "name">;
 
 export default EntityType;
