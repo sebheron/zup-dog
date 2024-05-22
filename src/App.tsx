@@ -1,32 +1,37 @@
 import { nanoid } from "nanoid";
 import { Suspense, lazy, useCallback, useMemo, useState } from "react";
 import { BiSolidCameraMovie } from "react-icons/bi";
-import { CgShapeCircle, CgShapeHexagon, CgShapeSquare } from "react-icons/cg";
-import { IoShapes } from "react-icons/io5";
-import { Tooltip } from "react-tooltip";
-import Bar from "@/components/Bar/Bar";
-import Button from "@/components/Button/Button";
-import Card from "@/components/Card/Card";
 import Loading from "@/components/Loading/Loading";
-import Toast from "@/components/Toast/Toast";
+import MenuItem from "@/components/MenuItem/MenuItem";
+import SceneContext from "@/components/Scene/SceneContext";
 import Entities from "@/constants/Entities";
-import EntityType from "@/types/EntityType";
-import SceneContext from "./components/Scene/SceneContext";
-import MustDeclare from "./types/MustDeclare";
+import Shapes from "@/constants/Shapes";
+import EntityDeclaration from "@/types/EntityDeclaration";
+import MustDeclare from "@/types/MustDeclare";
+import tooltip from "@/utils/tooltip";
+import EntityType from "./types/EntityType";
 
+const Bar = lazy(() => import("@/components/Bar/Bar"));
+const Button = lazy(() => import("@/components/Button/Button"));
+const Card = lazy(() => import("@/components/Card/Card"));
+const Menu = lazy(() => import("@/components/Menu/Menu"));
+const Splitter = lazy(() => import("@/components/Splitter/Splitter"));
+const Tooltip = lazy(() => import("@/components/Tooltip/Tooltip"));
+const Toast = lazy(() => import("@/components/Toast/Toast"));
 const Camera = lazy(() => import("@/components/Camera/Camera"));
 const Logo = lazy(() => import("@/components/Logo/Logo"));
 const Gizmo = lazy(() => import("@/components/Gizmos/ScreenGizmo/ScreenGizmo"));
 const Viewport = lazy(() => import("@/components/Viewport/Viewport"));
 
 function App() {
-  const [entities, setEntities] = useState<EntityType[]>([]);
-  const [selected, setSelected] = useState<EntityType | null>(null);
+  const [entities, setEntities] = useState<EntityDeclaration[]>([]);
+  const [selected, setSelected] = useState<EntityDeclaration | null>(null);
 
-  const add = useCallback((entity: Omit<EntityType, "id">) => {
-    const entityWithId = {
+  const add = useCallback((entity: EntityType) => {
+    const entityWithId: EntityDeclaration = {
       ...entity,
       id: nanoid(),
+      name: entity.shape,
       props: { ...entity.props },
     };
     setEntities((prev) => [...prev, entityWithId]);
@@ -67,23 +72,26 @@ function App() {
             <Viewport entities={entities}>
               <Bar>
                 <Logo />
-                <Bar.Splitter />
-                <Button onClick={() => add(Entities.BOX)}>
-                  <CgShapeSquare />
-                </Button>
-                <Button onClick={() => add(Entities.ELLIPSE)}>
-                  <CgShapeCircle />
-                </Button>
-                <Button onClick={() => add(Entities.POLYGON)}>
-                  <CgShapeHexagon />
-                </Button>
-                <Button>
-                  <IoShapes />
-                </Button>
-                <Bar.Splitter />
-                <Button>
-                  <BiSolidCameraMovie />
-                </Button>
+                <Splitter />
+                {Entities.map((entity) => {
+                  const Icon = Shapes[entity.shape];
+                  return (
+                    <Button
+                      key={entity.shape}
+                      onClick={() => add(entity)}
+                      {...tooltip(entity.shape)}
+                    >
+                      <Icon />
+                    </Button>
+                  );
+                })}
+                <Splitter />
+                <Menu
+                  buttonContent={<BiSolidCameraMovie />}
+                  {...tooltip("Camera Settings")}
+                >
+                  <MenuItem>Reset Camera</MenuItem>
+                </Menu>
               </Bar>
               <Gizmo />
               <Card position="left"></Card>

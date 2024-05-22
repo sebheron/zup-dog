@@ -1,16 +1,16 @@
 import { Fragment, useCallback } from "react";
 import useScene from "@/components/Scene/useScene";
-import EntityType from "@/types/EntityType";
+import EntityDeclaration from "@/types/EntityType";
 
 interface Props {
-  entities: EntityType[];
+  entities: EntityDeclaration[];
 }
 
 const Entity = ({ entities }: Props) => {
   const { selected, select } = useScene();
 
   const handleClick = useCallback(
-    (entity: EntityType) => {
+    (entity: EntityDeclaration) => {
       select((prev) => (prev?.id === entity.id ? null : entity));
     },
     [select],

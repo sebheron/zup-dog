@@ -1,10 +1,10 @@
 import { Dispatch, SetStateAction, createContext } from "react";
-import EntityType from "@/types/EntityType";
+import EntityDeclaration from "@/types/EntityDeclaration";
 import MustDeclare from "@/types/MustDeclare";
 
 interface SceneContextType {
-  selected: EntityType | null;
-  select: Dispatch<SetStateAction<EntityType | null>>;
+  selected: EntityDeclaration | null;
+  select: Dispatch<SetStateAction<EntityDeclaration | null>>;
   update: (id: string, props: MustDeclare<Record<string, unknown>>) => void;
 }
 

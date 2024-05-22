@@ -1,10 +1,10 @@
 import { useCallback, useState } from "react";
 import { Cone, Shape } from "react-zdog";
 import Colors from "@/constants/Colors";
-import EntityType from "@/types/EntityType";
+import EntityDeclaration from "@/types/EntityType";
 
 interface Props {
-  entity: EntityType;
+  entity: EntityDeclaration;
 }
 
 enum Interactables {
