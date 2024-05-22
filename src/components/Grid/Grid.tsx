@@ -1,5 +1,6 @@
 import { Fragment } from "react";
 import { Shape } from "react-zdog";
+import Colors from "@/constants/Colors";
 
 interface Props {
   length: number;
@@ -11,7 +12,7 @@ const Grid = ({ length, cellSize }: Props) => {
     <Fragment key={`row-${i}`}>
       <Shape
         stroke={1}
-        color="#989898"
+        color={Colors.GRID}
         path={[
           { x: -length / 2, z: -length / 2 + i * cellSize },
           { x: length / 2, z: -length / 2 + i * cellSize },
@@ -19,7 +20,7 @@ const Grid = ({ length, cellSize }: Props) => {
       />
       <Shape
         stroke={1}
-        color="#989898"
+        color={Colors.GRID}
         path={[
           { x: -length / 2 + i * cellSize, z: -length / 2 },
           { x: -length / 2 + i * cellSize, z: length / 2 },
