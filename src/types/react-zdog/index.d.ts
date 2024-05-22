@@ -22,13 +22,13 @@ declare module "react-zdog" {
   }>;
 
   type AdditionalElementProps = PropsWithChildren<{
-    onClick?: () => void;
+    onClick?: (e: React.MouseEvent<HTMLElement>) => void;
     onPointerEnter?: () => void;
     onPointerLeave?: () => void;
   }>;
 
   export const Illustration: React.FC<
-    AdditionalIllustrationProps & IllustrationOptions
+    AdditionalIllustrationProps & AdditionalElementProps & IllustrationOptions
   >;
   export const Anchor: React.FC<AdditionalElementProps & AnchorOptions>;
   export const Shape: React.FC<AdditionalElementProps & ShapeOptions>;
