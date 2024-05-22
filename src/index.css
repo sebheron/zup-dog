@@ -1,6 +1,7 @@
 :root {
   --fg-primary: #fff;
-  --fg-secondary: #989898;
+  --fg-secondary: #cccccc;
+  --fg-tertiary: #8686866f;
 
   --bg-primary: #111111;
   --bg-secondary: #1b1b1bc2;
@@ -31,4 +32,8 @@ body {
 * {
   font-family: "Nunito Sans";
   box-sizing: border-box;
+}
+
+*::-webkit-scrollbar {
+  display: none;
 }
