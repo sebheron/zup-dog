@@ -1,26 +1,17 @@
 import { nanoid } from "nanoid";
 import { Suspense, lazy, useCallback, useMemo, useState } from "react";
-import { BiSolidCameraMovie } from "react-icons/bi";
 import Loading from "@/components/Loading/Loading";
-import MenuItem from "@/components/MenuItem/MenuItem";
 import SceneContext from "@/components/Scene/SceneContext";
-import Entities from "@/constants/Entities";
-import Shapes from "@/constants/Shapes";
 import EntityDeclaration from "@/types/EntityDeclaration";
+import EntityType from "@/types/EntityType";
 import MustDeclare from "@/types/MustDeclare";
-import tooltip from "@/utils/tooltip";
-import EntityType from "./types/EntityType";
 
 const Bar = lazy(() => import("@/components/Bar/Bar"));
-const Button = lazy(() => import("@/components/Button/Button"));
 const Card = lazy(() => import("@/components/Card/Card"));
-const Menu = lazy(() => import("@/components/Menu/Menu"));
-const Splitter = lazy(() => import("@/components/Splitter/Splitter"));
 const Tooltip = lazy(() => import("@/components/Tooltip/Tooltip"));
 const Toast = lazy(() => import("@/components/Toast/Toast"));
 const Camera = lazy(() => import("@/components/Camera/Camera"));
-const Logo = lazy(() => import("@/components/Logo/Logo"));
-const Gizmo = lazy(() => import("@/components/Gizmos/ScreenGizmo/ScreenGizmo"));
+const ScreenGizmo = lazy(() => import("@/components/ScreenGizmo/ScreenGizmo"));
 const Viewport = lazy(() => import("@/components/Viewport/Viewport"));
 
 function App() {
@@ -59,8 +50,9 @@ function App() {
       selected,
       select: setSelected,
       update,
+      add,
     }),
-    [selected, update],
+    [selected, update, add],
   );
 
   return (
@@ -70,30 +62,8 @@ function App() {
         <Camera>
           <SceneContext.Provider value={sceneContext}>
             <Viewport entities={entities}>
-              <Bar>
-                <Logo />
-                <Splitter />
-                {Entities.map((entity) => {
-                  const Icon = Shapes[entity.shape];
-                  return (
-                    <Button
-                      key={entity.shape}
-                      onClick={() => add(entity)}
-                      {...tooltip(entity.shape)}
-                    >
-                      <Icon />
-                    </Button>
-                  );
-                })}
-                <Splitter />
-                <Menu
-                  buttonContent={<BiSolidCameraMovie />}
-                  {...tooltip("Camera Settings")}
-                >
-                  <MenuItem>Reset Camera</MenuItem>
-                </Menu>
-              </Bar>
-              <Gizmo />
+              <Bar />
+              <ScreenGizmo />
               <Card position="left"></Card>
               <Card position="right"></Card>
             </Viewport>

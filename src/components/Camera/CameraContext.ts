@@ -13,6 +13,7 @@ interface CameraContextType {
     targetRotation: VectorType,
     time: number,
   ) => void;
+  reset: () => void;
 }
 
 const CameraContext = createContext<CameraContextType | null>(null);

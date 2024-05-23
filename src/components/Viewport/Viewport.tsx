@@ -3,9 +3,9 @@ import { Illustration } from "react-zdog";
 import useCamera from "@/components/Camera/useCamera";
 import Dolly from "@/components/Dolly/Dolly";
 import Entity from "@/components/Entity/Entity";
-import TransformGizmo from "@/components/Gizmos/TransformGizmo/TransformGizmo";
 import Grid from "@/components/Grid/Grid";
 import useScene from "@/components/Scene/useScene";
+import TransformGizmo from "@/components/TransformGizmo/TransformGizmo";
 import EntityDeclaration from "@/types/EntityDeclaration";
 import styles from "./Viewport.module.css";
 
