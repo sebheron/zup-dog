@@ -1,11 +1,11 @@
 import { FC } from "react";
+import { AdditionalElementProps } from "react-zdog-alt";
 import { AnchorOptions } from "zdog";
 import Shapes from "@/constants/Shapes";
-import EntityBase from "./EntityBase";
-import MustDeclare from "./MustDeclare";
+import MustDeclare from "./utility/MustDeclare";
 
-type EntityDeclaration<
-  C extends FC<EntityBase> = FC<EntityBase>,
+type ObjectInstance<
+  C extends FC<AdditionalElementProps> = FC<AdditionalElementProps>,
   O extends object = Record<string, unknown> & AnchorOptions,
 > = {
   id: string;
@@ -13,7 +13,7 @@ type EntityDeclaration<
   shape: keyof typeof Shapes;
   component: C;
   props: MustDeclare<O>;
-  children?: EntityDeclaration[];
+  children?: ObjectInstance[];
 };
 
-export default EntityDeclaration;
+export default ObjectInstance;

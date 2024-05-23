@@ -1,10 +1,9 @@
 import clsx from "clsx";
 import { nanoid } from "nanoid";
 import { PropsWithChildren, useCallback, useMemo, useState } from "react";
+import Global from "@/constants/Global";
 import styles from "./Toast.module.css";
 import ToastContext from "./ToastContext";
-
-const TOAST_DURATION = 3000;
 
 interface ToastType {
   id: string;
@@ -22,7 +21,7 @@ const Toast = ({ children }: PropsWithChildren) => {
     if (toast.manualDismiss) return;
     setTimeout(() => {
       setToasts((prev) => prev.filter((t) => t.id !== toast.id));
-    }, TOAST_DURATION);
+    }, Global.TOAST_DURATION);
   }, []);
 
   const notify = useCallback(

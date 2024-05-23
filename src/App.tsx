@@ -2,9 +2,9 @@ import { nanoid } from "nanoid";
 import { Suspense, lazy, useCallback, useMemo, useState } from "react";
 import Loading from "@/components/Loading/Loading";
 import SceneContext from "@/components/Scene/SceneContext";
-import EntityDeclaration from "@/types/EntityDeclaration";
-import EntityType from "@/types/EntityType";
-import MustDeclare from "@/types/MustDeclare";
+import ObjectInstance from "@/types/ObjectInstance";
+import ObjectType from "@/types/ObjectType";
+import MustDeclare from "@/types/utility/MustDeclare";
 
 const Bar = lazy(() => import("@/components/Bar/Bar"));
 const Card = lazy(() => import("@/components/Card/Card"));
@@ -15,30 +15,30 @@ const ScreenGizmo = lazy(() => import("@/components/ScreenGizmo/ScreenGizmo"));
 const Viewport = lazy(() => import("@/components/Viewport/Viewport"));
 
 function App() {
-  const [entities, setEntities] = useState<EntityDeclaration[]>([]);
-  const [selected, setSelected] = useState<EntityDeclaration | null>(null);
+  const [objects, setObjects] = useState<ObjectInstance[]>([]);
+  const [selected, setSelected] = useState<ObjectInstance | null>(null);
 
-  const add = useCallback((entity: EntityType) => {
-    const entityWithId: EntityDeclaration = {
-      ...entity,
+  const add = useCallback((obj: ObjectType) => {
+    const objWithId: ObjectInstance = {
+      ...obj,
       id: nanoid(),
-      name: entity.shape,
-      props: { ...entity.props },
+      name: obj.shape,
+      props: { ...obj.props },
     };
-    setEntities((prev) => [...prev, entityWithId]);
-    setSelected(entityWithId);
+    setObjects((prev) => [...prev, objWithId]);
+    setSelected(objWithId);
   }, []);
 
   const update = useCallback(
     (id: string, props: MustDeclare<Record<string, unknown>>) => {
-      setEntities((prev) =>
-        prev.map((entity) =>
-          entity.id === id
+      setObjects((prev) =>
+        prev.map((obj) =>
+          obj.id === id
             ? {
-                ...entity,
-                props: { ...entity.props, ...props },
+                ...obj,
+                props: { ...obj.props, ...props },
               }
-            : entity,
+            : obj,
         ),
       );
     },
@@ -48,9 +48,9 @@ function App() {
   const sceneContext = useMemo(
     () => ({
       selected,
-      select: setSelected,
       update,
       add,
+      select: setSelected,
     }),
     [selected, update, add],
   );
@@ -61,7 +61,7 @@ function App() {
       <Toast>
         <Camera>
           <SceneContext.Provider value={sceneContext}>
-            <Viewport entities={entities}>
+            <Viewport objects={objects}>
               <Bar />
               <ScreenGizmo />
               <Card position="left"></Card>

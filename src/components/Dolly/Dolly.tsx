@@ -1,7 +1,7 @@
 import { PropsWithChildren, useCallback, useEffect } from "react";
-import { Shape, useZdog } from "react-zdog";
+import { Shape, useZdog } from "react-zdog-alt";
 import useCamera from "@/components/Camera/useCamera";
-import { shift, spin } from "@/utils/vector";
+import vector from "@/utils/vector";
 
 interface Props extends PropsWithChildren {
   controllable?: boolean;
@@ -29,7 +29,7 @@ const Dolly = ({ controllable, canRotate, canTranslate, children }: Props) => {
     (event: MouseEvent) => {
       event.preventDefault();
       setPosition((position) =>
-        shift(
+        vector.shift(
           position,
           event.movementX * 0.8 * (1 / zoom),
           event.movementY * 0.8 * (1 / zoom),
@@ -43,7 +43,7 @@ const Dolly = ({ controllable, canRotate, canTranslate, children }: Props) => {
     (event: MouseEvent) => {
       event.preventDefault();
       setRotation((rotation) =>
-        spin(rotation, event.movementX / 600, event.movementY / 600),
+        vector.spin(rotation, event.movementX / 600, event.movementY / 600),
       );
     },
     [setRotation],

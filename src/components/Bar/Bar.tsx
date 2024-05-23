@@ -1,30 +1,32 @@
 import { BiSolidCameraMovie } from "react-icons/bi";
 import Button from "@/components/Button/Button";
+import useCamera from "@/components/Camera/useCamera";
 import Logo from "@/components/Logo/Logo";
 import Menu from "@/components/Menu/Menu";
 import MenuItem from "@/components/MenuItem/MenuItem";
 import useScene from "@/components/Scene/useScene";
 import Splitter from "@/components/Splitter/Splitter";
-import Entities from "@/constants/Entities";
+import Objects from "@/constants/Objects";
 import Shapes from "@/constants/Shapes";
 import tooltip from "@/utils/tooltip";
 import styles from "./Bar.module.css";
 
 const Bar = () => {
   const { add } = useScene();
+  const { reset } = useCamera();
 
   return (
     <div className={styles.container}>
       <div className={styles.bar}>
         <Logo />
         <Splitter />
-        {Entities.map((entity) => {
-          const Icon = Shapes[entity.shape];
+        {Objects.map((obj) => {
+          const Icon = Shapes[obj.shape];
           return (
             <Button
-              key={entity.shape}
-              onClick={() => add(entity)}
-              {...tooltip(entity.shape)}
+              key={obj.shape}
+              onClick={() => add(obj)}
+              {...tooltip(obj.shape)}
             >
               <Icon />
             </Button>
@@ -35,7 +37,7 @@ const Bar = () => {
           buttonContent={<BiSolidCameraMovie />}
           {...tooltip("Camera Settings")}
         >
-          <MenuItem>Reset Camera</MenuItem>
+          <MenuItem onClick={reset}>Reset Camera</MenuItem>
         </Menu>
       </div>
     </div>

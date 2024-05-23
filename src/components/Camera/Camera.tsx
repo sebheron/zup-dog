@@ -8,18 +8,15 @@ import {
   useState,
 } from "react";
 import { Vector } from "zdog";
+import Global from "@/constants/Global";
 import VectorType from "@/types/VectorType";
 import CameraContext from "./CameraContext";
 
-const DEFAULT_ZOOM = 1;
-const DEFAULT_POSITION = { x: 0, y: 0, z: 0 };
-const DEFAULT_ROTATION = { x: -0.3, y: 0.55, z: 0 };
-
 const Camera = ({ children }: PropsWithChildren) => {
   const animating = useRef<string | null>(null);
-  const [zoom, setZoom] = useState<number>(DEFAULT_ZOOM);
-  const [position, setPosition] = useState<VectorType>(DEFAULT_POSITION);
-  const [rotation, setRotation] = useState<VectorType>(DEFAULT_ROTATION);
+  const [zoom, setZoom] = useState<number>(Global.DEFAULT_ZOOM);
+  const [position, setPosition] = useState<VectorType>(Global.DEFAULT_POSITION);
+  const [rotation, setRotation] = useState<VectorType>(Global.DEFAULT_ROTATION);
 
   //Cheat lerping by switching to Vector class
   const lerpTo = async (
@@ -47,8 +44,8 @@ const Camera = ({ children }: PropsWithChildren) => {
       newRotation.set(rotationVector);
 
       if (elapsed > time) {
-        setPosition(targetPosition);
-        setRotation(targetRotation);
+        setPosition({ ...targetPosition });
+        setRotation({ ...targetRotation });
         animating.current = null;
         return;
       }
@@ -66,8 +63,8 @@ const Camera = ({ children }: PropsWithChildren) => {
     };
 
   const reset = () => {
-    lerpTo(DEFAULT_POSITION, DEFAULT_ROTATION, 1000);
-    setZoom(DEFAULT_ZOOM);
+    lerpTo(Global.DEFAULT_POSITION, Global.DEFAULT_ROTATION, 1000);
+    setZoom(Global.DEFAULT_ZOOM);
   };
 
   const cameraContext = useMemo(

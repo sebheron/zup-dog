@@ -1,21 +1,29 @@
-import { PropsWithChildren } from "react";
-import { Illustration } from "react-zdog";
+import { PropsWithChildren, useCallback } from "react";
+import { Illustration } from "react-zdog-alt";
 import useCamera from "@/components/Camera/useCamera";
 import Dolly from "@/components/Dolly/Dolly";
-import Entity from "@/components/Entity/Entity";
 import Grid from "@/components/Grid/Grid";
+import Model from "@/components/Model/Model";
 import useScene from "@/components/Scene/useScene";
 import TransformGizmo from "@/components/TransformGizmo/TransformGizmo";
-import EntityDeclaration from "@/types/EntityDeclaration";
+import ObjectInstance from "@/types/ObjectInstance";
 import styles from "./Viewport.module.css";
 
 interface Props extends PropsWithChildren {
-  entities: EntityDeclaration[];
+  objects: ObjectInstance[];
 }
 
-const Viewport = ({ children, entities }: Props) => {
+const Viewport = ({ children, objects }: Props) => {
   const { zoom } = useCamera();
   const { selected, select } = useScene();
+
+  const handleMouseDown = useCallback(
+    (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
+      if (e.buttons !== 1) return;
+      select(null);
+    },
+    [select],
+  );
 
   return (
     <div className={styles.container}>
@@ -23,7 +31,7 @@ const Viewport = ({ children, entities }: Props) => {
         <Illustration element="canvas" zoom={zoom} pointerEvents>
           <Dolly controllable canRotate canTranslate>
             <Grid length={1000} cellSize={100} />
-            <Entity entities={entities} />
+            <Model objects={objects} />
           </Dolly>
         </Illustration>
       </div>
@@ -32,11 +40,11 @@ const Viewport = ({ children, entities }: Props) => {
           <Illustration
             element="canvas"
             zoom={zoom}
+            onPointerDown={handleMouseDown}
             pointerEvents
-            onClick={() => select(null)}
           >
             <Dolly controllable canRotate canTranslate>
-              <TransformGizmo entity={selected} />
+              <TransformGizmo obj={selected} />
             </Dolly>
           </Illustration>
         </div>

@@ -1,4 +1,4 @@
-declare module "react-zdog" {
+declare module "react-zdog-alt" {
   import { DependencyList, PropsWithChildren } from "react";
   import {
     IllustrationOptions,
@@ -21,10 +21,13 @@ declare module "react-zdog" {
     className?: string;
   }>;
 
-  type AdditionalElementProps = PropsWithChildren<{
+  export type AdditionalElementProps = PropsWithChildren<{
+    pointerEvents?: boolean;
     onClick?: (e: React.MouseEvent<HTMLElement>) => void;
-    onPointerEnter?: () => void;
-    onPointerLeave?: () => void;
+    onPointerMove?: (e: React.MouseEvent<HTMLElement>) => void;
+    onPointerDown?: (e: React.MouseEvent<HTMLElement>) => void;
+    onPointerEnter?: (e: React.MouseEvent<HTMLElement>) => void;
+    onPointerLeave?: (e: React.MouseEvent<HTMLElement>) => void;
   }>;
 
   export const Illustration: React.FC<

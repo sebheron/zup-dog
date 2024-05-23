@@ -10,7 +10,7 @@ import {
   Rect,
   RoundedRect,
   Shape,
-} from "react-zdog";
+} from "react-zdog-alt";
 import {
   AnchorOptions,
   BoxOptions,
@@ -24,8 +24,8 @@ import {
   RoundedRectOptions,
   ShapeOptions,
 } from "zdog";
-import EntityType from "@/types/EntityType";
-import MustDeclare from "../types/MustDeclare";
+import ObjectType from "@/types/ObjectType";
+import MustDeclare from "../types/utility/MustDeclare";
 
 const DEFAULT_ANCHOR: MustDeclare<AnchorOptions> = {
   addTo: null,
@@ -60,7 +60,7 @@ const DEFAULT_ELLIPSE: MustDeclare<EllipseOptions> = {
   quarters: 4,
 };
 
-const SHAPE: EntityType<typeof Shape, ShapeOptions> = {
+const SHAPE: ObjectType<typeof Shape, ShapeOptions> = {
   shape: "Shape",
   component: Shape,
   props: {
@@ -69,7 +69,7 @@ const SHAPE: EntityType<typeof Shape, ShapeOptions> = {
   },
 };
 
-const BOX: EntityType<typeof Box, BoxOptions> = {
+const BOX: ObjectType<typeof Box, BoxOptions> = {
   shape: "Box",
   component: Box,
   props: {
@@ -84,7 +84,7 @@ const BOX: EntityType<typeof Box, BoxOptions> = {
   },
 };
 
-const CONE: EntityType<typeof Cone, ConeOptions> = {
+const CONE: ObjectType<typeof Cone, ConeOptions> = {
   shape: "Cone",
   component: Cone,
   props: {
@@ -93,7 +93,7 @@ const CONE: EntityType<typeof Cone, ConeOptions> = {
   },
 };
 
-const RECT: EntityType<typeof Rect, RectOptions> = {
+const RECT: ObjectType<typeof Rect, RectOptions> = {
   shape: "Rectangle",
   component: Rect,
   props: {
@@ -101,7 +101,7 @@ const RECT: EntityType<typeof Rect, RectOptions> = {
   },
 };
 
-const GROUP: EntityType<typeof Group, GroupOptions> = {
+const GROUP: ObjectType<typeof Group, GroupOptions> = {
   shape: "Group",
   component: Group,
   props: {
@@ -111,7 +111,7 @@ const GROUP: EntityType<typeof Group, GroupOptions> = {
   },
 };
 
-const ANCHOR: EntityType<typeof Anchor, AnchorOptions> = {
+const ANCHOR: ObjectType<typeof Anchor, AnchorOptions> = {
   shape: "Anchor",
   component: Anchor,
   props: {
@@ -119,13 +119,13 @@ const ANCHOR: EntityType<typeof Anchor, AnchorOptions> = {
   },
 };
 
-const ELLIPSE: EntityType<typeof Ellipse, EllipseOptions> = {
+const ELLIPSE: ObjectType<typeof Ellipse, EllipseOptions> = {
   shape: "Ellipse",
   component: Ellipse,
   props: { ...DEFAULT_ELLIPSE },
 };
 
-const POLYGON: EntityType<typeof Polygon, PolygonOptions> = {
+const POLYGON: ObjectType<typeof Polygon, PolygonOptions> = {
   shape: "Polygon",
   component: Polygon,
   props: {
@@ -135,7 +135,7 @@ const POLYGON: EntityType<typeof Polygon, PolygonOptions> = {
   },
 };
 
-const CYLINDER: EntityType<typeof Cylinder, CylinderOptions> = {
+const CYLINDER: ObjectType<typeof Cylinder, CylinderOptions> = {
   shape: "Cylinder",
   component: Cylinder,
   props: {
@@ -146,7 +146,7 @@ const CYLINDER: EntityType<typeof Cylinder, CylinderOptions> = {
   },
 };
 
-const HEMISPHERE: EntityType<typeof Hemisphere, HemisphereOptions> = {
+const HEMISPHERE: ObjectType<typeof Hemisphere, HemisphereOptions> = {
   shape: "Hemisphere",
   component: Hemisphere,
   props: {
@@ -154,7 +154,7 @@ const HEMISPHERE: EntityType<typeof Hemisphere, HemisphereOptions> = {
   },
 };
 
-const ROUNDED_RECT: EntityType<typeof RoundedRect, RoundedRectOptions> = {
+const ROUNDED_RECT: ObjectType<typeof RoundedRect, RoundedRectOptions> = {
   shape: "Rounded Rectangle",
   component: RoundedRect,
   props: {
@@ -165,7 +165,7 @@ const ROUNDED_RECT: EntityType<typeof RoundedRect, RoundedRectOptions> = {
   },
 };
 
-const Entities = [
+const Objects = [
   SHAPE,
   BOX,
   CONE,
@@ -179,4 +179,4 @@ const Entities = [
   GROUP,
 ];
 
-export default Entities;
+export default Objects;
