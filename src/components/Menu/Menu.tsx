@@ -1,5 +1,5 @@
 import { Menu as HeadlessMenu, Transition } from "@headlessui/react";
-import { PropsWithChildren, ReactNode } from "react";
+import { Fragment, PropsWithChildren, ReactNode } from "react";
 import Button from "@/components/Button/Button";
 import styles from "./Menu.module.css";
 
@@ -9,7 +9,7 @@ interface Props extends PropsWithChildren {
 }
 
 const Menu = ({ children, buttonContent, ...props }: Props) => (
-  <HeadlessMenu as="div" className={styles.menu}>
+  <HeadlessMenu as="div">
     {({ open }) => (
       <>
         <HeadlessMenu.Button as={Button} {...props} data-tooltip-hidden={open}>
@@ -22,6 +22,7 @@ const Menu = ({ children, buttonContent, ...props }: Props) => (
           enterTo={styles.visible}
           leaveFrom={styles.visible}
           leaveTo={styles.hidden}
+          as={Fragment}
         >
           <HeadlessMenu.Items as="div" className={styles.items}>
             {children}
