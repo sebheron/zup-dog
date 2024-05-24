@@ -7,6 +7,7 @@ interface Props
   variant?: "default" | "important" | "primary" | "secondary";
   size?: "small" | "medium" | "large";
   alignment?: "left" | "center" | "right";
+  active?: boolean;
 }
 
 const Button = forwardRef<HTMLButtonElement, Props>(
@@ -16,6 +17,7 @@ const Button = forwardRef<HTMLButtonElement, Props>(
       variant = "default",
       size = "medium",
       alignment = "center",
+      active = false,
       ...props
     },
     ref,
@@ -27,6 +29,7 @@ const Button = forwardRef<HTMLButtonElement, Props>(
         styles[variant],
         styles[size],
         styles[alignment],
+        { [styles.active]: active },
       )}
       {...props}
     >

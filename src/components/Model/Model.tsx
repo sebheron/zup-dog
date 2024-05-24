@@ -1,9 +1,9 @@
 import { Fragment } from "react";
 import useScene from "@/components/Scene/useScene";
-import ObjectInstance from "@/types/ObjectInstance";
+import ObjectInstanceType from "@/types/ObjectInstanceType";
 
 interface Props {
-  objects: ObjectInstance[];
+  objects: ObjectInstanceType[];
   onClick: (id: string) => void;
 }
 

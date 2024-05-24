@@ -1,5 +1,11 @@
 import clsx from "clsx";
-import { PropsWithChildren, useCallback, useRef, useState } from "react";
+import {
+  PropsWithChildren,
+  useCallback,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { Illustration } from "react-zdog-alt";
 import { Vector } from "zdog";
 import useCamera from "@/components/Camera/useCamera";
@@ -8,24 +14,24 @@ import Grid from "@/components/Grid/Grid";
 import Model from "@/components/Model/Model";
 import useScene from "@/components/Scene/useScene";
 import TransformGizmo from "@/components/TransformGizmo/TransformGizmo";
-import { Arrow } from "@/constants/Arrows";
+import { ArrowType } from "@/constants/Arrows";
 import useDolly from "@/hooks/useDolly";
 import CallbackVector from "@/types/CallbackVector";
-import ObjectInstance from "@/types/ObjectInstance";
+import ObjectInstanceType from "@/types/ObjectInstanceType";
 import VectorType from "@/types/VectorType";
 import vector from "@/utils/vector";
 import styles from "./Viewport.module.css";
 
 interface Props extends PropsWithChildren {
-  objects: ObjectInstance[];
+  objects: ObjectInstanceType[];
 }
 
 const Viewport = ({ children, objects }: Props) => {
   const ghostRef = useRef<Record<string, Vector>>({});
-  const { register } = useDolly();
+  const { registerDolly } = useDolly();
   const { zoom, rotation, position } = useCamera();
-  const { selected, select, update } = useScene();
-  const [arrow, setArrow] = useState<Arrow | null>(null);
+  const { selected, select, update, del } = useScene();
+  const [arrow, setArrow] = useState<ArrowType | null>(null);
   const [multiSelect, setMultiSelect] = useState(false);
 
   const getAxisCenter = useCallback(
@@ -49,7 +55,7 @@ const Viewport = ({ children, objects }: Props) => {
   );
 
   const handleMoveStart = useCallback(
-    (newArrow: Arrow) => {
+    (newArrow: ArrowType) => {
       if (!selected || newArrow === arrow) return;
       setArrow(newArrow);
       for (const selection of selected) {
@@ -106,8 +112,9 @@ const Viewport = ({ children, objects }: Props) => {
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
       if (e.key === "Shift") setMultiSelect(true);
+      if (e.key === "Delete") del(selected);
     },
-    [setMultiSelect],
+    [setMultiSelect, del, selected],
   );
 
   const handleKeyUp = useCallback(
@@ -125,6 +132,16 @@ const Viewport = ({ children, objects }: Props) => {
     [multiSelect, select],
   );
 
+  const center = useMemo(
+    () =>
+      new CallbackVector(
+        getAxisCenter("x"),
+        getAxisCenter("y"),
+        getAxisCenter("z"),
+      ),
+    [getAxisCenter],
+  );
+
   return (
     <div className={styles.container}>
       <div className={styles.viewport}>
@@ -134,7 +151,7 @@ const Viewport = ({ children, objects }: Props) => {
           pointerEvents
           translate={position}
           rotate={rotation}
-          {...register()}
+          {...registerDolly()}
         >
           <Grid length={1000} cellSize={100} />
           <Model objects={objects} onClick={handleModelClick} />
@@ -142,7 +159,9 @@ const Viewport = ({ children, objects }: Props) => {
       </div>
       {!!selected.length && (
         <div
-          className={clsx(styles.viewport, multiSelect && styles.multiselect)}
+          className={clsx(styles.viewport, {
+            [styles.multiSelect]: multiSelect,
+          })}
         >
           <Illustration
             element="canvas"
@@ -152,16 +171,10 @@ const Viewport = ({ children, objects }: Props) => {
             translate={position}
             rotate={rotation}
             pointerEvents
-            {...register()}
+            {...registerDolly()}
           >
             <TransformGizmo
-              position={
-                new CallbackVector(
-                  getAxisCenter("x"),
-                  getAxisCenter("y"),
-                  getAxisCenter("z"),
-                )
-              }
+              position={center}
               selectedArrow={arrow}
               onSelectArrow={handleMoveStart}
             />

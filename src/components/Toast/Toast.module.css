@@ -11,19 +11,20 @@
   z-index: 4;
   overflow: hidden;
   pointer-events: none;
+  mask-image: linear-gradient(to top, #000000, #000000 80%, #00000000);
 }
 
 .toast {
   position: absolute;
-  right: 0.8rem;
+  right: max(15rem, 16%);
   bottom: 0;
   translate: 0 -1rem;
   width: max-content;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0.5rem;
-  border: 2px solid var(--border-color);
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--border-color);
   background-color: var(--bg-secondary);
   color: var(--fg-primary);
   border-radius: 0.8rem;

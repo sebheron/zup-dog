@@ -10,6 +10,7 @@ interface SceneContextType {
     props: (id: string) => MustDeclare<Record<string, unknown>> | undefined,
   ) => void;
   add: (obj: ObjectType) => void;
+  del: (ids: string[]) => void;
 }
 
 const SceneContext = createContext<SceneContextType | null>(null);

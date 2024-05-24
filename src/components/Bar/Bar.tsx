@@ -20,6 +20,7 @@ const Bar = () => {
       <div className={styles.bar}>
         <Logo />
         <Divider />
+
         {Objects.map((obj) => {
           const Icon = Shapes[obj.shape];
           return (

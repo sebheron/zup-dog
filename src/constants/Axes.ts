@@ -1,8 +1,7 @@
 import { TAU } from "zdog";
-import GizmoCap from "@/types/GizmoCap";
 import Colors from "./Colors";
 
-const CAPS: Record<string, GizmoCap> = {
+const Axes = {
   XPOS: {
     color: Colors.XAXIS,
     offset: { x: 30, y: 0, z: 0 },
@@ -41,6 +40,6 @@ const CAPS: Record<string, GizmoCap> = {
   },
 };
 
-export type Cap = keyof typeof CAPS;
+export type AxisType = keyof typeof Axes;
 
-export default CAPS;
+export default Axes;

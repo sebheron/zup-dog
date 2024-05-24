@@ -7,11 +7,23 @@
   align-items: center;
 }
 
+.button:focus {
+  outline: none;
+}
+
+.button:focus-visible {
+  box-shadow: 0 0 0 0.1rem var(--accent-primary);
+}
+
 .default:hover {
   background-color: var(--accent-primary);
 }
 
 .default:active {
+  background-color: var(--accent-secondary);
+}
+
+.default.active {
   background-color: var(--accent-secondary);
 }
 

@@ -1,12 +1,12 @@
 import { Fragment, useState } from "react";
 import { Illustration, Shape } from "react-zdog-alt";
 import useCamera from "@/components/Camera/useCamera";
-import CAPS, { Cap } from "@/constants/Caps";
-import styles from "./ScreenGizmo.module.css";
+import Axes, { AxisType } from "@/constants/Axes";
+import styles from "./Axis.module.css";
 
-const Gizmo = () => {
+const Axis = () => {
   const { lerpTo, rotation } = useCamera();
-  const [interactable, setInteractable] = useState<Cap | null>(null);
+  const [interactable, setInteractable] = useState<AxisType | null>(null);
 
   return (
     <div className={styles.gizmo}>
@@ -16,7 +16,7 @@ const Gizmo = () => {
         rotate={rotation}
         pointerEvents
       >
-        {Object.entries(CAPS).map(([key, cap]) => (
+        {Object.entries(Axes).map(([key, cap]) => (
           <Fragment key={key}>
             <Shape
               stroke={2}
@@ -30,19 +30,17 @@ const Gizmo = () => {
               translate={cap.offset}
               pointerEvents={false}
             />
-            {!!cap.targetRotation && !!cap.targetPosition && (
-              <Shape
-                stroke={20}
-                translate={cap.offset}
-                onPointerMove={() => setInteractable(key)}
-                onPointerLeave={() => setInteractable(null)}
-                onClick={() =>
-                  lerpTo(cap.targetPosition!, cap.targetRotation!, 1000)
-                }
-                visible={false}
-                pointerEvents
-              />
-            )}
+            <Shape
+              stroke={20}
+              translate={cap.offset}
+              onPointerMove={() => setInteractable(key as AxisType)}
+              onPointerLeave={() => setInteractable(null)}
+              onClick={() =>
+                lerpTo(cap.targetPosition!, cap.targetRotation!, 1000)
+              }
+              visible={false}
+              pointerEvents
+            />
           </Fragment>
         ))}
       </Illustration>
@@ -50,4 +48,4 @@ const Gizmo = () => {
   );
 };
 
-export default Gizmo;
+export default Axis;

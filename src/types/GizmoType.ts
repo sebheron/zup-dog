@@ -1,9 +1,9 @@
 import VectorType from "./VectorType";
 
-type GizmoArrow = {
+type GizmoType = {
   color: string;
   direction: VectorType;
   rotation?: Partial<VectorType>;
 };
 
-export default GizmoArrow;
+export default GizmoType;

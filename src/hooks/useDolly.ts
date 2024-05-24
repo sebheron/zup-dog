@@ -51,13 +51,13 @@ const useDolly = () => {
     event.preventDefault();
   }, []);
 
-  const register = () => ({
+  const registerDolly = () => ({
     onWheel: handleZoom,
     onMouseMove: handleMove,
     onContextMenu: handleContextMenu,
   });
 
-  return { register };
+  return { registerDolly };
 };
 
 export default useDolly;

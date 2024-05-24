@@ -1,17 +1,4 @@
 import {
-  Anchor,
-  Box,
-  Cone,
-  Cylinder,
-  Ellipse,
-  Group,
-  Hemisphere,
-  Polygon,
-  Rect,
-  RoundedRect,
-  Shape,
-} from "react-zdog-alt";
-import {
   AnchorOptions,
   BoxOptions,
   ConeOptions,
@@ -24,18 +11,19 @@ import {
   RoundedRectOptions,
   ShapeOptions,
 } from "zdog";
+import NameType from "@/types/NameType";
 import ObjectType from "@/types/ObjectType";
-import MustDeclare from "../types/utility/MustDeclare";
+import MustDeclare from "@/types/utility/MustDeclare";
 
-const DEFAULT_ANCHOR: MustDeclare<AnchorOptions> = {
+const defaultAnchor: MustDeclare<AnchorOptions> = {
   addTo: null,
   translate: { x: 0, y: 0, z: 0 },
   rotate: { x: 0, y: 0, z: 0 },
   scale: 1,
 };
 
-const DEFAULT_SHAPE: MustDeclare<ShapeOptions> = {
-  ...DEFAULT_ANCHOR,
+const defaultShape: MustDeclare<ShapeOptions> = {
+  ...defaultAnchor,
   color: "#E62",
   stroke: 0,
   fill: true,
@@ -46,34 +34,32 @@ const DEFAULT_SHAPE: MustDeclare<ShapeOptions> = {
   path: [{ x: 0, y: 0, z: 0 }],
 };
 
-const DEFAULT_RECT: MustDeclare<RectOptions> = {
-  ...DEFAULT_SHAPE,
+const defaultRect: MustDeclare<RectOptions> = {
+  ...defaultShape,
   width: 64,
   height: 64,
 };
 
-const DEFAULT_ELLIPSE: MustDeclare<EllipseOptions> = {
-  ...DEFAULT_SHAPE,
+const defaultEllipse: MustDeclare<EllipseOptions> = {
+  ...defaultShape,
   diameter: 64,
   width: 64,
   height: 64,
   quarters: 4,
 };
 
-const SHAPE: ObjectType<typeof Shape, ShapeOptions> = {
-  shape: "Shape",
-  component: Shape,
+const ShapeObject: ObjectType<ShapeOptions> = {
+  shape: NameType.Shape,
   props: {
-    ...DEFAULT_SHAPE,
+    ...defaultShape,
     stroke: 64,
   },
 };
 
-const BOX: ObjectType<typeof Box, BoxOptions> = {
-  shape: "Box",
-  component: Box,
+const BoxObject: ObjectType<BoxOptions> = {
+  shape: NameType.Box,
   props: {
-    ...DEFAULT_RECT,
+    ...defaultRect,
     depth: 64,
     frontFace: true,
     rearFace: true,
@@ -84,81 +70,72 @@ const BOX: ObjectType<typeof Box, BoxOptions> = {
   },
 };
 
-const CONE: ObjectType<typeof Cone, ConeOptions> = {
-  shape: "Cone",
-  component: Cone,
+const ConeObject: ObjectType<ConeOptions> = {
+  shape: NameType.Cone,
   props: {
-    ...DEFAULT_ELLIPSE,
+    ...defaultEllipse,
     length: 64,
   },
 };
 
-const RECT: ObjectType<typeof Rect, RectOptions> = {
-  shape: "Rectangle",
-  component: Rect,
+const RectangleObject: ObjectType<RectOptions> = {
+  shape: NameType.Rectangle,
   props: {
-    ...DEFAULT_RECT,
+    ...defaultRect,
   },
 };
 
-const GROUP: ObjectType<typeof Group, GroupOptions> = {
-  shape: "Group",
-  component: Group,
+const GroupObject: ObjectType<GroupOptions> = {
+  shape: NameType.Group,
   props: {
-    ...DEFAULT_ANCHOR,
+    ...defaultAnchor,
     visible: true,
     updateSort: false,
   },
 };
 
-const ANCHOR: ObjectType<typeof Anchor, AnchorOptions> = {
-  shape: "Anchor",
-  component: Anchor,
+const AnchorObject: ObjectType<AnchorOptions> = {
+  shape: NameType.Anchor,
   props: {
-    ...DEFAULT_ANCHOR,
+    ...defaultAnchor,
   },
 };
 
-const ELLIPSE: ObjectType<typeof Ellipse, EllipseOptions> = {
-  shape: "Ellipse",
-  component: Ellipse,
-  props: { ...DEFAULT_ELLIPSE },
+const EllipseObject: ObjectType<EllipseOptions> = {
+  shape: NameType.Ellipse,
+  props: { ...defaultEllipse },
 };
 
-const POLYGON: ObjectType<typeof Polygon, PolygonOptions> = {
-  shape: "Polygon",
-  component: Polygon,
+const PolygonObject: ObjectType<PolygonOptions> = {
+  shape: NameType.Polygon,
   props: {
-    ...DEFAULT_SHAPE,
+    ...defaultShape,
     radius: 64,
     sides: 6,
   },
 };
 
-const CYLINDER: ObjectType<typeof Cylinder, CylinderOptions> = {
-  shape: "Cylinder",
-  component: Cylinder,
+const CylinderObject: ObjectType<CylinderOptions> = {
+  shape: NameType.Cylinder,
   props: {
-    ...DEFAULT_SHAPE,
+    ...defaultShape,
     diameter: 64,
     length: 64,
     frontFace: true,
   },
 };
 
-const HEMISPHERE: ObjectType<typeof Hemisphere, HemisphereOptions> = {
-  shape: "Hemisphere",
-  component: Hemisphere,
+const HemisphereObject: ObjectType<HemisphereOptions> = {
+  shape: NameType.Hemisphere,
   props: {
-    ...DEFAULT_ELLIPSE,
+    ...defaultEllipse,
   },
 };
 
-const ROUNDED_RECT: ObjectType<typeof RoundedRect, RoundedRectOptions> = {
-  shape: "Rounded Rectangle",
-  component: RoundedRect,
+const RoundedRectangleObject: ObjectType<RoundedRectOptions> = {
+  shape: NameType.RoundedRectangle,
   props: {
-    ...DEFAULT_SHAPE,
+    ...defaultShape,
     width: 64,
     height: 64,
     cornerRadius: 16,
@@ -166,17 +143,17 @@ const ROUNDED_RECT: ObjectType<typeof RoundedRect, RoundedRectOptions> = {
 };
 
 const Objects = [
-  SHAPE,
-  BOX,
-  CONE,
-  CYLINDER,
-  HEMISPHERE,
-  RECT,
-  ROUNDED_RECT,
-  ELLIPSE,
-  POLYGON,
-  ANCHOR,
-  GROUP,
+  ShapeObject,
+  BoxObject,
+  ConeObject,
+  CylinderObject,
+  HemisphereObject,
+  RectangleObject,
+  RoundedRectangleObject,
+  EllipseObject,
+  PolygonObject,
+  AnchorObject,
+  GroupObject,
 ];
 
 export default Objects;

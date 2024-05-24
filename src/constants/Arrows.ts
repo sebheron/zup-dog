@@ -1,8 +1,8 @@
 import { TAU } from "zdog";
-import GizmoArrow from "@/types/GizmoArrow";
+import GizmoType from "@/types/GizmoType";
 import Colors from "./Colors";
 
-const Arrows: Record<string, GizmoArrow> = {
+const Arrows: Record<string, GizmoType> = {
   X: {
     color: Colors.XAXIS,
     direction: { x: 1, y: 0, z: 0 },
@@ -19,6 +19,6 @@ const Arrows: Record<string, GizmoArrow> = {
   },
 };
 
-export type Arrow = keyof typeof Arrows;
+export type ArrowType = keyof typeof Arrows;
 
 export default Arrows;

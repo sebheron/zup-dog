@@ -1,24 +1,24 @@
 import { Fragment, useCallback, useState } from "react";
 import { Cone, Shape } from "react-zdog-alt";
 import useCamera from "@/components/Camera/useCamera";
-import Arrows, { Arrow } from "@/constants/Arrows";
+import Arrows, { ArrowType } from "@/constants/Arrows";
 import Colors from "@/constants/Colors";
 import VectorType from "@/types/VectorType";
 import vector from "@/utils/vector";
 
 interface Props {
   position: VectorType;
-  selectedArrow: Arrow | null;
-  onSelectArrow: (arrow: Arrow) => void;
+  selectedArrow: ArrowType | null;
+  onSelectArrow: (arrow: ArrowType) => void;
 }
 
 const TransformGizmo = ({ position, selectedArrow, onSelectArrow }: Props) => {
   const { zoom } = useCamera();
 
-  const [interactable, setInteractable] = useState<Arrow | null>(null);
+  const [interactable, setInteractable] = useState<ArrowType | null>(null);
 
   const handleArrowDown = useCallback(
-    (e: React.MouseEvent<HTMLElement>, arrow: Arrow) => {
+    (e: React.MouseEvent<HTMLElement>, arrow: ArrowType) => {
       onSelectArrow(arrow);
       e.stopPropagation();
     },

@@ -1,11 +1,10 @@
-import { FC } from "react";
-import { AdditionalElementProps } from "react-zdog-alt";
 import { AnchorOptions } from "zdog";
-import ObjectInstance from "./ObjectInstance";
+import NameType from "./NameType";
+import MustDeclare from "./utility/MustDeclare";
 
-type ObjectType<
-  C extends FC<AdditionalElementProps> = FC<AdditionalElementProps>,
-  O extends object = Record<string, unknown> & AnchorOptions,
-> = Omit<ObjectInstance<C, O>, "id" | "name">;
+type ObjectType<O extends object = Record<string, unknown> & AnchorOptions> = {
+  shape: NameType;
+  props: MustDeclare<O>;
+};
 
 export default ObjectType;
