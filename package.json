@@ -20,7 +20,7 @@
     "react-dom": "^18.2.0",
     "react-icons": "^5.2.1",
     "react-tooltip": "^5.26.4",
-    "react-zdog-alt": "^1.1.1",
+    "react-zdog-alt": "^1.1.2",
     "zdog": "^1.1.3"
   },
   "devDependencies": {
