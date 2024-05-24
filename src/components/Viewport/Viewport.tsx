@@ -10,11 +10,11 @@ import { Illustration } from "react-zdog-alt";
 import { Vector } from "zdog";
 import useCamera from "@/components/Camera/useCamera";
 import DocEvent from "@/components/DocEvent/DocEvent";
-import TransformGizmo from "@/components/Gizmos/TransformGizmo/TransformGizmo";
+import TranslationGizmo from "@/components/Gizmos/TranslationGizmo/TranslationGizmo";
 import Grid from "@/components/Grid/Grid";
 import Model from "@/components/Model/Model";
 import useScene from "@/components/Scene/useScene";
-import { ArrowType } from "@/constants/Arrows";
+import { TranslationType } from "@/constants/Translations";
 import useDolly from "@/hooks/useDolly";
 import CallbackVector from "@/types/CallbackVector";
 import InstanceType from "@/types/InstanceType";
@@ -31,7 +31,7 @@ const Viewport = ({ children, objects }: Props) => {
   const { registerDolly } = useDolly();
   const { zoom, rotation, position } = useCamera();
   const { selected, select, update, del } = useScene();
-  const [arrow, setArrow] = useState<ArrowType | null>(null);
+  const [translation, setTranslation] = useState<TranslationType | null>(null);
   const [multiSelect, setMultiSelect] = useState(false);
 
   const getAxisCenter = useCallback(
@@ -55,9 +55,9 @@ const Viewport = ({ children, objects }: Props) => {
   );
 
   const handleMoveStart = useCallback(
-    (newArrow: ArrowType) => {
-      if (!selected || newArrow === arrow) return;
-      setArrow(newArrow);
+    (newTranslation: TranslationType) => {
+      if (!selected || newTranslation === translation) return;
+      setTranslation(newTranslation);
       for (const selection of selected) {
         const obj = objects.find((o) => o.id === selection);
         if (!obj) continue;
@@ -67,11 +67,11 @@ const Viewport = ({ children, objects }: Props) => {
         translate: ghostRef.current[id],
       }));
     },
-    [selected, arrow, update, objects],
+    [selected, translation, update, objects],
   );
 
   const handleMoveEnd = useCallback(() => {
-    if (!selected || !arrow) return;
+    if (!selected || !translation) return;
     update(selected, (id) => {
       if (!ghostRef.current[id]) return;
       return {
@@ -83,12 +83,12 @@ const Viewport = ({ children, objects }: Props) => {
       };
     });
     ghostRef.current = {};
-    setArrow(null);
-  }, [selected, arrow, update]);
+    setTranslation(null);
+  }, [selected, translation, update]);
 
   const handleMove = useCallback(
     (e: MouseEvent) => {
-      if (e.buttons !== 1 && arrow) {
+      if (e.buttons !== 1 && translation) {
         handleMoveEnd();
         return;
       }
@@ -100,13 +100,13 @@ const Viewport = ({ children, objects }: Props) => {
       );
       Object.keys(ghostRef.current).forEach((id) => {
         ghostRef.current[id].add({
-          x: arrow === "X" ? mouseVector.x : 0,
-          y: arrow === "Y" ? mouseVector.y : 0,
-          z: arrow === "Z" ? mouseVector.z : 0,
+          x: translation === "X" ? mouseVector.x : 0,
+          y: translation === "Y" ? mouseVector.y : 0,
+          z: translation === "Z" ? mouseVector.z : 0,
         });
       });
     },
-    [arrow, rotation, zoom, handleMoveEnd],
+    [translation, rotation, zoom, handleMoveEnd],
   );
 
   const handleKeyDown = useCallback(
@@ -173,10 +173,10 @@ const Viewport = ({ children, objects }: Props) => {
             pointerEvents
             {...registerDolly()}
           >
-            <TransformGizmo
+            <TranslationGizmo
               position={center}
-              selectedArrow={arrow}
-              onSelectArrow={handleMoveStart}
+              selectedTranslation={translation}
+              onBeginTranslation={handleMoveStart}
             />
           </Illustration>
           <DocEvent type="mousemove" listener={handleMove} />
