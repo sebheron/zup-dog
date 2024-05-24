@@ -44,8 +44,8 @@ const Camera = ({ children }: PropsWithChildren) => {
       newRotation.set(rotationVector);
 
       if (elapsed > time) {
-        setPosition({ ...targetPosition });
-        setRotation({ ...targetRotation });
+        setPosition(targetPosition);
+        setRotation(targetRotation);
         animating.current = null;
         return;
       }
