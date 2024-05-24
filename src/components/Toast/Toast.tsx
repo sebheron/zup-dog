@@ -21,7 +21,7 @@ const Toast = ({ children }: PropsWithChildren) => {
     if (toast.manualDismiss) return;
     setTimeout(() => {
       setToasts((prev) => prev.filter((t) => t.id !== toast.id));
-    }, Global.TOAST_DURATION);
+    }, Global.ToastDuration);
   }, []);
 
   const notify = useCallback(

@@ -4,7 +4,7 @@ import styles from "./Tooltip.module.css";
 
 const Tooltip = () => (
   <ReactTooltip
-    id={Global.TOOLTIP_ID}
+    id={Global.TooltipId}
     className={styles.tooltip}
     disableStyleInjection={true}
     delayShow={800}

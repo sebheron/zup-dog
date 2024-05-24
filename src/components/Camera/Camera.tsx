@@ -14,9 +14,9 @@ import CameraContext from "./CameraContext";
 
 const Camera = ({ children }: PropsWithChildren) => {
   const animating = useRef<string | null>(null);
-  const [zoom, setZoom] = useState<number>(Global.DEFAULT_ZOOM);
-  const [position, setPosition] = useState<VectorType>(Global.DEFAULT_POSITION);
-  const [rotation, setRotation] = useState<VectorType>(Global.DEFAULT_ROTATION);
+  const [zoom, setZoom] = useState<number>(Global.DefaultZoom);
+  const [position, setPosition] = useState<VectorType>(Global.DefaultPosition);
+  const [rotation, setRotation] = useState<VectorType>(Global.DefaultRotation);
 
   //Cheat lerping by switching to Vector class
   const lerpTo = async (
@@ -63,8 +63,8 @@ const Camera = ({ children }: PropsWithChildren) => {
     };
 
   const reset = () => {
-    lerpTo(Global.DEFAULT_POSITION, Global.DEFAULT_ROTATION, 1000);
-    setZoom(Global.DEFAULT_ZOOM);
+    lerpTo(Global.DefaultPosition, Global.DefaultRotation, 1000);
+    setZoom(Global.DefaultZoom);
   };
 
   const cameraContext = useMemo(

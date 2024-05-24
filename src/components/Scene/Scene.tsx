@@ -69,7 +69,7 @@ const Scene = () => {
       toast.notify(`${ids.length} object${ids.length > 1 ? "s" : ""} deleted`);
       select(null);
     },
-    [select],
+    [select, toast],
   );
 
   const sceneContext = useMemo(
