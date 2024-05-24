@@ -1,7 +1,9 @@
+import clsx from "clsx";
 import { PropsWithChildren, useCallback, useRef, useState } from "react";
 import { Illustration } from "react-zdog-alt";
 import { Vector } from "zdog";
 import useCamera from "@/components/Camera/useCamera";
+import DocEvent from "@/components/DocEvent/DocEvent";
 import Grid from "@/components/Grid/Grid";
 import Model from "@/components/Model/Model";
 import useScene from "@/components/Scene/useScene";
@@ -12,7 +14,6 @@ import CallbackVector from "@/types/CallbackVector";
 import ObjectInstance from "@/types/ObjectInstance";
 import VectorType from "@/types/VectorType";
 import vector from "@/utils/vector";
-import DocEvent from "../DocEvent/DocEvent";
 import styles from "./Viewport.module.css";
 
 interface Props extends PropsWithChildren {
@@ -25,6 +26,7 @@ const Viewport = ({ children, objects }: Props) => {
   const { zoom, rotation, position } = useCamera();
   const { selected, select, update } = useScene();
   const [arrow, setArrow] = useState<Arrow | null>(null);
+  const [multiSelect, setMultiSelect] = useState(false);
 
   const getAxisCenter = useCallback(
     (axis: keyof VectorType) => {
@@ -101,6 +103,28 @@ const Viewport = ({ children, objects }: Props) => {
     [arrow, rotation, zoom, handleMoveEnd],
   );
 
+  const handleKeyDown = useCallback(
+    (e: KeyboardEvent) => {
+      if (e.key === "Shift") setMultiSelect(true);
+    },
+    [setMultiSelect],
+  );
+
+  const handleKeyUp = useCallback(
+    (e: KeyboardEvent) => {
+      if (e.key === "Shift") setMultiSelect(false);
+    },
+    [setMultiSelect],
+  );
+
+  const handleModelClick = useCallback(
+    (id: string) => {
+      console.log("handleModelClick", id, multiSelect);
+      select(id, multiSelect);
+    },
+    [multiSelect, select],
+  );
+
   return (
     <div className={styles.container}>
       <div className={styles.viewport}>
@@ -113,11 +137,13 @@ const Viewport = ({ children, objects }: Props) => {
           {...register()}
         >
           <Grid length={1000} cellSize={100} />
-          <Model objects={objects} />
+          <Model objects={objects} onClick={handleModelClick} />
         </Illustration>
       </div>
       {!!selected.length && (
-        <div className={styles.viewport}>
+        <div
+          className={clsx(styles.viewport, multiSelect && styles.multiselect)}
+        >
           <Illustration
             element="canvas"
             zoom={zoom}
@@ -141,6 +167,8 @@ const Viewport = ({ children, objects }: Props) => {
             />
           </Illustration>
           <DocEvent type="mousemove" listener={handleMove} />
+          <DocEvent type="keydown" listener={handleKeyDown} />
+          <DocEvent type="keyup" listener={handleKeyUp} />
         </div>
       )}
       {children}

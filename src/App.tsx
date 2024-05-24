@@ -18,17 +18,6 @@ function App() {
   const [objects, setObjects] = useState<ObjectInstance[]>([]);
   const [selected, setSelected] = useState<string[]>([]);
 
-  const add = useCallback((obj: ObjectType) => {
-    const objWithId: ObjectInstance = {
-      ...obj,
-      id: nanoid(),
-      name: obj.shape,
-      props: { ...obj.props },
-    };
-    setObjects((prev) => [...prev, objWithId]);
-    setSelected((prev) => [...prev, objWithId.id]);
-  }, []);
-
   const update = useCallback(
     (
       ids: string[],
@@ -36,28 +25,44 @@ function App() {
     ) => {
       setObjects((prev) =>
         prev.map((obj) => {
-          if (ids.includes(obj.id)) {
-            const additionalProps = props(obj.id);
-            if (!additionalProps) return obj;
-            return {
-              ...obj,
-              props: { ...obj.props, ...additionalProps },
-            };
-          }
-          return obj;
+          if (!ids.includes(obj.id)) return obj;
+          const additionalProps = props(obj.id);
+          if (!additionalProps) return obj;
+          return {
+            ...obj,
+            props: { ...obj.props, ...additionalProps },
+          };
         }),
       );
     },
     [],
   );
 
-  const select = useCallback((id: string | null, add: boolean = false) => {
-    setSelected((prev) => {
-      if (id === null) return [];
-      if (add) return [...prev, id];
-      return [id];
-    });
-  }, []);
+  const select = useCallback(
+    (id: string | null, multiSelect: boolean = false) => {
+      setSelected((prev) => {
+        if (id === null) return [];
+        if (prev.includes(id)) return prev.filter((i) => i !== id);
+        if (multiSelect) return [...prev, id];
+        return [id];
+      });
+    },
+    [],
+  );
+
+  const add = useCallback(
+    (obj: ObjectType) => {
+      const objWithId: ObjectInstance = {
+        ...obj,
+        id: nanoid(),
+        name: obj.shape,
+        props: { ...obj.props },
+      };
+      setObjects((prev) => [...prev, objWithId]);
+      select(objWithId.id);
+    },
+    [select],
+  );
 
   const sceneContext = useMemo(
     () => ({

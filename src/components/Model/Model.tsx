@@ -1,24 +1,14 @@
-import { Fragment, useCallback } from "react";
+import { Fragment } from "react";
 import useScene from "@/components/Scene/useScene";
 import ObjectInstance from "@/types/ObjectInstance";
 
 interface Props {
   objects: ObjectInstance[];
+  onClick: (id: string) => void;
 }
 
-const Model = ({ objects }: Props) => {
-  const { selected, select } = useScene();
-
-  const handleClick = useCallback(
-    (obj: ObjectInstance) => {
-      if (selected.includes(obj.id)) {
-        select(null);
-      } else {
-        select(obj.id);
-      }
-    },
-    [selected, select],
-  );
+const Model = ({ objects, onClick }: Props) => {
+  const { selected } = useScene();
 
   return objects.map((obj) => {
     const highlightProps = {
@@ -26,11 +16,10 @@ const Model = ({ objects }: Props) => {
       color: "#6d59ff45",
       fill: false,
     };
-
     return (
       <Fragment key={obj.id}>
-        <obj.component {...obj.props} onClick={() => handleClick(obj)}>
-          {obj.children && <Model objects={obj.children} />}
+        <obj.component {...obj.props} onClick={() => onClick(obj.id)}>
+          {obj.children && <Model objects={obj.children} onClick={onClick} />}
         </obj.component>
         {selected.includes(obj.id) && (
           <obj.component
