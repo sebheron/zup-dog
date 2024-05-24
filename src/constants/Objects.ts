@@ -131,7 +131,7 @@ const POLYGON: ObjectType<typeof Polygon, PolygonOptions> = {
   props: {
     ...DEFAULT_SHAPE,
     radius: 64,
-    sides: 5,
+    sides: 6,
   },
 };
 
