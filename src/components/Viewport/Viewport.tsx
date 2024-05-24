@@ -20,6 +20,7 @@ import CallbackVector from "@/types/CallbackVector";
 import InstanceType from "@/types/InstanceType";
 import VectorType from "@/types/VectorType";
 import vector from "@/utils/vector";
+import RotationGizmo from "../Gizmos/RotationGizmo/RotationGizmo";
 import styles from "./Viewport.module.css";
 
 interface Props extends PropsWithChildren {
@@ -100,9 +101,9 @@ const Viewport = ({ children, objects }: Props) => {
       );
       Object.keys(ghostRef.current).forEach((id) => {
         ghostRef.current[id].add({
-          x: translation === "X" ? mouseVector.x : 0,
-          y: translation === "Y" ? mouseVector.y : 0,
-          z: translation === "Z" ? mouseVector.z : 0,
+          x: translation === "XT" ? mouseVector.x : 0,
+          y: translation === "YT" ? mouseVector.y : 0,
+          z: translation === "ZT" ? mouseVector.z : 0,
         });
       });
     },
@@ -178,6 +179,7 @@ const Viewport = ({ children, objects }: Props) => {
               selectedTranslation={translation}
               onBeginTranslation={handleMoveStart}
             />
+            <RotationGizmo position={center} />
           </Illustration>
           <DocEvent type="mousemove" listener={handleMove} />
           <DocEvent type="keydown" listener={handleKeyDown} />

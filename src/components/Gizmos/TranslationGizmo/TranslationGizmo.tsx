@@ -55,9 +55,11 @@ const TranslationGizmo = ({
               backface={true}
             />
             <Shape
-              onPointerEnter={() => setInteractable(key)}
+              onPointerEnter={() => setInteractable(key as TranslationType)}
               onPointerLeave={() => setInteractable(null)}
-              onPointerDown={(e) => handleTranslationDown(e, key)}
+              onPointerDown={(e) =>
+                handleTranslationDown(e, key as TranslationType)
+              }
               stroke={30 * (1 / zoom)}
               path={[{}, vector.scale(translation.direction, 70)]}
               visible={false}
