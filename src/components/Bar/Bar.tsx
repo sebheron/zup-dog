@@ -6,8 +6,8 @@ import Logo from "@/components/Logo/Logo";
 import Menu from "@/components/Menu/Menu";
 import MenuItem from "@/components/MenuItem/MenuItem";
 import useScene from "@/components/Scene/useScene";
+import Icons from "@/constants/Icons";
 import Objects from "@/constants/Objects";
-import Shapes from "@/constants/Shapes";
 import tooltip from "@/utils/tooltip";
 import styles from "./Bar.module.css";
 
@@ -22,7 +22,7 @@ const Bar = () => {
         <Divider />
 
         {Objects.map((obj) => {
-          const Icon = Shapes[obj.shape];
+          const Icon = Icons[obj.shape];
           return (
             <Button
               key={obj.shape}

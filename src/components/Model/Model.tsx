@@ -1,9 +1,10 @@
 import { Fragment } from "react";
 import useScene from "@/components/Scene/useScene";
-import ObjectInstanceType from "@/types/ObjectInstanceType";
+import Components from "@/constants/Components";
+import InstanceType from "@/types/InstanceType";
 
 interface Props {
-  objects: ObjectInstanceType[];
+  objects: InstanceType[];
   onClick: (id: string) => void;
 }
 
@@ -11,22 +12,20 @@ const Model = ({ objects, onClick }: Props) => {
   const { selected } = useScene();
 
   return objects.map((obj) => {
+    const Component = Components[obj.shape];
     const highlightProps = {
       stroke: ((obj.props.stroke as number) ?? 1) + 5,
       color: "#6d59ff45",
       fill: false,
     };
+
     return (
       <Fragment key={obj.id}>
-        <obj.component {...obj.props} onClick={() => onClick(obj.id)}>
+        <Component {...obj.props} onClick={() => onClick(obj.id)}>
           {obj.children && <Model objects={obj.children} onClick={onClick} />}
-        </obj.component>
+        </Component>
         {selected.includes(obj.id) && (
-          <obj.component
-            {...obj.props}
-            {...highlightProps}
-            pointerEvents={false}
-          />
+          <Component {...obj.props} {...highlightProps} pointerEvents={false} />
         )}
       </Fragment>
     );

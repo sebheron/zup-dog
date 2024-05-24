@@ -10,20 +10,20 @@ import { Illustration } from "react-zdog-alt";
 import { Vector } from "zdog";
 import useCamera from "@/components/Camera/useCamera";
 import DocEvent from "@/components/DocEvent/DocEvent";
+import TransformGizmo from "@/components/Gizmos/TransformGizmo/TransformGizmo";
 import Grid from "@/components/Grid/Grid";
 import Model from "@/components/Model/Model";
 import useScene from "@/components/Scene/useScene";
-import TransformGizmo from "@/components/TransformGizmo/TransformGizmo";
 import { ArrowType } from "@/constants/Arrows";
 import useDolly from "@/hooks/useDolly";
 import CallbackVector from "@/types/CallbackVector";
-import ObjectInstanceType from "@/types/ObjectInstanceType";
+import InstanceType from "@/types/InstanceType";
 import VectorType from "@/types/VectorType";
 import vector from "@/utils/vector";
 import styles from "./Viewport.module.css";
 
 interface Props extends PropsWithChildren {
-  objects: ObjectInstanceType[];
+  objects: InstanceType[];
 }
 
 const Viewport = ({ children, objects }: Props) => {
