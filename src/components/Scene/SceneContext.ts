@@ -1,12 +1,14 @@
-import { Dispatch, SetStateAction, createContext } from "react";
-import ObjectInstance from "@/types/ObjectInstance";
+import { createContext } from "react";
 import ObjectType from "@/types/ObjectType";
 import MustDeclare from "@/types/utility/MustDeclare";
 
 interface SceneContextType {
-  selected: ObjectInstance | null;
-  select: Dispatch<SetStateAction<ObjectInstance | null>>;
-  update: (id: string, props: MustDeclare<Record<string, unknown>>) => void;
+  selected: string[];
+  select: (id: string | null, add?: boolean) => void;
+  update: (
+    ids: string[],
+    props: (id: string) => MustDeclare<Record<string, unknown>> | undefined,
+  ) => void;
   add: (obj: ObjectType) => void;
 }
 

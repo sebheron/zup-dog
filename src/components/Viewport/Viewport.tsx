@@ -1,6 +1,6 @@
-import { PropsWithChildren, useCallback, useState } from "react";
+import { PropsWithChildren, useCallback, useRef, useState } from "react";
 import { Illustration } from "react-zdog-alt";
-import { PointerPosition } from "zdog";
+import { Vector } from "zdog";
 import useCamera from "@/components/Camera/useCamera";
 import Grid from "@/components/Grid/Grid";
 import Model from "@/components/Model/Model";
@@ -8,7 +8,11 @@ import useScene from "@/components/Scene/useScene";
 import TransformGizmo from "@/components/TransformGizmo/TransformGizmo";
 import { Arrow } from "@/constants/Arrows";
 import useDolly from "@/hooks/useDolly";
+import CallbackVector from "@/types/CallbackVector";
 import ObjectInstance from "@/types/ObjectInstance";
+import VectorType from "@/types/VectorType";
+import vector from "@/utils/vector";
+import DocEvent from "../DocEvent/DocEvent";
 import styles from "./Viewport.module.css";
 
 interface Props extends PropsWithChildren {
@@ -16,11 +20,23 @@ interface Props extends PropsWithChildren {
 }
 
 const Viewport = ({ children, objects }: Props) => {
+  const ghostRef = useRef<Record<string, Vector>>({});
   const { register } = useDolly();
   const { zoom, rotation, position } = useCamera();
-  const { selected, select } = useScene();
-
+  const { selected, select, update } = useScene();
   const [arrow, setArrow] = useState<Arrow | null>(null);
+
+  const getAxisCenter = useCallback(
+    (axis: keyof VectorType) => {
+      return () =>
+        selected.reduce((acc, id) => {
+          const obj = objects.find((o) => o.id === id);
+          if (!obj) return acc;
+          return acc + (obj.props.translate?.[axis] ?? 0);
+        }, 0) / selected.length;
+    },
+    [selected, objects],
+  );
 
   const handleMouseDown = useCallback(
     (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
@@ -30,22 +46,59 @@ const Viewport = ({ children, objects }: Props) => {
     [select],
   );
 
-  const handleMouseMove = useCallback(
-    (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
-      if (e.buttons === 1) return;
-      setArrow(null);
+  const handleMoveStart = useCallback(
+    (newArrow: Arrow) => {
+      if (!selected || newArrow === arrow) return;
+      setArrow(newArrow);
+      for (const selection of selected) {
+        const obj = objects.find((o) => o.id === selection);
+        if (!obj) continue;
+        ghostRef.current[obj.id] = new Vector(obj.props.translate ?? {});
+      }
+      update(selected, (id) => ({
+        translate: ghostRef.current[id],
+      }));
     },
-    [],
+    [selected, arrow, update, objects],
   );
 
-  const handleDragMove = useCallback(
-    (pointer: PointerPosition, moveX: number, moveY: number) => {
-      //Move according to the arrow selected
-      console.log(pointer, moveX, moveY);
-      if (arrow) {
+  const handleMoveEnd = useCallback(() => {
+    if (!selected || !arrow) return;
+    update(selected, (id) => {
+      if (!ghostRef.current[id]) return;
+      return {
+        translate: {
+          x: ghostRef.current[id].x,
+          y: ghostRef.current[id].y,
+          z: ghostRef.current[id].z,
+        },
+      };
+    });
+    ghostRef.current = {};
+    setArrow(null);
+  }, [selected, arrow, update]);
+
+  const handleMove = useCallback(
+    (e: MouseEvent) => {
+      if (e.buttons !== 1 && arrow) {
+        handleMoveEnd();
+        return;
       }
+      const mouseVector = vector.moveWithMouse(
+        rotation,
+        zoom,
+        e.movementX,
+        e.movementY,
+      );
+      Object.keys(ghostRef.current).forEach((id) => {
+        ghostRef.current[id].add({
+          x: arrow === "X" ? mouseVector.x : 0,
+          y: arrow === "Y" ? mouseVector.y : 0,
+          z: arrow === "Z" ? mouseVector.z : 0,
+        });
+      });
     },
-    [arrow],
+    [arrow, rotation, zoom, handleMoveEnd],
   );
 
   return (
@@ -55,7 +108,6 @@ const Viewport = ({ children, objects }: Props) => {
           element="canvas"
           zoom={zoom}
           pointerEvents
-          onDragMove={handleDragMove}
           translate={position}
           rotate={rotation}
           {...register()}
@@ -64,25 +116,31 @@ const Viewport = ({ children, objects }: Props) => {
           <Model objects={objects} />
         </Illustration>
       </div>
-      {!!selected && (
+      {!!selected.length && (
         <div className={styles.viewport}>
           <Illustration
             element="canvas"
             zoom={zoom}
             onPointerDown={handleMouseDown}
-            onPointerMove={handleMouseMove}
-            onPointerUp={() => setArrow(null)}
+            onPointerUp={handleMoveEnd}
             translate={position}
             rotate={rotation}
             pointerEvents
             {...register()}
           >
             <TransformGizmo
-              obj={selected}
+              position={
+                new CallbackVector(
+                  getAxisCenter("x"),
+                  getAxisCenter("y"),
+                  getAxisCenter("z"),
+                )
+              }
               selectedArrow={arrow}
-              onSelectArrow={(arrow) => setArrow(arrow)}
+              onSelectArrow={handleMoveStart}
             />
           </Illustration>
+          <DocEvent type="mousemove" listener={handleMove} />
         </div>
       )}
       {children}

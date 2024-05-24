@@ -11,9 +11,13 @@ const Model = ({ objects }: Props) => {
 
   const handleClick = useCallback(
     (obj: ObjectInstance) => {
-      select((prev) => (prev?.id === obj.id ? null : obj));
+      if (selected.includes(obj.id)) {
+        select(null);
+      } else {
+        select(obj.id);
+      }
     },
-    [select],
+    [selected, select],
   );
 
   return objects.map((obj) => {
@@ -28,7 +32,7 @@ const Model = ({ objects }: Props) => {
         <obj.component {...obj.props} onClick={() => handleClick(obj)}>
           {obj.children && <Model objects={obj.children} />}
         </obj.component>
-        {selected?.id === obj.id && (
+        {selected.includes(obj.id) && (
           <obj.component
             {...obj.props}
             {...highlightProps}

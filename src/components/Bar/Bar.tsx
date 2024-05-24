@@ -1,11 +1,11 @@
 import { BiSolidCameraMovie } from "react-icons/bi";
 import Button from "@/components/Button/Button";
 import useCamera from "@/components/Camera/useCamera";
+import Divider from "@/components/Divider/Divider";
 import Logo from "@/components/Logo/Logo";
 import Menu from "@/components/Menu/Menu";
 import MenuItem from "@/components/MenuItem/MenuItem";
 import useScene from "@/components/Scene/useScene";
-import Splitter from "@/components/Splitter/Splitter";
 import Objects from "@/constants/Objects";
 import Shapes from "@/constants/Shapes";
 import tooltip from "@/utils/tooltip";
@@ -19,7 +19,7 @@ const Bar = () => {
     <div className={styles.container}>
       <div className={styles.bar}>
         <Logo />
-        <Splitter />
+        <Divider />
         {Objects.map((obj) => {
           const Icon = Shapes[obj.shape];
           return (
@@ -32,7 +32,7 @@ const Bar = () => {
             </Button>
           );
         })}
-        <Splitter />
+        <Divider />
         <Menu
           buttonContent={<BiSolidCameraMovie />}
           {...tooltip("Camera Settings")}
