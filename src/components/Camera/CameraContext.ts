@@ -1,16 +1,16 @@
 import { Dispatch, SetStateAction, createContext } from "react";
-import VectorType from "../../types/VectorType";
+import Vector3Type from "../../types/Vector3Type";
 
 interface CameraContextType {
-  position: VectorType;
-  rotation: VectorType;
+  position: Vector3Type;
+  rotation: Vector3Type;
   zoom: number;
-  setPosition: Dispatch<SetStateAction<VectorType>>;
-  setRotation: Dispatch<SetStateAction<VectorType>>;
+  setPosition: Dispatch<SetStateAction<Vector3Type>>;
+  setRotation: Dispatch<SetStateAction<Vector3Type>>;
   setZoom: Dispatch<SetStateAction<number>>;
   lerpTo: (
-    targetPosition: VectorType,
-    targetRotation: VectorType,
+    targetPosition: Vector3Type,
+    targetRotation: Vector3Type,
     time: number,
   ) => void;
   reset: () => void;

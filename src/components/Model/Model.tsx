@@ -17,12 +17,10 @@ const Model = ({ objects, onClick }: Props) => {
       if (!selected.length) return {};
       const isSelected = selected.includes(obj.id);
       const newColors: Record<string, string> = {};
-      console.log(obj.props.color, isSelected);
       if (typeof obj.props.color === "string") {
         newColors.color = !isSelected
           ? Color(obj.props.color).alpha(0.5).darken(0.25).hexa()
           : obj.props.color;
-        console.log(newColors.color);
       }
       if (typeof obj.props.frontFace === "string") {
         newColors.frontFace = !isSelected

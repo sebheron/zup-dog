@@ -50,12 +50,13 @@ const Scene = () => {
   );
 
   const add = useCallback(
-    (obj: ObjectType) => {
+    (obj: ObjectType, parentId: string | null = null) => {
       const objWithId: InstanceType = {
         ...obj,
         id: nanoid(),
         name: obj.shape,
         props: { ...obj.props },
+        parentId,
       };
       setObjects((prev) => [...prev, objWithId]);
       select(objWithId.id);

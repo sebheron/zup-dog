@@ -9,19 +9,19 @@ import {
 } from "react";
 import { Vector } from "zdog";
 import Global from "@/constants/Global";
-import VectorType from "@/types/VectorType";
+import Vector3Type from "@/types/Vector3Type";
 import CameraContext from "./CameraContext";
 
 const Camera = ({ children }: PropsWithChildren) => {
   const animating = useRef<string | null>(null);
   const [zoom, setZoom] = useState<number>(Global.DefaultZoom);
-  const [position, setPosition] = useState<VectorType>(Global.DefaultPosition);
-  const [rotation, setRotation] = useState<VectorType>(Global.DefaultRotation);
+  const [position, setPosition] = useState<Vector3Type>(Global.DefaultPosition);
+  const [rotation, setRotation] = useState<Vector3Type>(Global.DefaultRotation);
 
   //Cheat lerping by switching to Vector class
   const lerpTo = async (
-    targetPosition: VectorType,
-    targetRotation: VectorType,
+    targetPosition: Vector3Type,
+    targetRotation: Vector3Type,
     time: number,
   ) => {
     let startTime: number;
