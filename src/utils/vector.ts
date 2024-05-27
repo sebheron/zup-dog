@@ -30,8 +30,8 @@ const inverseRotate = (offset: Vector3Type, rotation: Vector3Type) => {
   const y1 = x * Math.sin(-rz) + y * Math.cos(-rz);
 
   // Inverse of y-axis rotation
-  const x2 = x1 * Math.cos(ry) + z * Math.sin(ry);
-  const z2 = -x1 * Math.sin(ry) + z * Math.cos(ry);
+  const x2 = x1 * Math.cos(ry) - z * Math.sin(ry);
+  const z2 = -x1 * Math.sin(ry) - z * Math.cos(ry);
 
   // Inverse of x-axis rotation
   const y3 = y1 * Math.cos(-rx) - z2 * Math.sin(-rx);
