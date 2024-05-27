@@ -5,7 +5,7 @@ type InstanceType<O extends object = Record<string, unknown> & AnchorOptions> =
   ObjectType<O> & {
     id: string;
     name: string;
-    children?: InstanceType[];
+    parentId: string | null;
   };
 
 export default InstanceType;
