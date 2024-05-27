@@ -1,5 +1,6 @@
 import clsx from "clsx";
 import {
+  CSSProperties,
   PropsWithChildren,
   useCallback,
   useMemo,
@@ -14,11 +15,11 @@ import TranslationGizmo from "@/components/Gizmos/TranslationGizmo/TranslationGi
 import Grid from "@/components/Grid/Grid";
 import Model from "@/components/Model/Model";
 import useScene from "@/components/Scene/useScene";
-import { TranslationType } from "@/constants/Translations";
+import { ActionType } from "@/constants/Actions";
 import useDolly from "@/hooks/useDolly";
 import CallbackVector from "@/types/CallbackVector";
 import InstanceType from "@/types/InstanceType";
-import VectorType from "@/types/VectorType";
+import Vector3Type from "@/types/Vector3Type";
 import vector from "@/utils/vector";
 import RotationGizmo from "../Gizmos/RotationGizmo/RotationGizmo";
 import styles from "./Viewport.module.css";
@@ -28,15 +29,19 @@ interface Props extends PropsWithChildren {
 }
 
 const Viewport = ({ children, objects }: Props) => {
-  const ghostRef = useRef<Record<string, Vector>>({});
   const { registerDolly } = useDolly();
   const { zoom, rotation, position } = useCamera();
   const { selected, select, update, del } = useScene();
-  const [translation, setTranslation] = useState<TranslationType | null>(null);
+  const [action, setAction] = useState<ActionType | null>(null);
   const [multiSelect, setMultiSelect] = useState(false);
+  const [screenPos, setScreenPos] = useState<CSSProperties>({
+    top: 0,
+    left: 0,
+  });
+  const ghostRef = useRef<Record<string, Vector>>({});
 
   const getAxisCenter = useCallback(
-    (axis: keyof VectorType) => {
+    (axis: keyof Vector3Type) => {
       return () =>
         selected.reduce((acc, id) => {
           const obj = objects.find((o) => o.id === id);
@@ -47,6 +52,16 @@ const Viewport = ({ children, objects }: Props) => {
     [selected, objects],
   );
 
+  const center = useMemo(
+    () =>
+      new CallbackVector(
+        getAxisCenter("x"),
+        getAxisCenter("y"),
+        getAxisCenter("z"),
+      ),
+    [getAxisCenter],
+  );
+
   const handleMouseDown = useCallback(
     (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
       if (e.buttons !== 1) return;
@@ -55,10 +70,10 @@ const Viewport = ({ children, objects }: Props) => {
     [select],
   );
 
-  const handleMoveStart = useCallback(
-    (newTranslation: TranslationType) => {
-      if (!selected || newTranslation === translation) return;
-      setTranslation(newTranslation);
+  const handleActionStart = useCallback(
+    (newAction: ActionType) => {
+      if (!selected || newAction === action) return;
+      setAction(newAction);
       for (const selection of selected) {
         const obj = objects.find((o) => o.id === selection);
         if (!obj) continue;
@@ -68,11 +83,11 @@ const Viewport = ({ children, objects }: Props) => {
         translate: ghostRef.current[id],
       }));
     },
-    [selected, translation, update, objects],
+    [selected, action, update, objects],
   );
 
-  const handleMoveEnd = useCallback(() => {
-    if (!selected || !translation) return;
+  const handleActionEnd = useCallback(() => {
+    if (!selected || !action) return;
     update(selected, (id) => {
       if (!ghostRef.current[id]) return;
       return {
@@ -84,30 +99,36 @@ const Viewport = ({ children, objects }: Props) => {
       };
     });
     ghostRef.current = {};
-    setTranslation(null);
-  }, [selected, translation, update]);
+    setAction(null);
+  }, [selected, action, update]);
 
   const handleMove = useCallback(
     (e: MouseEvent) => {
-      if (e.buttons !== 1 && translation) {
-        handleMoveEnd();
+      if (e.buttons !== 1 && action) {
+        handleActionEnd();
         return;
       }
-      const mouseVector = vector.moveWithMouse(
+
+      const a = vector.worldToScreen(rotation, position, zoom, center);
+
+      setScreenPos({
+        top: a.y,
+        left: a.x,
+      });
+
+      const mouseVector = vector.mouseToWorld(
         rotation,
         zoom,
         e.movementX,
         e.movementY,
       );
       Object.keys(ghostRef.current).forEach((id) => {
-        ghostRef.current[id].add({
-          x: translation === "XT" ? mouseVector.x : 0,
-          y: translation === "YT" ? mouseVector.y : 0,
-          z: translation === "ZT" ? mouseVector.z : 0,
-        });
+        ghostRef.current[id].x += action === "XT" ? mouseVector.x : 0;
+        ghostRef.current[id].y += action === "YT" ? mouseVector.y : 0;
+        ghostRef.current[id].z += action === "ZT" ? mouseVector.z : 0;
       });
     },
-    [translation, rotation, zoom, handleMoveEnd],
+    [action, rotation, position, zoom, center, handleActionEnd],
   );
 
   const handleKeyDown = useCallback(
@@ -127,20 +148,9 @@ const Viewport = ({ children, objects }: Props) => {
 
   const handleModelClick = useCallback(
     (id: string) => {
-      console.log("handleModelClick", id, multiSelect);
       select(id, multiSelect);
     },
     [multiSelect, select],
-  );
-
-  const center = useMemo(
-    () =>
-      new CallbackVector(
-        getAxisCenter("x"),
-        getAxisCenter("y"),
-        getAxisCenter("z"),
-      ),
-    [getAxisCenter],
   );
 
   return (
@@ -150,8 +160,8 @@ const Viewport = ({ children, objects }: Props) => {
           element="canvas"
           zoom={zoom}
           pointerEvents
-          translate={position}
           rotate={rotation}
+          translate={position}
           {...registerDolly()}
         >
           <Grid length={1000} cellSize={100} />
@@ -160,7 +170,7 @@ const Viewport = ({ children, objects }: Props) => {
       </div>
       {!!selected.length && (
         <div
-          className={clsx(styles.viewport, {
+          className={clsx(styles.viewport, styles.filtered, {
             [styles.multiSelect]: multiSelect,
           })}
         >
@@ -168,22 +178,38 @@ const Viewport = ({ children, objects }: Props) => {
             element="canvas"
             zoom={zoom}
             onPointerDown={handleMouseDown}
-            onPointerUp={handleMoveEnd}
-            translate={position}
+            onPointerUp={handleActionEnd}
             rotate={rotation}
+            translate={position}
             pointerEvents
             {...registerDolly()}
           >
             <TranslationGizmo
               position={center}
-              selectedTranslation={translation}
-              onBeginTranslation={handleMoveStart}
+              action={action}
+              onAction={handleActionStart}
             />
-            <RotationGizmo position={center} />
+            <RotationGizmo
+              position={center}
+              action={action}
+              onAction={handleActionStart}
+            />
           </Illustration>
           <DocEvent type="mousemove" listener={handleMove} />
           <DocEvent type="keydown" listener={handleKeyDown} />
           <DocEvent type="keyup" listener={handleKeyUp} />
+          <div
+            style={{
+              ...screenPos,
+              position: "absolute",
+              pointerEvents: "none",
+              width: "10px",
+              height: "10px",
+              backgroundColor: "red",
+              borderRadius: "50%",
+              transform: "translate(-50%, -50%)",
+            }}
+          />
         </div>
       )}
       {children}
