@@ -15,7 +15,7 @@ import SceneContext from "./SceneContext";
 const Scene = () => {
   const toast = useToast();
   const [objects, setObjects] = useState<InstanceType[]>([]);
-  const [selected, setSelected] = useState<string[]>([]);
+  const [selected, setSelected] = useState<string | null>(null);
 
   const update = useCallback(
     (
@@ -37,17 +37,9 @@ const Scene = () => {
     [],
   );
 
-  const select = useCallback(
-    (id: string | null, multiSelect: boolean = false) => {
-      setSelected((prev) => {
-        if (id === null) return [];
-        if (prev.includes(id)) return prev.filter((i) => i !== id);
-        if (multiSelect) return [...prev, id];
-        return [id];
-      });
-    },
-    [],
-  );
+  const select = useCallback((id: string | null) => {
+    setSelected(id);
+  }, []);
 
   const add = useCallback(
     (obj: ObjectType, parentId: string | null = null) => {

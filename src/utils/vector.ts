@@ -1,43 +1,54 @@
+import Quaternion from "quaternion";
 import { TAU } from "zdog";
 import Vector3Type from "../types/Vector3Type";
 
-const rotate = (offset: Vector3Type, rotation: Vector3Type) => {
-  const { x, y, z } = offset;
-  const { x: rx, y: ry, z: rz } = rotation;
-
-  const y1 = y * Math.cos(rx) - z * Math.sin(rx);
-  const z1 = y * Math.sin(rx) + z * Math.cos(rx);
-
-  const x2 = x * Math.cos(-ry) + z1 * Math.sin(-ry);
-  const z2 = -x * Math.sin(-ry) + z1 * Math.cos(-ry);
-
-  const x3 = x2 * Math.cos(rz) - y1 * Math.sin(rz);
-  const y3 = x2 * Math.sin(rz) + y1 * Math.cos(rz);
-
-  return {
-    x: x3,
-    y: y3,
-    z: z2,
-  };
+const globalRotate = (
+  localRotation: Vector3Type,
+  globalRotationAmount: Vector3Type,
+) => {
+  const quat = Quaternion.fromEuler(
+    globalRotationAmount.x,
+    globalRotationAmount.y,
+    globalRotationAmount.z,
+    "ZYX",
+  );
+  const rot = quat.mul(
+    Quaternion.fromEuler(
+      localRotation.x,
+      localRotation.y,
+      localRotation.z,
+      "ZYX",
+    ),
+  );
+  const [x, y, z] = rot.toEuler("ZYX");
+  return { x, y, z };
 };
 
-const inverseRotate = (offset: Vector3Type, rotation: Vector3Type) => {
-  const { x, y, z } = offset;
+const rotateAround = (
+  center: Vector3Type,
+  point: Vector3Type,
+  rotation: Vector3Type,
+) => {
+  const { x, y, z } = point;
   const { x: rx, y: ry, z: rz } = rotation;
 
-  const x1 = x * Math.cos(-rz) - y * Math.sin(-rz);
-  const y1 = x * Math.sin(-rz) + y * Math.cos(-rz);
+  const x1 = x - center.x;
+  const y1 = y - center.y;
+  const z1 = z - center.z;
 
-  const x2 = x1 * Math.cos(ry) - z * Math.sin(ry);
-  const z2 = -x1 * Math.sin(ry) - z * Math.cos(ry);
+  const x2 = x1 * Math.cos(rz) - y1 * Math.sin(rz);
+  const y2 = x1 * Math.sin(rz) + y1 * Math.cos(rz);
 
-  const y3 = y1 * Math.cos(-rx) - z2 * Math.sin(-rx);
-  const z3 = y1 * Math.sin(-rx) + z2 * Math.cos(-rx);
+  const x3 = x2 * Math.cos(ry) + z1 * Math.sin(ry);
+  const z3 = -x2 * Math.sin(ry) + z1 * Math.cos(ry);
+
+  const x4 = x3 * Math.cos(rx) - y2 * Math.sin(rx);
+  const y4 = x3 * Math.sin(rx) + y2 * Math.cos(rx);
 
   return {
-    x: x2,
-    y: y3,
-    z: z3,
+    x: x4 + center.x,
+    y: y4 + center.y,
+    z: z3 + center.z,
   };
 };
 
@@ -87,18 +98,24 @@ const mouseToWorld = (
   mouseX: number,
   mouseY: number,
 ) => {
-  return rotate(
-    {
-      x: mouseX * (1 / zoom),
-      y: mouseY * (1 / zoom),
-      z: 0,
-    },
-    {
-      x: -rotation.x,
-      y: -rotation.y,
-      z: -rotation.z,
-    },
-  );
+  const x = mouseX * (1 / zoom);
+  const y = mouseY * (1 / zoom);
+  const { x: rx, y: ry, z: rz } = rotation;
+
+  const y1 = y * Math.cos(-rx);
+  const z1 = y * Math.sin(-rx);
+
+  const x2 = x * Math.cos(ry) + z1 * Math.sin(ry);
+  const z2 = -x * Math.sin(ry) + z1 * Math.cos(ry);
+
+  const x3 = x2 * Math.cos(-rz) - y1 * Math.sin(-rz);
+  const y3 = x2 * Math.sin(-rz) + y1 * Math.cos(-rz);
+
+  return {
+    x: x3,
+    y: y3,
+    z: z2,
+  };
 };
 
 const worldToScreen = (
@@ -107,18 +124,83 @@ const worldToScreen = (
   zoom: number,
   worldPoint: Vector3Type,
 ) => {
-  const offset =
-    0.25 * parseFloat(getComputedStyle(document.documentElement).fontSize);
-  const rotated = inverseRotate(worldPoint, rotation);
+  const { x, y, z } = worldPoint;
+  const { x: rx, y: ry, z: rz } = rotation;
+
+  const x1 = x * Math.cos(-rz) - y * Math.sin(-rz);
+  const y1 = x * Math.sin(-rz) + y * Math.cos(-rz);
+
+  const x2 = x1 * Math.cos(ry) - z * Math.sin(ry);
+  const z2 = -x1 * Math.sin(ry) - z * Math.cos(ry);
+
+  const y3 = y1 * Math.cos(-rx) - z2 * Math.sin(-rx);
+  const z3 = y1 * Math.sin(-rx) + z2 * Math.cos(-rx);
+
+  const rotated = { x: x2, y: y3, z: z3 };
   const moved = vector.add(rotated, position);
   const scaled = vector.scale(moved, zoom);
+
+  const padding =
+    0.25 * parseFloat(getComputedStyle(document.documentElement).fontSize);
   return {
-    x: scaled.x - offset + window.innerWidth / 2,
-    y: scaled.y - offset + window.innerHeight / 2,
+    x: scaled.x - padding + window.innerWidth / 2,
+    y: scaled.y - padding + window.innerHeight / 2,
+  };
+};
+
+const angleBetween = (
+  center: Vector3Type,
+  position: Vector3Type,
+): Vector3Type => {
+  const dx = position.x - center.x;
+  const dy = position.y - center.y;
+  const dz = position.z - center.z;
+
+  return {
+    x: Math.atan2(dy, dx),
+    y: Math.atan2(dz, dx),
+    z: Math.atan2(dy, -dz),
+  };
+};
+
+const angleDelta = (
+  center: Vector3Type,
+  offset: Vector3Type,
+  previousOffset: Vector3Type,
+): Vector3Type => {
+  const currentAngle = angleBetween(center, offset);
+  const previousAngle = angleBetween(center, previousOffset);
+
+  let angleDelta = subtract(currentAngle, previousAngle);
+
+  if (angleDelta.x > Math.PI) {
+    angleDelta.x -= TAU;
+  } else if (angleDelta.x < -Math.PI) {
+    angleDelta.x += TAU;
+  }
+
+  if (angleDelta.y > Math.PI) {
+    angleDelta.y -= TAU;
+  } else if (angleDelta.y < -Math.PI) {
+    angleDelta.y += TAU;
+  }
+
+  if (angleDelta.z > Math.PI) {
+    angleDelta.z -= TAU;
+  } else if (angleDelta.z < -Math.PI) {
+    angleDelta.z += TAU;
+  }
+
+  return {
+    x: angleDelta.x,
+    y: angleDelta.y,
+    z: angleDelta.z,
   };
 };
 
 const vector = {
+  globalRotate,
+  rotateAround,
   scale,
   add,
   subtract,
@@ -127,6 +209,8 @@ const vector = {
   spin,
   mouseToWorld,
   worldToScreen,
+  angleBetween,
+  angleDelta,
 };
 
 export default vector;

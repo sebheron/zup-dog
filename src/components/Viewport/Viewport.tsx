@@ -1,9 +1,8 @@
 import clsx from "clsx";
 import {
-  CSSProperties,
   PropsWithChildren,
   useCallback,
-  useMemo,
+  useEffect,
   useRef,
   useState,
 } from "react";
@@ -17,7 +16,6 @@ import Model from "@/components/Model/Model";
 import useScene from "@/components/Scene/useScene";
 import { ActionType } from "@/constants/Actions";
 import useDolly from "@/hooks/useDolly";
-import CallbackVector from "@/types/CallbackVector";
 import InstanceType from "@/types/InstanceType";
 import Vector3Type from "@/types/Vector3Type";
 import vector from "@/utils/vector";
@@ -33,33 +31,22 @@ const Viewport = ({ children, objects }: Props) => {
   const { zoom, rotation, position } = useCamera();
   const { selected, select, update, del } = useScene();
   const [action, setAction] = useState<ActionType | null>(null);
-  const [multiSelect, setMultiSelect] = useState(false);
-  const [screenPos, setScreenPos] = useState<CSSProperties>({
-    top: 0,
-    left: 0,
-  });
-  const ghostRef = useRef<Record<string, Vector>>({});
 
-  const getAxisCenter = useCallback(
-    (axis: keyof Vector3Type) => {
-      return () =>
-        selected.reduce((acc, id) => {
-          const obj = objects.find((o) => o.id === id);
-          if (!obj) return acc;
-          return acc + (obj.props.translate?.[axis] ?? 0);
-        }, 0) / selected.length;
+  const transformRef = useRef<Vector>(new Vector());
+  const rotationRef = useRef<Vector>(new Vector());
+
+  const getWorldScreenPos = useCallback(
+    (pos: Vector3Type) => {
+      return vector.worldToScreen(rotation, position, zoom, pos);
     },
-    [selected, objects],
+    [rotation, zoom, position],
   );
 
-  const center = useMemo(
-    () =>
-      new CallbackVector(
-        getAxisCenter("x"),
-        getAxisCenter("y"),
-        getAxisCenter("z"),
-      ),
-    [getAxisCenter],
+  const getMouseWorldPos = useCallback(
+    (x: number, y: number) => {
+      return vector.mouseToWorld(rotation, zoom, x, y);
+    },
+    [rotation, zoom],
   );
 
   const handleMouseDown = useCallback(
@@ -73,14 +60,14 @@ const Viewport = ({ children, objects }: Props) => {
   const handleActionStart = useCallback(
     (newAction: ActionType) => {
       if (!selected || newAction === action) return;
+      const obj = objects.find((o) => o.id === selected);
+      if (!obj) return;
       setAction(newAction);
-      for (const selection of selected) {
-        const obj = objects.find((o) => o.id === selection);
-        if (!obj) continue;
-        ghostRef.current[obj.id] = new Vector(obj.props.translate ?? {});
-      }
-      update(selected, (id) => ({
-        translate: ghostRef.current[id],
+      transformRef.current.set(obj?.props.translate ?? {});
+      rotationRef.current.set(obj?.props.rotate ?? {});
+      update([selected], () => ({
+        translate: transformRef.current,
+        rotate: rotationRef.current,
       }));
     },
     [selected, action, update, objects],
@@ -88,70 +75,90 @@ const Viewport = ({ children, objects }: Props) => {
 
   const handleActionEnd = useCallback(() => {
     if (!selected || !action) return;
-    update(selected, (id) => {
-      if (!ghostRef.current[id]) return;
+    update([selected], () => {
+      if (!transformRef.current || !rotationRef.current) return;
       return {
         translate: {
-          x: ghostRef.current[id].x,
-          y: ghostRef.current[id].y,
-          z: ghostRef.current[id].z,
+          x: transformRef.current.x,
+          y: transformRef.current.y,
+          z: transformRef.current.z,
+        },
+        rotate: {
+          x: rotationRef.current.x,
+          y: rotationRef.current.y,
+          z: rotationRef.current.z,
         },
       };
     });
-    ghostRef.current = {};
     setAction(null);
   }, [selected, action, update]);
 
   const handleMove = useCallback(
     (e: MouseEvent) => {
-      if (e.buttons !== 1 && action) {
+      if (
+        (e.buttons !== 1 && action) ||
+        !transformRef.current ||
+        !rotationRef.current
+      ) {
         handleActionEnd();
         return;
       }
 
-      const a = vector.worldToScreen(rotation, position, zoom, center);
-
-      setScreenPos({
-        top: a.y,
-        left: a.x,
-      });
-
-      const mouseVector = vector.mouseToWorld(
-        rotation,
-        zoom,
-        e.movementX,
-        e.movementY,
+      const center2d = getWorldScreenPos(transformRef.current);
+      const centerVector = getMouseWorldPos(center2d.x, center2d.y);
+      const movementVector = getMouseWorldPos(e.movementX, e.movementY);
+      const mouseVector = getMouseWorldPos(e.clientX, e.clientY);
+      const prevMouseVector = getMouseWorldPos(
+        e.clientX - e.movementX,
+        e.clientY - e.movementY,
       );
-      Object.keys(ghostRef.current).forEach((id) => {
-        ghostRef.current[id].x += action === "XT" ? mouseVector.x : 0;
-        ghostRef.current[id].y += action === "YT" ? mouseVector.y : 0;
-        ghostRef.current[id].z += action === "ZT" ? mouseVector.z : 0;
+      const delta = vector.angleDelta(
+        centerVector,
+        mouseVector,
+        prevMouseVector,
+      );
+
+      // Translation
+      const translation = {
+        x: action === "XT" ? movementVector.x : 0,
+        y: action === "YT" ? movementVector.y : 0,
+        z: action === "ZT" ? movementVector.z : 0,
+      };
+
+      // Rotation
+      const rotate = vector.globalRotate(rotationRef.current, {
+        x: action === "XR" ? delta.z : 0,
+        y: action === "YR" ? delta.y : 0,
+        z: action === "ZR" ? delta.x : 0,
       });
+
+      rotationRef.current.set(rotate);
+      transformRef.current.add(translation);
     },
-    [action, rotation, position, zoom, center, handleActionEnd],
+    [action, handleActionEnd, getMouseWorldPos, getWorldScreenPos],
   );
 
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
-      if (e.key === "Shift") setMultiSelect(true);
-      if (e.key === "Delete") del(selected);
+      if (e.key === "Delete" && selected) del([selected]);
     },
-    [setMultiSelect, del, selected],
-  );
-
-  const handleKeyUp = useCallback(
-    (e: KeyboardEvent) => {
-      if (e.key === "Shift") setMultiSelect(false);
-    },
-    [setMultiSelect],
+    [del, selected],
   );
 
   const handleModelClick = useCallback(
     (id: string) => {
-      select(id, multiSelect);
+      select(id);
     },
-    [multiSelect, select],
+    [select],
   );
+
+  useEffect(() => {
+    if (!selected) return;
+    const obj = objects.find((o) => o.id === selected);
+    if (!obj) return;
+    transformRef.current.set(obj?.props.translate ?? {});
+    rotationRef.current.set(obj?.props.rotate ?? {});
+  }, [selected, objects]);
 
   return (
     <div className={styles.container}>
@@ -168,12 +175,8 @@ const Viewport = ({ children, objects }: Props) => {
           <Model objects={objects} onClick={handleModelClick} />
         </Illustration>
       </div>
-      {!!selected.length && (
-        <div
-          className={clsx(styles.viewport, styles.filtered, {
-            [styles.multiSelect]: multiSelect,
-          })}
-        >
+      {!!selected && (
+        <div className={clsx(styles.viewport, styles.filtered)}>
           <Illustration
             element="canvas"
             zoom={zoom}
@@ -185,31 +188,18 @@ const Viewport = ({ children, objects }: Props) => {
             {...registerDolly()}
           >
             <TranslationGizmo
-              position={center}
+              position={transformRef.current}
               action={action}
               onAction={handleActionStart}
             />
             <RotationGizmo
-              position={center}
+              position={transformRef.current}
               action={action}
               onAction={handleActionStart}
             />
           </Illustration>
           <DocEvent type="mousemove" listener={handleMove} />
           <DocEvent type="keydown" listener={handleKeyDown} />
-          <DocEvent type="keyup" listener={handleKeyUp} />
-          <div
-            style={{
-              ...screenPos,
-              position: "absolute",
-              pointerEvents: "none",
-              width: "10px",
-              height: "10px",
-              backgroundColor: "red",
-              borderRadius: "50%",
-              transform: "translate(-50%, -50%)",
-            }}
-          />
         </div>
       )}
       {children}
