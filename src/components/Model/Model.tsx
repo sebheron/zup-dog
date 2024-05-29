@@ -5,7 +5,7 @@ import InstanceType from "@/types/InstanceType";
 
 interface Props {
   objects: InstanceType[];
-  onClick: (id: string) => void;
+  onClick: (instance: InstanceType) => void;
 }
 
 const Model = ({ objects, onClick }: Props) => {
@@ -33,14 +33,14 @@ const Model = ({ objects, onClick }: Props) => {
 
     return (
       <Fragment key={obj.id}>
-        <Component {...obj.props} onClick={() => onClick(obj.id)}>
-          {/* {obj.children && <Model objects={obj.children} onClick={onClick} />} */}
+        <Component {...obj.props} onClick={() => onClick(obj)}>
+          {obj.children && <Model objects={obj.children} onClick={onClick} />}
         </Component>
-        {selected === obj.id && (
+        {selected?.id === obj.id && (
           <Component
             {...obj.props}
             {...selectedProps}
-            onClick={() => onClick(obj.id)}
+            onClick={() => onClick(obj)}
           />
         )}
       </Fragment>

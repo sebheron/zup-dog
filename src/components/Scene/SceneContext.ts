@@ -1,15 +1,16 @@
 import { createContext } from "react";
+import InstanceType from "@/types/InstanceType";
 import ObjectType from "@/types/ObjectType";
 import MustDeclare from "@/types/utility/MustDeclare";
 
 interface SceneContextType {
-  selected: string | null;
-  select: (id: string | null) => void;
+  selected: InstanceType | null;
+  select: (instance: InstanceType | null) => void;
   update: (
-    ids: string[],
-    props: (id: string) => MustDeclare<Record<string, unknown>> | undefined,
+    instance: InstanceType,
+    props: MustDeclare<Record<string, unknown>>,
   ) => void;
-  add: (obj: ObjectType) => void;
+  add: (obj: ObjectType, parent?: InstanceType | null) => void;
   del: (ids: string[]) => void;
 }
 

@@ -12,7 +12,7 @@ import tooltip from "@/utils/tooltip";
 import styles from "./Bar.module.css";
 
 const Bar = () => {
-  const { add } = useScene();
+  const { selected, add } = useScene();
   const { reset } = useCamera();
 
   return (
@@ -26,7 +26,7 @@ const Bar = () => {
           return (
             <Button
               key={obj.shape}
-              onClick={() => add(obj)}
+              onClick={() => add(obj, selected)}
               {...tooltip(obj.shape)}
             >
               <Icon />

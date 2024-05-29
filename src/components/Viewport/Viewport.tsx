@@ -60,35 +60,30 @@ const Viewport = ({ children, objects }: Props) => {
   const handleActionStart = useCallback(
     (newAction: ActionType) => {
       if (!selected || newAction === action) return;
-      const obj = objects.find((o) => o.id === selected);
-      if (!obj) return;
       setAction(newAction);
-      transformRef.current.set(obj?.props.translate ?? {});
-      rotationRef.current.set(obj?.props.rotate ?? {});
-      update([selected], () => ({
+      transformRef.current.set(selected?.props.translate ?? {});
+      rotationRef.current.set(selected?.props.rotate ?? {});
+      update(selected, {
         translate: transformRef.current,
         rotate: rotationRef.current,
-      }));
+      });
     },
     [selected, action, update, objects],
   );
 
   const handleActionEnd = useCallback(() => {
     if (!selected || !action) return;
-    update([selected], () => {
-      if (!transformRef.current || !rotationRef.current) return;
-      return {
-        translate: {
-          x: transformRef.current.x,
-          y: transformRef.current.y,
-          z: transformRef.current.z,
-        },
-        rotate: {
-          x: rotationRef.current.x,
-          y: rotationRef.current.y,
-          z: rotationRef.current.z,
-        },
-      };
+    update(selected, {
+      translate: {
+        x: transformRef.current.x,
+        y: transformRef.current.y,
+        z: transformRef.current.z,
+      },
+      rotate: {
+        x: rotationRef.current.x,
+        y: rotationRef.current.y,
+        z: rotationRef.current.z,
+      },
     });
     setAction(null);
   }, [selected, action, update]);
@@ -140,24 +135,22 @@ const Viewport = ({ children, objects }: Props) => {
 
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
-      if (e.key === "Delete" && selected) del([selected]);
+      if (e.key === "Delete" && selected) del([selected.id]);
     },
     [del, selected],
   );
 
   const handleModelClick = useCallback(
-    (id: string) => {
-      select(id);
+    (instance: InstanceType) => {
+      select(instance);
     },
     [select],
   );
 
   useEffect(() => {
     if (!selected) return;
-    const obj = objects.find((o) => o.id === selected);
-    if (!obj) return;
-    transformRef.current.set(obj?.props.translate ?? {});
-    rotationRef.current.set(obj?.props.rotate ?? {});
+    transformRef.current.set(selected?.props.translate ?? {});
+    rotationRef.current.set(selected?.props.rotate ?? {});
   }, [selected, objects]);
 
   return (

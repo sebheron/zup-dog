@@ -15,50 +15,54 @@ import SceneContext from "./SceneContext";
 const Scene = () => {
   const toast = useToast();
   const [objects, setObjects] = useState<InstanceType[]>([]);
-  const [selected, setSelected] = useState<string | null>(null);
+  const [selected, setSelected] = useState<InstanceType | null>(null);
 
   const update = useCallback(
-    (
-      ids: string[],
-      props: (id: string) => MustDeclare<Record<string, unknown>> | undefined,
-    ) => {
-      setObjects((prev) =>
-        prev.map((obj) => {
-          if (!ids.includes(obj.id)) return obj;
-          const additionalProps = props(obj.id);
-          if (!additionalProps) return obj;
-          return {
-            ...obj,
-            props: { ...obj.props, ...additionalProps },
-          };
-        }),
-      );
+    (instance: InstanceType, props: MustDeclare<Record<string, unknown>>) => {
+      instance.props = { ...instance.props, ...props };
+      setObjects((prev) => [...prev]);
     },
     [],
   );
 
-  const select = useCallback((id: string | null) => {
-    setSelected(id);
+  const select = useCallback((instance: InstanceType | null) => {
+    setSelected(instance);
   }, []);
 
   const add = useCallback(
-    (obj: ObjectType, parentId: string | null = null) => {
+    (obj: ObjectType, parent: InstanceType | null = null) => {
       const objWithId: InstanceType = {
         ...obj,
         id: nanoid(),
         name: obj.shape,
         props: { ...obj.props },
-        parentId,
+        parentId: parent?.id,
       };
-      setObjects((prev) => [...prev, objWithId]);
-      select(objWithId.id);
+      setObjects((prev) => {
+        if (parent) {
+          if (!parent.children) parent.children = [];
+          parent.children.push(objWithId);
+          return [...prev];
+        }
+        return [...prev, objWithId];
+      });
+      select(objWithId);
     },
     [select],
   );
 
+  const filterIds = useCallback((prev: InstanceType[], ids: string[]) => {
+    return prev
+      .filter((obj) => !ids.includes(obj.id))
+      .map((obj) => {
+        if (obj.children) obj.children = filterIds(obj.children, ids);
+        return obj;
+      });
+  }, []);
+
   const del = useCallback(
     (ids: string[]) => {
-      setObjects((prev) => prev.filter((obj) => !ids.includes(obj.id)));
+      setObjects((prev) => filterIds(prev, ids));
       toast.notify(`${ids.length} object${ids.length > 1 ? "s" : ""} deleted`);
       select(null);
     },
