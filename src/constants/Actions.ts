@@ -8,6 +8,7 @@ export const Rotations = {
     start: { x: 0, y: 0, z: 1 },
     arc: { x: 0, y: -1, z: 1 },
     end: { x: 0, y: -1, z: 0 },
+    rotation: { y: -TAU / 4 },
   },
   YR: {
     color: Colors.YAXIS,
@@ -15,6 +16,7 @@ export const Rotations = {
     start: { x: 0, y: 0, z: 1 },
     arc: { x: 1, y: 0, z: 1 },
     end: { x: 1, y: 0, z: 0 },
+    rotation: { x: TAU / 4 },
   },
   ZR: {
     color: Colors.ZAXIS,
@@ -22,6 +24,7 @@ export const Rotations = {
     start: { x: 0, y: -1, z: 0 },
     arc: { x: 1, y: -1, z: 0 },
     end: { x: 1, y: 0, z: 0 },
+    rotation: {},
   },
 };
 

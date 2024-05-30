@@ -19,6 +19,7 @@ declare module "react-zdog-alt" {
 
   export type ElementProxy = {
     renderOrigin: Required<VectorOptions>;
+    isFacingBack: boolean;
   };
 
   export type AdditionalElementProps = PropsWithChildren<{

@@ -149,6 +149,9 @@ const worldToScreen = (
   };
 };
 
+const angle2d = (a: Vector2Type, b: Vector2Type) =>
+  Math.atan2(b.y - a.y, b.x - a.x);
+
 const angleBetween = (
   center: Vector3Type,
   position: Vector3Type,
@@ -243,6 +246,7 @@ const vector = {
   spin,
   mouseToWorld,
   worldToScreen,
+  angle2d,
   angleBetween,
   angleDelta,
   nearestPoint,

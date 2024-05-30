@@ -1,13 +1,15 @@
-import { PropsWithChildren, useCallback } from "react";
+import { useCallback } from "react";
 import { Shape } from "react-zdog-alt";
 import useScene from "@/components/Scene/useScene";
 import InstanceType from "@/types/InstanceType";
+import RotationGizmo from "../Gizmos/RotationGizmo/RotationGizmo";
+import TranslationGizmo from "../Gizmos/TranslationGizmo/TranslationGizmo";
 
-interface Props extends PropsWithChildren {
+interface Props {
   objects: InstanceType[];
 }
 
-const SelectedModel = ({ children, objects }: Props) => {
+const SelectedModel = ({ objects }: Props) => {
   const { selected } = useScene();
 
   const getRequiredProps = useCallback(
@@ -21,18 +23,30 @@ const SelectedModel = ({ children, objects }: Props) => {
 
   return selected
     ? objects.map((obj) => {
-        const requiredProps = getRequiredProps(obj);
+        const { translate, rotate, scale } = getRequiredProps(obj);
 
         if (selected.id === obj.id)
           return (
-            <Shape color="transparent" {...requiredProps} key={obj.id}>
-              {children}
+            <Shape
+              color="transparent"
+              translate={translate}
+              scale={scale}
+              key={obj.id}
+            >
+              <RotationGizmo />
+              <TranslationGizmo />
             </Shape>
           );
         else if (obj.children)
           return (
-            <Shape color="transparent" {...requiredProps} key={obj.id}>
-              <SelectedModel objects={obj.children}>{children}</SelectedModel>
+            <Shape
+              color="transparent"
+              translate={translate}
+              rotate={rotate}
+              scale={scale}
+              key={obj.id}
+            >
+              <SelectedModel objects={obj.children} />
             </Shape>
           );
         else return null;

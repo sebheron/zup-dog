@@ -58,9 +58,10 @@ const TranslationGizmo = () => {
     setAction(null);
   }, [selected, action, update, select]);
 
-  const handleMove = useCallback(
+  const handleTranslation = useCallback(
     (e: MouseEvent) => {
-      if (e.buttons !== 1 && action) {
+      if (!action) return;
+      else if (e.buttons !== 1 && action) {
         handleTranslationEnd();
         return;
       }
@@ -83,11 +84,11 @@ const TranslationGizmo = () => {
       const pointing =
         vector.direction2d(endRef.current, nearestPoint) < distance ? 1 : -1;
 
-      //If the distance is null, set it to the current distance
+      //If the distance is null, set it to the current distance, prevents jumping
       if (distanceRef.current == null) distanceRef.current = distance;
 
       //Get the translation direction
-      const translate = Translations[action as TranslationType].direction;
+      const translate = Translations[action].direction;
 
       //Calculate the difference in distance
       const diff = distance - distanceRef.current;
@@ -107,8 +108,8 @@ const TranslationGizmo = () => {
   return (
     <Shape scale={1 / zoom} color="transparent">
       {Object.entries(Translations).map(([key, translation]) => {
-        const startRef = useRef<ElementProxy>(null);
-        const endRef = useRef<ElementProxy>(null);
+        const startShapeRef = useRef<ElementProxy>(null);
+        const endShapeRef = useRef<ElementProxy>(null);
 
         const color =
           action === key || (!action && interactable === key)
@@ -118,7 +119,7 @@ const TranslationGizmo = () => {
         return (
           <Fragment key={key}>
             <Shape
-              ref={startRef}
+              ref={startShapeRef}
               stroke={4 * (1 / zoom)}
               color={color}
               path={[{}, vector.scale(translation.direction, 50)]}
@@ -126,7 +127,7 @@ const TranslationGizmo = () => {
               pointerEvents={false}
             />
             <Cone
-              ref={endRef}
+              ref={endShapeRef}
               translate={vector.scale(translation.direction, 50)}
               rotate={translation.rotation}
               diameter={10}
@@ -143,8 +144,8 @@ const TranslationGizmo = () => {
                 handleTranslationDown(
                   e,
                   key as TranslationType,
-                  startRef.current,
-                  endRef.current,
+                  startShapeRef.current,
+                  endShapeRef.current,
                 )
               }
               stroke={30 * (1 / zoom)}
@@ -162,7 +163,8 @@ const TranslationGizmo = () => {
           </Fragment>
         );
       })}
-      {!!action && <DocEvent type="mousemove" listener={handleMove} />}
+      {action && <DocEvent type="mouseup" listener={handleTranslationEnd} />}
+      <DocEvent type="mousemove" listener={handleTranslation} />
     </Shape>
   );
 };
