@@ -1,4 +1,4 @@
-import { Fragment } from "react";
+import { Fragment, useEffect, useRef } from "react";
 import { Shape } from "react-zdog-alt";
 import Colors from "@/constants/Colors";
 

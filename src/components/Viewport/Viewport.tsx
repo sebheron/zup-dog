@@ -3,6 +3,7 @@ import {
   PropsWithChildren,
   useCallback,
   useEffect,
+  useMemo,
   useRef,
   useState,
 } from "react";
@@ -20,16 +21,14 @@ import InstanceType from "@/types/InstanceType";
 import Vector3Type from "@/types/Vector3Type";
 import vector from "@/utils/vector";
 import RotationGizmo from "../Gizmos/RotationGizmo/RotationGizmo";
+import SelectedModel from "../SelectedModel/SelectedModel";
 import styles from "./Viewport.module.css";
 
-interface Props extends PropsWithChildren {
-  objects: InstanceType[];
-}
-
-const Viewport = ({ children, objects }: Props) => {
+const Viewport = ({ children }: PropsWithChildren) => {
   const { registerDolly } = useDolly();
   const { zoom, rotation, position } = useCamera();
-  const { selected, select, update, del } = useScene();
+  const { objects, selected, select, update, del, getGlobalTransform } =
+    useScene();
   const [action, setAction] = useState<ActionType | null>(null);
 
   const transformRef = useRef<Vector>(new Vector());
@@ -68,7 +67,7 @@ const Viewport = ({ children, objects }: Props) => {
         rotate: rotationRef.current,
       });
     },
-    [selected, action, update, objects],
+    [selected, action, update],
   );
 
   const handleActionEnd = useCallback(() => {
@@ -85,16 +84,13 @@ const Viewport = ({ children, objects }: Props) => {
         z: rotationRef.current.z,
       },
     });
+    select(selected);
     setAction(null);
-  }, [selected, action, update]);
+  }, [selected, action, update, select]);
 
   const handleMove = useCallback(
     (e: MouseEvent) => {
-      if (
-        (e.buttons !== 1 && action) ||
-        !transformRef.current ||
-        !rotationRef.current
-      ) {
+      if (e.buttons !== 1 && action) {
         handleActionEnd();
         return;
       }
@@ -180,16 +176,10 @@ const Viewport = ({ children, objects }: Props) => {
             pointerEvents
             {...registerDolly()}
           >
-            <TranslationGizmo
-              position={transformRef.current}
-              action={action}
-              onAction={handleActionStart}
-            />
-            <RotationGizmo
-              position={transformRef.current}
-              action={action}
-              onAction={handleActionStart}
-            />
+            <SelectedModel objects={objects}>
+              <TranslationGizmo action={action} onAction={handleActionStart} />
+              <RotationGizmo action={action} onAction={handleActionStart} />
+            </SelectedModel>
           </Illustration>
           <DocEvent type="mousemove" listener={handleMove} />
           <DocEvent type="keydown" listener={handleKeyDown} />

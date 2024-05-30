@@ -71,20 +71,21 @@ const Scene = () => {
 
   const sceneContext = useMemo(
     () => ({
+      objects,
       selected,
       update,
       add,
       select,
       del,
     }),
-    [selected, update, add, select, del],
+    [objects, selected, update, add, select, del],
   );
 
   return (
     <Camera>
       <Tooltip />
       <SceneContext.Provider value={sceneContext}>
-        <Viewport objects={objects}>
+        <Viewport>
           <Bar />
           <Axis />
           <Card position="left"></Card>

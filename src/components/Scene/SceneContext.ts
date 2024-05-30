@@ -4,6 +4,7 @@ import ObjectType from "@/types/ObjectType";
 import MustDeclare from "@/types/utility/MustDeclare";
 
 interface SceneContextType {
+  objects: InstanceType[];
   selected: InstanceType | null;
   select: (instance: InstanceType | null) => void;
   update: (

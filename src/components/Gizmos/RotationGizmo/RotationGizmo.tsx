@@ -7,7 +7,7 @@ import { RotationType, Rotations } from "@/constants/Actions";
 import Colors from "@/constants/Colors";
 import vector from "@/utils/vector";
 
-const RotationGizmo = ({ position, action, onAction }: GizmoProps) => {
+const RotationGizmo = ({ action, onAction }: GizmoProps) => {
   const { zoom } = useCamera();
 
   const [interactable, setInteractable] = useState<RotationType | null>(null);
@@ -21,7 +21,7 @@ const RotationGizmo = ({ position, action, onAction }: GizmoProps) => {
   );
 
   return (
-    <Shape translate={position} scale={1 / zoom} color="transparent">
+    <Shape scale={1 / zoom} color="transparent">
       {Object.entries(Rotations).map(([key, rotation]) => {
         const path: PathCommand[] = [
           vector.scale(rotation.start, 40),

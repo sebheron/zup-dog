@@ -14,12 +14,14 @@ declare module "react-zdog-alt" {
     HemisphereOptions,
     RoundedRectOptions,
     Illustration as ZIllustration,
+    VectorOptions,
   } from "zdog";
 
-  type AdditionalIllustrationProps = PropsWithChildren<{
-    pointerEvents?: boolean;
-    className?: string;
-  }>;
+  export type ElementRef = {
+    Item: {
+      renderOrigin: Required<VectorOptions>;
+    };
+  };
 
   export type AdditionalElementProps = PropsWithChildren<{
     pointerEvents?: boolean;
@@ -29,6 +31,12 @@ declare module "react-zdog-alt" {
     onPointerUp?: (e: React.MouseEvent<HTMLElement>) => void;
     onPointerEnter?: (e: React.MouseEvent<HTMLElement>) => void;
     onPointerLeave?: (e: React.MouseEvent<HTMLElement>) => void;
+    ref?: React.Ref<ElementRef>;
+  }>;
+
+  type AdditionalIllustrationProps = PropsWithChildren<{
+    pointerEvents?: boolean;
+    className?: string;
   }>;
 
   export const Illustration: React.FC<
