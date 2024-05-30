@@ -8,7 +8,6 @@ import Tooltip from "@/components/Tooltip/Tooltip";
 import Viewport from "@/components/Viewport/Viewport";
 import InstanceType from "@/types/InstanceType";
 import ObjectType from "@/types/ObjectType";
-import MustDeclare from "@/types/utility/MustDeclare";
 import useToast from "../Toast/useToast";
 import SceneContext from "./SceneContext";
 
@@ -18,7 +17,7 @@ const Scene = () => {
   const [selected, setSelected] = useState<InstanceType | null>(null);
 
   const update = useCallback(
-    (instance: InstanceType, props: MustDeclare<Record<string, unknown>>) => {
+    (instance: InstanceType, props: Record<string, unknown>) => {
       instance.props = { ...instance.props, ...props };
       setObjects((prev) => [...prev]);
     },
@@ -51,22 +50,22 @@ const Scene = () => {
     [select],
   );
 
-  const filterIds = useCallback((prev: InstanceType[], ids: string[]) => {
+  const filter = useCallback((prev: InstanceType[], instance: InstanceType) => {
     return prev
-      .filter((obj) => !ids.includes(obj.id))
+      .filter((obj) => instance.id !== obj.id)
       .map((obj) => {
-        if (obj.children) obj.children = filterIds(obj.children, ids);
+        if (obj.children) obj.children = filter(obj.children, instance);
         return obj;
       });
   }, []);
 
   const del = useCallback(
-    (ids: string[]) => {
-      setObjects((prev) => filterIds(prev, ids));
-      toast.notify(`${ids.length} object${ids.length > 1 ? "s" : ""} deleted`);
+    (instance: InstanceType) => {
+      setObjects((prev) => filter(prev, instance));
+      toast.notify(`${instance.name} deleted`);
       select(null);
     },
-    [select, toast],
+    [filter, select, toast],
   );
 
   const sceneContext = useMemo(

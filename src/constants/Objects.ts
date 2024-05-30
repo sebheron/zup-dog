@@ -13,16 +13,15 @@ import {
 } from "zdog";
 import NameType from "@/types/NameType";
 import ObjectType from "@/types/ObjectType";
-import MustDeclare from "@/types/utility/MustDeclare";
 
-const defaultAnchor: MustDeclare<AnchorOptions> = {
-  addTo: null,
+const defaultAnchor: AnchorOptions = {
+  addTo: undefined,
   translate: { x: 0, y: 0, z: 0 },
   rotate: { x: 0, y: 0, z: 0 },
   scale: 1,
 };
 
-const defaultShape: MustDeclare<ShapeOptions> = {
+const defaultShape: ShapeOptions = {
   ...defaultAnchor,
   color: "#E62",
   stroke: 0,
@@ -34,13 +33,13 @@ const defaultShape: MustDeclare<ShapeOptions> = {
   path: [{ x: 0, y: 0, z: 0 }],
 };
 
-const defaultRect: MustDeclare<RectOptions> = {
+const defaultRect: RectOptions = {
   ...defaultShape,
   width: 64,
   height: 64,
 };
 
-const defaultEllipse: MustDeclare<EllipseOptions> = {
+const defaultEllipse: EllipseOptions = {
   ...defaultShape,
   diameter: 64,
   width: 64,
