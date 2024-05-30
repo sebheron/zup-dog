@@ -1,5 +1,5 @@
 import { Fragment, useCallback, useRef, useState } from "react";
-import { Cone, ElementProxy, Shape } from "react-zdog-alt";
+import { Anchor, Cone, ElementProxy, Shape } from "react-zdog-alt";
 import { Vector } from "zdog";
 import useCamera from "@/components/Camera/useCamera";
 import DocEvent from "@/components/DocEvent/DocEvent";
@@ -109,7 +109,7 @@ const TranslationGizmo = ({ action, onAction }: GizmoProps) => {
   );
 
   return (
-    <Shape scale={1 / zoom} color="transparent">
+    <Anchor scale={1 / zoom}>
       {Object.entries(Translations).map(([key, translation]) => {
         const startShapeRef = useRef<ElementProxy>(null);
         const endShapeRef = useRef<ElementProxy>(null);
@@ -168,7 +168,7 @@ const TranslationGizmo = ({ action, onAction }: GizmoProps) => {
       })}
       {action && <DocEvent type="mouseup" listener={handleTranslationEnd} />}
       <DocEvent type="mousemove" listener={handleTranslation} />
-    </Shape>
+    </Anchor>
   );
 };
 

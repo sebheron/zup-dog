@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Shape } from "react-zdog-alt";
+import { Anchor } from "react-zdog-alt";
 import useScene from "@/components/Scene/useScene";
 import { ActionType } from "@/constants/Actions";
 import InstanceType from "@/types/InstanceType";
@@ -20,27 +20,21 @@ const SelectedModel = ({ objects }: Props) => {
 
         if (selected.id === obj.id)
           return (
-            <Shape
-              key={obj.id}
-              translate={translate}
-              scale={scale}
-              color="transparent"
-            >
+            <Anchor key={obj.id} translate={translate} scale={scale}>
               <RotationGizmo action={action} onAction={setAction} />
               <TranslationGizmo action={action} onAction={setAction} />
-            </Shape>
+            </Anchor>
           );
         else if (obj.children)
           return (
-            <Shape
-              color="transparent"
+            <Anchor
               translate={translate}
               rotate={rotate}
               scale={scale}
               key={obj.id}
             >
               <SelectedModel objects={obj.children} />
-            </Shape>
+            </Anchor>
           );
         else return null;
       })

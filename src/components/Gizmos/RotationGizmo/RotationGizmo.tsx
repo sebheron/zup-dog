@@ -1,5 +1,5 @@
 import { Fragment, useCallback, useRef, useState } from "react";
-import { ElementProxy, Ellipse, Shape } from "react-zdog-alt";
+import { Anchor, ElementProxy, Ellipse, Shape } from "react-zdog-alt";
 import { PathCommand, TAU, Vector } from "zdog";
 import useCamera from "@/components/Camera/useCamera";
 import DocEvent from "@/components/DocEvent/DocEvent";
@@ -99,7 +99,7 @@ const RotationGizmo = ({ action, onAction }: GizmoProps) => {
   );
 
   return (
-    <Shape scale={1 / zoom} color="transparent">
+    <Anchor scale={1 / zoom}>
       {Object.entries(Rotations).map(([key, rotation]) => {
         const centerShapeRef = useRef<ElementProxy>(null);
         const directionShapeRef = useRef<ElementProxy>(null);
@@ -136,7 +136,7 @@ const RotationGizmo = ({ action, onAction }: GizmoProps) => {
               color="transparent"
               ref={directionShapeRef}
             />
-            <Shape color="transparent" ref={centerShapeRef} />
+            <Anchor ref={centerShapeRef} />
             <Shape
               onPointerEnter={() => setInteractable(key as RotationType)}
               onPointerLeave={() => setInteractable(null)}
@@ -191,7 +191,7 @@ const RotationGizmo = ({ action, onAction }: GizmoProps) => {
       })}
       {action && <DocEvent type="mouseup" listener={handleRotationEnd} />}
       <DocEvent type="mousemove" listener={handleRotation} />
-    </Shape>
+    </Anchor>
   );
 };
 
