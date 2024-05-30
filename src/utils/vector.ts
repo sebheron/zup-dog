@@ -1,5 +1,6 @@
 import Quaternion from "quaternion";
 import { TAU } from "zdog";
+import Vector2Type from "@/types/Vector2Type";
 import Vector3Type from "../types/Vector3Type";
 
 const globalRotate = (
@@ -198,6 +199,39 @@ const angleDelta = (
   };
 };
 
+const nearestPoint = (
+  start: Vector2Type,
+  end: Vector2Type,
+  point: Vector2Type,
+) => {
+  // Direction vector of the line
+  const dx = end.x - start.x;
+  const dy = end.y - start.y;
+
+  // Vector from p1 to the point p
+  const apx = point.x - start.x;
+  const apy = point.y - start.y;
+
+  // Dot product of AP and the direction vector
+  const ap_dot_d = apx * dx + apy * dy;
+
+  // Dot product of the direction vector with itself
+  const d_dot_d = dx * dx + dy * dy;
+
+  // Parameter t of the projection
+  const t = ap_dot_d / d_dot_d;
+
+  // Nearest point on the line
+  const nearestX = start.x + t * dx;
+  const nearestY = start.y + t * dy;
+
+  return { x: nearestX, y: nearestY };
+};
+
+const direction2d = (a: Vector2Type, b: Vector2Type) =>
+  Math.hypot(a.x - b.x, a.y - b.y) *
+  (Math.sign(a.x - b.x) || Math.sign(a.y - b.y));
+
 const vector = {
   globalRotate,
   rotateAround,
@@ -211,6 +245,8 @@ const vector = {
   worldToScreen,
   angleBetween,
   angleDelta,
+  nearestPoint,
+  direction2d,
 };
 
 export default vector;
