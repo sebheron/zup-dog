@@ -1,8 +1,7 @@
-import { ActionType } from "@/constants/Actions";
+import InstanceType from "@/types/InstanceType";
 
 interface GizmoProps {
-  action: ActionType | null;
-  onAction: (action: ActionType) => void;
+  selected: InstanceType | null;
 }
 
 export default GizmoProps;
