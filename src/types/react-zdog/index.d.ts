@@ -17,10 +17,8 @@ declare module "react-zdog-alt" {
     VectorOptions,
   } from "zdog";
 
-  export type ElementRef = {
-    Item: {
-      renderOrigin: Required<VectorOptions>;
-    };
+  export type ElementProxy = {
+    renderOrigin: Required<VectorOptions>;
   };
 
   export type AdditionalElementProps = PropsWithChildren<{
@@ -31,7 +29,7 @@ declare module "react-zdog-alt" {
     onPointerUp?: (e: React.MouseEvent<HTMLElement>) => void;
     onPointerEnter?: (e: React.MouseEvent<HTMLElement>) => void;
     onPointerLeave?: (e: React.MouseEvent<HTMLElement>) => void;
-    ref?: React.Ref<ElementRef>;
+    ref?: React.Ref<ElementProxy>;
   }>;
 
   type AdditionalIllustrationProps = PropsWithChildren<{
