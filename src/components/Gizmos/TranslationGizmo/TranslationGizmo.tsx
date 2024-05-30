@@ -9,12 +9,12 @@ import Colors from "@/constants/Colors";
 import Vector2Type from "@/types/Vector2Type";
 import cam from "@/utils/cam";
 import vector from "@/utils/vector";
+import GizmoProps from "../GizmoProps";
 
-const TranslationGizmo = () => {
+const TranslationGizmo = ({ action, onAction }: GizmoProps) => {
   const { zoom } = useCamera();
   const { selected, update, select } = useScene();
 
-  const [action, setAction] = useState<TranslationType | null>(null);
   const [interactable, setInteractable] = useState<TranslationType | null>(
     null,
   );
@@ -32,17 +32,17 @@ const TranslationGizmo = () => {
       end: ElementProxy | null,
     ) => {
       if (!start || !end || !selected || translation === action) return;
-      transformRef.current.set(selected?.props.translate ?? {});
+      e.stopPropagation();
+      transformRef.current.set(selected?.props.translate);
       startRef.current = cam.screenPosition(start);
       endRef.current = cam.screenPosition(end);
       distanceRef.current = null;
-      setAction(translation);
+      onAction(translation);
       update(selected, {
         translate: transformRef.current,
       });
-      e.stopPropagation();
     },
-    [action, selected, update],
+    [action, selected, update, onAction],
   );
 
   const handleTranslationEnd = useCallback(() => {
@@ -55,8 +55,8 @@ const TranslationGizmo = () => {
       },
     });
     select(selected);
-    setAction(null);
-  }, [selected, action, update, select]);
+    onAction(null);
+  }, [selected, action, update, select, onAction]);
 
   const handleTranslation = useCallback(
     (e: MouseEvent) => {
@@ -88,7 +88,10 @@ const TranslationGizmo = () => {
       if (distanceRef.current == null) distanceRef.current = distance;
 
       //Get the translation direction
-      const translate = Translations[action].direction;
+      const translate = Translations[action as TranslationType]?.direction;
+
+      //If we're not translating, return
+      if (!translate) return;
 
       //Calculate the difference in distance
       const diff = distance - distanceRef.current;

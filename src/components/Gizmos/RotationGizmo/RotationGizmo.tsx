@@ -9,12 +9,12 @@ import Colors from "@/constants/Colors";
 import Vector2Type from "@/types/Vector2Type";
 import cam from "@/utils/cam";
 import vector from "@/utils/vector";
+import GizmoProps from "../GizmoProps";
 
-const RotationGizmo = () => {
+const RotationGizmo = ({ action, onAction }: GizmoProps) => {
   const { zoom } = useCamera();
   const { selected, update, select } = useScene();
 
-  const [action, setAction] = useState<RotationType | null>(null);
   const [interactable, setInteractable] = useState<RotationType | null>(null);
 
   const angleRef = useRef<number | null>(null);
@@ -30,19 +30,19 @@ const RotationGizmo = () => {
       direction: ElementProxy | null,
     ) => {
       if (!center || !direction || !selected || rotation === action) return;
-      rotationRef.current.set(selected?.props.rotate ?? {});
+      e.stopPropagation();
+      rotationRef.current.set(selected?.props.rotate);
       centerRef.current = cam.screenPosition(center, zoom);
       // Determine the direction of the rotation using the direction shape
       pointingRef.current = direction.isFacingBack ? -1 : 1;
       angleRef.current = null;
 
-      setAction(rotation);
+      onAction(rotation);
       update(selected, {
         rotate: rotationRef.current,
       });
-      e.stopPropagation();
     },
-    [action, selected, zoom, update],
+    [action, selected, zoom, update, onAction],
   );
 
   const handleRotationEnd = useCallback(() => {
@@ -55,8 +55,8 @@ const RotationGizmo = () => {
       },
     });
     select(selected);
-    setAction(null);
-  }, [selected, action, update, select]);
+    onAction(null);
+  }, [selected, action, update, select, onAction]);
 
   const handleRotation = useCallback(
     (e: MouseEvent) => {
@@ -78,7 +78,10 @@ const RotationGizmo = () => {
       if (angleRef.current === null) angleRef.current = angle;
 
       // Get the rotation direction
-      const rotate = Rotations[action].direction;
+      const rotate = Rotations[action as RotationType]?.direction;
+
+      // If we're not rotating, return
+      if (!rotate) return;
 
       // Calculate the difference in angles
       const diff = angle - angleRef.current;
