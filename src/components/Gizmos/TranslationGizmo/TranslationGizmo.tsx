@@ -38,7 +38,11 @@ const TranslationGizmo = ({ action, onAction }: GizmoProps) => {
         };
 
         //Get the nearest point on the line
-        const nearestPoint = vector.nearestPoint(startVector, endVector, mouse);
+        const nearestPoint = vector.nearestPoint2d(
+          startVector,
+          endVector,
+          mouse,
+        );
         //Get the distance from the start point to the nearest point
         const distance = vector.direction2d(startVector, nearestPoint);
 
