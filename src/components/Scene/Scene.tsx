@@ -15,6 +15,7 @@ import Viewport from "@/components/Viewport/Viewport";
 import InstanceType from "@/types/InstanceType";
 import ObjectType from "@/types/ObjectType";
 import tooltip from "@/utils/tooltip";
+import Properties from "../Properties/Properties";
 import SceneContext from "./SceneContext";
 
 const Scene = () => {
@@ -150,7 +151,9 @@ const Scene = () => {
               </Link>
             </CardFooter>
           </Card>
-          <Card position="right"></Card>
+          <Card position="right">
+            <Properties />
+          </Card>
         </Viewport>
       </SceneContext.Provider>
     </Camera>
