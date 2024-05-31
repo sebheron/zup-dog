@@ -51,10 +51,7 @@ const Scene = () => {
   }, []);
 
   const add = useCallback(
-    <T extends Record<string, any>>(
-      obj: ObjectType<T>,
-      parent: InstanceType | null = null,
-    ) => {
+    (obj: ObjectType, parent: InstanceType | null = null) => {
       const instance: InstanceType = {
         ...obj,
         id: nanoid(),

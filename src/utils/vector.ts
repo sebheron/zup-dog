@@ -175,7 +175,7 @@ const angleDelta = (
   const currentAngle = angleBetween(center, offset);
   const previousAngle = angleBetween(center, previousOffset);
 
-  let angleDelta = subtract(currentAngle, previousAngle);
+  const angleDelta = subtract(currentAngle, previousAngle);
 
   if (angleDelta.x > Math.PI) {
     angleDelta.x -= TAU;
