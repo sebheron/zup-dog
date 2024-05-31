@@ -2,11 +2,9 @@ import { Fragment, useCallback, useRef, useState } from "react";
 import { Anchor, ElementProxy, Ellipse, Shape } from "react-zdog-alt";
 import { PathCommand, TAU, Vector } from "zdog";
 import useCamera from "@/components/Camera/useCamera";
-import DocEvent from "@/components/DocEvent/DocEvent";
 import useScene from "@/components/Scene/useScene";
 import { RotationType, Rotations } from "@/constants/Actions";
 import Colors from "@/constants/Colors";
-import Vector2Type from "@/types/Vector2Type";
 import cam from "@/utils/cam";
 import vector from "@/utils/vector";
 import GizmoProps from "../GizmoProps";
@@ -17,11 +15,6 @@ const RotationGizmo = ({ action, onAction }: GizmoProps) => {
 
   const [interactable, setInteractable] = useState<RotationType | null>(null);
 
-  const angleRef = useRef<number | null>(null);
-  const centerRef = useRef<Vector2Type>({ x: 0, y: 0 });
-  const pointingRef = useRef<number>(0);
-  const rotationRef = useRef<Vector>(new Vector());
-
   const handleRotationDown = useCallback(
     (
       e: React.MouseEvent<HTMLElement>,
@@ -30,72 +23,68 @@ const RotationGizmo = ({ action, onAction }: GizmoProps) => {
       direction: ElementProxy | null,
     ) => {
       if (!center || !direction || !selected || rotation === action) return;
-      e.stopPropagation();
-      rotationRef.current.set(selected?.props.rotate);
-      centerRef.current = cam.screenPosition(center, zoom);
+
+      const rotationVector = new Vector(selected.props.rotate);
+      const centerVector = cam.screenPosition(center, zoom);
       // Determine the direction of the rotation using the direction shape
-      pointingRef.current = direction.isFacingBack ? -1 : 1;
-      angleRef.current = null;
+      const pointingDirection = direction.isFacingBack ? -1 : 1;
+      let previousAngle: number | null = null;
 
-      onAction(rotation);
-      update(selected, {
-        rotate: rotationRef.current,
-      });
-    },
-    [action, selected, zoom, update, onAction],
-  );
+      const handleRotation = (e: MouseEvent) => {
+        const mouse = {
+          x: e.clientX,
+          y: e.clientY,
+        };
 
-  const handleRotationEnd = useCallback(() => {
-    if (!selected || !action) return;
-    update(selected, {
-      rotate: {
-        x: rotationRef.current.x,
-        y: rotationRef.current.y,
-        z: rotationRef.current.z,
-      },
-    });
-    select(selected);
-    onAction(null);
-  }, [selected, action, update, select, onAction]);
+        // Calculate the angle between the mouse and the center of the rotation gizmo
+        const angle = vector.angle2d(centerVector, mouse);
 
-  const handleRotation = useCallback(
-    (e: MouseEvent) => {
-      if (!action) return;
-      else if (e.buttons !== 1 && action) {
-        handleRotationEnd();
-        return;
-      }
+        // If the angle reference is null, set it to the current angle, preventing a jump
+        if (previousAngle == null) previousAngle = angle;
 
-      const mouse = {
-        x: e.clientX,
-        y: e.clientY,
+        // Get the rotation direction
+        const rotate = Rotations[rotation as RotationType]?.direction;
+
+        // If we're not rotating, return
+        if (!rotate) return;
+
+        // Calculate the difference in angles
+        const diff = angle - previousAngle;
+
+        // Adjust the rotation vector based on the difference in angles
+        const delta = vector.scale(rotate, diff * pointingDirection);
+
+        // Add the delta to the current rotation
+        rotationVector.set(vector.globalRotate(rotationVector, delta));
+
+        // Update the angle
+        previousAngle = angle;
       };
 
-      // Calculate the angle between the mouse and the center of the rotation gizmo
-      const angle = vector.angle2d(centerRef.current, mouse);
+      const handleRotationEnd = () => {
+        update(selected, {
+          rotate: {
+            x: rotationVector.x,
+            y: rotationVector.y,
+            z: rotationVector.z,
+          },
+        });
+        select(selected);
+        onAction(null);
+        document.removeEventListener("mousemove", handleRotation);
+        document.removeEventListener("mouseup", handleRotationEnd);
+      };
 
-      // If the angle reference is null, set it to the current angle, preventing a jump
-      if (angleRef.current === null) angleRef.current = angle;
+      e.stopPropagation();
+      onAction(rotation);
+      update(selected, {
+        rotate: rotationVector,
+      });
 
-      // Get the rotation direction
-      const rotate = Rotations[action as RotationType]?.direction;
-
-      // If we're not rotating, return
-      if (!rotate) return;
-
-      // Calculate the difference in angles
-      const diff = angle - angleRef.current;
-
-      // Adjust the rotation vector based on the difference in angles
-      const delta = vector.scale(rotate, diff * pointingRef.current);
-
-      // Add the delta to the current rotation
-      rotationRef.current.set(vector.globalRotate(rotationRef.current, delta));
-
-      // Update the angle
-      angleRef.current = angle;
+      document.addEventListener("mousemove", handleRotation);
+      document.addEventListener("mouseup", handleRotationEnd);
     },
-    [action, handleRotationEnd],
+    [selected, action, update, select, onAction, zoom],
   );
 
   return (
@@ -189,8 +178,6 @@ const RotationGizmo = ({ action, onAction }: GizmoProps) => {
           </Fragment>
         );
       })}
-      {action && <DocEvent type="mouseup" listener={handleRotationEnd} />}
-      <DocEvent type="mousemove" listener={handleRotation} />
     </Anchor>
   );
 };

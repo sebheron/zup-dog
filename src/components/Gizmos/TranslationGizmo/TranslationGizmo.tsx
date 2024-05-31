@@ -2,11 +2,9 @@ import { Fragment, useCallback, useRef, useState } from "react";
 import { Anchor, Cone, ElementProxy, Shape } from "react-zdog-alt";
 import { Vector } from "zdog";
 import useCamera from "@/components/Camera/useCamera";
-import DocEvent from "@/components/DocEvent/DocEvent";
 import useScene from "@/components/Scene/useScene";
 import { TranslationType, Translations } from "@/constants/Actions";
 import Colors from "@/constants/Colors";
-import Vector2Type from "@/types/Vector2Type";
 import cam from "@/utils/cam";
 import vector from "@/utils/vector";
 import GizmoProps from "../GizmoProps";
@@ -19,11 +17,6 @@ const TranslationGizmo = ({ action, onAction }: GizmoProps) => {
     null,
   );
 
-  const distanceRef = useRef<number | null>(null);
-  const startRef = useRef<Vector2Type>({ x: 0, y: 0 });
-  const endRef = useRef<Vector2Type>({ x: 0, y: 0 });
-  const transformRef = useRef<Vector>(new Vector());
-
   const handleTranslationDown = useCallback(
     (
       e: React.MouseEvent<HTMLElement>,
@@ -32,80 +25,74 @@ const TranslationGizmo = ({ action, onAction }: GizmoProps) => {
       end: ElementProxy | null,
     ) => {
       if (!start || !end || !selected || translation === action) return;
-      e.stopPropagation();
-      transformRef.current.set(selected?.props.translate);
-      startRef.current = cam.screenPosition(start);
-      endRef.current = cam.screenPosition(end);
-      distanceRef.current = null;
-      onAction(translation);
-      update(selected, {
-        translate: transformRef.current,
-      });
-    },
-    [action, selected, update, onAction],
-  );
 
-  const handleTranslationEnd = useCallback(() => {
-    if (!selected || !action) return;
-    update(selected, {
-      translate: {
-        x: transformRef.current.x,
-        y: transformRef.current.y,
-        z: transformRef.current.z,
-      },
-    });
-    select(selected);
-    onAction(null);
-  }, [selected, action, update, select, onAction]);
+      const translationVector = new Vector(selected.props.translate);
+      const startVector = cam.screenPosition(start);
+      const endVector = cam.screenPosition(end);
+      let previousDistance: number | null = null;
 
-  const handleTranslation = useCallback(
-    (e: MouseEvent) => {
-      if (!action) return;
-      else if (e.buttons !== 1 && action) {
-        handleTranslationEnd();
-        return;
-      }
+      const handleTranslation = (e: MouseEvent) => {
+        const mouse = {
+          x: e.clientX,
+          y: e.clientY,
+        };
 
-      const mouse = {
-        x: e.clientX,
-        y: e.clientY,
+        //Get the nearest point on the line
+        const nearestPoint = vector.nearestPoint(startVector, endVector, mouse);
+        //Get the distance from the start point to the nearest point
+        const distance = vector.direction2d(startVector, nearestPoint);
+
+        //Find the direction the translation should go
+        const pointing =
+          vector.direction2d(endVector, nearestPoint) < distance ? 1 : -1;
+
+        //If the distance is null, set it to the current distance, prevents jumping
+        if (previousDistance == null) previousDistance = distance;
+
+        //Get the translation direction
+        const translate =
+          Translations[translation as TranslationType]?.direction;
+
+        //If we're not translating, return
+        if (!translate) return;
+
+        //Calculate the difference in distance
+        const diff = distance - previousDistance;
+
+        //Adjust the translation vector by the difference, the direction, and the zoom
+        const delta = vector.scale(translate, diff * (1 / zoom) * pointing);
+
+        //Add the delta to the translation vector
+        translationVector.add(delta);
+
+        //Update the distance
+        previousDistance = distance;
       };
 
-      //Get the nearest point on the line
-      const nearestPoint = vector.nearestPoint(
-        startRef.current,
-        endRef.current,
-        mouse,
-      );
-      //Get the distance from the start point to the nearest point
-      const distance = vector.direction2d(startRef.current, nearestPoint);
+      const handleTranslationEnd = () => {
+        update(selected, {
+          translation: {
+            x: translationVector.x,
+            y: translationVector.y,
+            z: translationVector.z,
+          },
+        });
+        select(selected);
+        onAction(null);
+        document.removeEventListener("mousemove", handleTranslation);
+        document.removeEventListener("mouseup", handleTranslationEnd);
+      };
 
-      //Find the direction the translation should go
-      const pointing =
-        vector.direction2d(endRef.current, nearestPoint) < distance ? 1 : -1;
+      e.stopPropagation();
+      onAction(translation);
+      update(selected, {
+        translate: translationVector,
+      });
 
-      //If the distance is null, set it to the current distance, prevents jumping
-      if (distanceRef.current == null) distanceRef.current = distance;
-
-      //Get the translation direction
-      const translate = Translations[action as TranslationType]?.direction;
-
-      //If we're not translating, return
-      if (!translate) return;
-
-      //Calculate the difference in distance
-      const diff = distance - distanceRef.current;
-
-      //Adjust the translation vector by the difference, the direction, and the zoom
-      const delta = vector.scale(translate, diff * (1 / zoom) * pointing);
-
-      //Add the delta to the translation vector
-      transformRef.current.add(delta);
-
-      //Update the distance
-      distanceRef.current = distance;
+      document.addEventListener("mousemove", handleTranslation);
+      document.addEventListener("mouseup", handleTranslationEnd);
     },
-    [zoom, action, handleTranslationEnd],
+    [selected, action, update, select, onAction, zoom],
   );
 
   return (
@@ -166,8 +153,6 @@ const TranslationGizmo = ({ action, onAction }: GizmoProps) => {
           </Fragment>
         );
       })}
-      {action && <DocEvent type="mouseup" listener={handleTranslationEnd} />}
-      <DocEvent type="mousemove" listener={handleTranslation} />
     </Anchor>
   );
 };
