@@ -25,34 +25,6 @@ const globalRotate = (
   return { x, y, z };
 };
 
-const rotateAround = (
-  center: Vector3Type,
-  point: Vector3Type,
-  rotation: Vector3Type,
-) => {
-  const { x, y, z } = point;
-  const { x: rx, y: ry, z: rz } = rotation;
-
-  const x1 = x - center.x;
-  const y1 = y - center.y;
-  const z1 = z - center.z;
-
-  const x2 = x1 * Math.cos(rz) - y1 * Math.sin(rz);
-  const y2 = x1 * Math.sin(rz) + y1 * Math.cos(rz);
-
-  const x3 = x2 * Math.cos(ry) + z1 * Math.sin(ry);
-  const z3 = -x2 * Math.sin(ry) + z1 * Math.cos(ry);
-
-  const x4 = x3 * Math.cos(rx) - y2 * Math.sin(rx);
-  const y4 = x3 * Math.sin(rx) + y2 * Math.cos(rx);
-
-  return {
-    x: x4 + center.x,
-    y: y4 + center.y,
-    z: z3 + center.z,
-  };
-};
-
 const scale = (vector: Partial<Vector3Type>, scalar: number) => ({
   x: (vector.x ?? 0) * scalar,
   y: (vector.y ?? 0) * scalar,
@@ -73,12 +45,6 @@ const subtract = (a: Partial<Vector3Type>, b: Partial<Vector3Type>) => ({
   x: (a.x ?? 0) - (b.x ?? 0),
   y: (a.y ?? 0) - (b.y ?? 0),
   z: (a.z ?? 0) - (b.z ?? 0),
-});
-
-const multiply = (a: Partial<Vector3Type>, b: Partial<Vector3Type>) => ({
-  x: (a.x ?? 0) * (b.x ?? 0),
-  y: (a.y ?? 0) * (b.y ?? 0),
-  z: (a.z ?? 0) * (b.z ?? 0),
 });
 
 const shift = (pos: Vector3Type, mouseX: number, mouseY: number) => ({
@@ -152,57 +118,7 @@ const worldToScreen = (
 const angle2d = (a: Vector2Type, b: Vector2Type) =>
   Math.atan2(b.y - a.y, b.x - a.x);
 
-const angleBetween = (
-  center: Vector3Type,
-  position: Vector3Type,
-): Vector3Type => {
-  const dx = position.x - center.x;
-  const dy = position.y - center.y;
-  const dz = position.z - center.z;
-
-  return {
-    x: Math.atan2(dy, dx),
-    y: Math.atan2(dz, dx),
-    z: Math.atan2(dy, -dz),
-  };
-};
-
-const angleDelta = (
-  center: Vector3Type,
-  offset: Vector3Type,
-  previousOffset: Vector3Type,
-): Vector3Type => {
-  const currentAngle = angleBetween(center, offset);
-  const previousAngle = angleBetween(center, previousOffset);
-
-  const angleDelta = subtract(currentAngle, previousAngle);
-
-  if (angleDelta.x > Math.PI) {
-    angleDelta.x -= TAU;
-  } else if (angleDelta.x < -Math.PI) {
-    angleDelta.x += TAU;
-  }
-
-  if (angleDelta.y > Math.PI) {
-    angleDelta.y -= TAU;
-  } else if (angleDelta.y < -Math.PI) {
-    angleDelta.y += TAU;
-  }
-
-  if (angleDelta.z > Math.PI) {
-    angleDelta.z -= TAU;
-  } else if (angleDelta.z < -Math.PI) {
-    angleDelta.z += TAU;
-  }
-
-  return {
-    x: angleDelta.x,
-    y: angleDelta.y,
-    z: angleDelta.z,
-  };
-};
-
-const nearestPoint = (
+const nearestPoint2d = (
   start: Vector2Type,
   end: Vector2Type,
   point: Vector2Type,
@@ -237,19 +153,15 @@ const direction2d = (a: Vector2Type, b: Vector2Type) =>
 
 const vector = {
   globalRotate,
-  rotateAround,
   scale,
   add,
   subtract,
-  multiply,
   shift,
   spin,
   mouseToWorld,
   worldToScreen,
   angle2d,
-  angleBetween,
-  angleDelta,
-  nearestPoint,
+  nearestPoint2d,
   direction2d,
 };
 
