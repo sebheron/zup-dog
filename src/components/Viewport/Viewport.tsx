@@ -1,8 +1,7 @@
 import clsx from "clsx";
-import { PropsWithChildren, useCallback } from "react";
+import { PropsWithChildren, useCallback, useEffect } from "react";
 import { Illustration } from "react-zdog-alt";
 import useCamera from "@/components/Camera/useCamera";
-import DocEvent from "@/components/DocEvent/DocEvent";
 import Grid from "@/components/Grid/Grid";
 import Model from "@/components/Model/Model";
 import useScene from "@/components/Scene/useScene";
@@ -24,19 +23,22 @@ const Viewport = ({ children }: PropsWithChildren) => {
     [select],
   );
 
-  const handleKeyDown = useCallback(
-    (e: KeyboardEvent) => {
-      if (e.key === "Delete" && selected) del([selected]);
-    },
-    [del, selected],
-  );
-
   const handleModelClick = useCallback(
     (instance: InstanceType) => {
       select(instance);
     },
     [select],
   );
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Delete" && selected) del([selected]);
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [del, selected]);
 
   return (
     <div className={styles.container}>
@@ -66,7 +68,6 @@ const Viewport = ({ children }: PropsWithChildren) => {
           >
             <SelectedModel objects={objects} />
           </Illustration>
-          <DocEvent type="keydown" listener={handleKeyDown} />
         </div>
       )}
       {children}
