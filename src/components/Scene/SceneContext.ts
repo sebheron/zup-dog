@@ -8,7 +8,10 @@ interface SceneContextType {
   move: (instances: InstanceType[], parent?: InstanceType | null) => void;
   select: (instance: InstanceType | null) => void;
   update: (instance: InstanceType, props: Record<string, unknown>) => void;
-  add: (obj: ObjectType, parent?: InstanceType | null) => void;
+  add: <T extends Record<string, any>>(
+    obj: ObjectType<T>,
+    parent?: InstanceType | null,
+  ) => void;
   del: (instances: InstanceType[]) => void;
   rename: (instance: InstanceType, name: string) => void;
 }

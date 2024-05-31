@@ -4,7 +4,7 @@ import styles from "./Button.module.css";
 
 interface Props
   extends Omit<React.HTMLAttributes<HTMLButtonElement>, "className"> {
-  variant?: "default";
+  variant?: "default" | "selectable";
   size?: "small" | "medium" | "large";
   alignment?: "left" | "center" | "right";
   active?: boolean;

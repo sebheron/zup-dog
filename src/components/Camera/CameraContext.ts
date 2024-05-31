@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction, createContext } from "react";
-import Vector3Type from "../../types/Vector3Type";
+import Vector3Type from "@/types/Vector3Type";
 
 interface CameraContextType {
   position: Vector3Type;

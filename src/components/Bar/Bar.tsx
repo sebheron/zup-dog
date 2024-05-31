@@ -1,4 +1,6 @@
 import { BiSolidCameraMovie } from "react-icons/bi";
+import { PiPaintBrushFill } from "react-icons/pi";
+import { TbCube3dSphere } from "react-icons/tb";
 import Button from "@/components/Button/Button";
 import useCamera from "@/components/Camera/useCamera";
 import Divider from "@/components/Divider/Divider";
@@ -20,7 +22,13 @@ const Bar = () => {
       <div className={styles.bar}>
         <Logo />
         <Divider />
-
+        <Button {...tooltip("Select")}>
+          <TbCube3dSphere />
+        </Button>
+        <Button {...tooltip("Paint")}>
+          <PiPaintBrushFill />
+        </Button>
+        <Divider />
         {Objects.map((obj) => {
           const Icon = Icons[obj.shape];
           return (

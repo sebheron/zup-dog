@@ -1,7 +1,7 @@
 import Quaternion from "quaternion";
 import { TAU } from "zdog";
 import Vector2Type from "@/types/Vector2Type";
-import Vector3Type from "../types/Vector3Type";
+import Vector3Type from "@/types/Vector3Type";
 
 const globalRotate = (
   localRotation: Vector3Type,

@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { Anchor } from "react-zdog-alt";
+import RotationGizmo from "@/components/Gizmos/RotationGizmo/RotationGizmo";
+import TranslationGizmo from "@/components/Gizmos/TranslationGizmo/TranslationGizmo";
 import useScene from "@/components/Scene/useScene";
 import { ActionType } from "@/constants/Actions";
 import InstanceType from "@/types/InstanceType";
-import RotationGizmo from "../Gizmos/RotationGizmo/RotationGizmo";
-import TranslationGizmo from "../Gizmos/TranslationGizmo/TranslationGizmo";
 
 interface Props {
   objects: InstanceType[];
