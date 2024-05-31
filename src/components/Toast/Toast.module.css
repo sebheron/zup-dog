@@ -16,7 +16,7 @@
 
 .toast {
   position: absolute;
-  right: max(15rem, 16%);
+  right: 15rem;
   bottom: 0;
   translate: 0 -1rem;
   width: max-content;

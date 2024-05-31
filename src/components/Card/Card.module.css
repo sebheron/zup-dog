@@ -1,6 +1,6 @@
 .card {
   position: absolute;
-  width: max(12rem, 15%);
+  width: 14rem;
   height: calc(100% - 1rem);
   color: var(--fg-primary);
   z-index: 3;
