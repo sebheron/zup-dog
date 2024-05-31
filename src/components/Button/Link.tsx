@@ -3,14 +3,18 @@ import { forwardRef } from "react";
 import styles from "./Button.module.css";
 
 interface Props
-  extends Omit<React.HTMLAttributes<HTMLButtonElement>, "className"> {
+  extends Omit<
+    React.HTMLAttributes<HTMLAnchorElement>,
+    "className" | "target"
+  > {
+  href: string;
   variant?: "default";
   size?: "small" | "medium" | "large";
   alignment?: "left" | "center" | "right";
   active?: boolean;
 }
 
-const Button = forwardRef<HTMLButtonElement, Props>(
+const Link = forwardRef<HTMLAnchorElement, Props>(
   (
     {
       children,
@@ -22,7 +26,7 @@ const Button = forwardRef<HTMLButtonElement, Props>(
     },
     ref,
   ) => (
-    <button
+    <a
       ref={ref}
       className={clsx(
         styles.button,
@@ -32,10 +36,11 @@ const Button = forwardRef<HTMLButtonElement, Props>(
         { [styles.active]: active },
       )}
       {...props}
+      target="_blank"
     >
       {children}
-    </button>
+    </a>
   ),
 );
 
-export default Button;
+export default Link;

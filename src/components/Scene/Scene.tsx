@@ -1,20 +1,42 @@
 import { nanoid } from "nanoid";
 import { useCallback, useMemo, useState } from "react";
+import { FaGithub } from "react-icons/fa";
+import { IoBugSharp } from "react-icons/io5";
 import Axis from "@/components/Axis/Axis";
 import Bar from "@/components/Bar/Bar";
+import Link from "@/components/Button/Link";
 import Camera from "@/components/Camera/Camera";
 import Card from "@/components/Card/Card";
+import CardFooter from "@/components/CardFooter/CardFooter";
+import useToast from "@/components/Toast/useToast";
 import Tooltip from "@/components/Tooltip/Tooltip";
+import TreeView from "@/components/TreeView/TreeView";
 import Viewport from "@/components/Viewport/Viewport";
 import InstanceType from "@/types/InstanceType";
 import ObjectType from "@/types/ObjectType";
-import useToast from "../Toast/useToast";
+import tooltip from "@/utils/tooltip";
 import SceneContext from "./SceneContext";
 
 const Scene = () => {
   const toast = useToast();
   const [objects, setObjects] = useState<InstanceType[]>([]);
   const [selected, setSelected] = useState<InstanceType | null>(null);
+
+  const count = useCallback((instances: InstanceType[]): number => {
+    return instances.reduce((acc, obj) => {
+      if (obj.children) acc += count(obj.children);
+      return acc + 1;
+    }, 0);
+  }, []);
+
+  const filter = useCallback((prev: InstanceType[], ids: string[]) => {
+    return prev
+      .filter((obj) => !ids.includes(obj.id))
+      .map((obj) => {
+        if (obj.children) obj.children = filter(obj.children, ids);
+        return obj;
+      });
+  }, []);
 
   const update = useCallback(
     (instance: InstanceType, props: Record<string, unknown>) => {
@@ -30,43 +52,65 @@ const Scene = () => {
 
   const add = useCallback(
     (obj: ObjectType, parent: InstanceType | null = null) => {
-      const objWithId: InstanceType = {
+      const instance: InstanceType = {
         ...obj,
         id: nanoid(),
         name: obj.shape,
         props: { ...obj.props },
         parentId: parent?.id,
+        children: [],
       };
       setObjects((prev) => {
+        const filtered = filter(prev, [instance.id]);
         if (parent) {
-          if (!parent.children) parent.children = [];
-          parent.children.push(objWithId);
-          return [...prev];
+          parent.children.push(instance);
+          return [...filtered];
         }
-        return [...prev, objWithId];
+        return [...filtered, instance];
       });
-      select(objWithId);
+      select(instance);
     },
-    [select],
+    [select, filter],
   );
-
-  const filter = useCallback((prev: InstanceType[], instance: InstanceType) => {
-    return prev
-      .filter((obj) => instance.id !== obj.id)
-      .map((obj) => {
-        if (obj.children) obj.children = filter(obj.children, instance);
-        return obj;
-      });
-  }, []);
 
   const del = useCallback(
-    (instance: InstanceType) => {
-      setObjects((prev) => filter(prev, instance));
-      toast.notify(`${instance.name} deleted`);
+    (instances: InstanceType[]) => {
+      const counted = count(instances);
+      console.log(counted);
+      setObjects((prev) =>
+        filter(
+          prev,
+          instances.map((obj) => obj.id),
+        ),
+      );
+      toast.notify(`${counted} deleted`);
       select(null);
     },
-    [filter, select, toast],
+    [filter, select, count, toast],
   );
+
+  const move = useCallback(
+    (instances: InstanceType[], parent?: InstanceType | null) => {
+      setObjects((prev) => {
+        const filtered = filter(
+          prev,
+          instances.map((obj) => obj.id),
+        );
+        if (parent) {
+          if (!parent.children) parent.children = [];
+          parent.children.push(...instances);
+          return [...filtered];
+        }
+        return [...filtered, ...instances];
+      });
+    },
+    [filter],
+  );
+
+  const rename = useCallback((instance: InstanceType, name: string) => {
+    instance.name = name;
+    setObjects((prev) => [...prev]);
+  }, []);
 
   const sceneContext = useMemo(
     () => ({
@@ -76,8 +120,10 @@ const Scene = () => {
       add,
       select,
       del,
+      move,
+      rename,
     }),
-    [objects, selected, update, add, select, del],
+    [objects, selected, update, add, select, del, move, rename],
   );
 
   return (
@@ -87,7 +133,23 @@ const Scene = () => {
         <Viewport>
           <Bar />
           <Axis />
-          <Card position="left"></Card>
+          <Card position="left">
+            <TreeView />
+            <CardFooter>
+              <Link
+                href="https://github.com/sebheron/zup-dog"
+                {...tooltip("Github")}
+              >
+                <FaGithub />
+              </Link>
+              <Link
+                href="https://github.com/sebheron/zup-dog/issues"
+                {...tooltip("Report an issue")}
+              >
+                <IoBugSharp />
+              </Link>
+            </CardFooter>
+          </Card>
           <Card position="right"></Card>
         </Viewport>
       </SceneContext.Provider>

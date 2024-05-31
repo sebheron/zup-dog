@@ -7,7 +7,9 @@ interface Props extends PropsWithChildren {
 }
 
 const Card = ({ children, position }: Props) => (
-  <div className={clsx(styles.card, styles[position])}>{children}</div>
+  <div className={clsx(styles.card, styles[position])}>
+    <div className={styles.container}>{children}</div>
+  </div>
 );
 
 export default Card;

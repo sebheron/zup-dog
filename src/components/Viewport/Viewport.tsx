@@ -26,7 +26,7 @@ const Viewport = ({ children }: PropsWithChildren) => {
 
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
-      if (e.key === "Delete" && selected) del(selected);
+      if (e.key === "Delete" && selected) del([selected]);
     },
     [del, selected],
   );
