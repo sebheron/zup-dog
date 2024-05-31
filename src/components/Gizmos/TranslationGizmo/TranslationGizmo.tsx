@@ -75,7 +75,7 @@ const TranslationGizmo = ({ action, onAction }: GizmoProps) => {
 
       const handleTranslationEnd = () => {
         update(selected, {
-          translation: {
+          translate: {
             x: translationVector.x,
             y: translationVector.y,
             z: translationVector.z,
