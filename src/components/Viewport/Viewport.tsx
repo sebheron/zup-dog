@@ -1,6 +1,12 @@
 import clsx from "clsx";
-import { PropsWithChildren, useCallback, useEffect } from "react";
-import { Illustration } from "react-zdog-alt";
+import {
+  PropsWithChildren,
+  forwardRef,
+  useCallback,
+  useEffect,
+  useRef,
+} from "react";
+import { Illustration, useZdog } from "react-zdog-alt";
 import useCamera from "@/components/Camera/useCamera";
 import Grid from "@/components/Grid/Grid";
 import Model from "@/components/Model/Model";
@@ -10,15 +16,51 @@ import useDolly from "@/hooks/useDolly";
 import InstanceType from "@/types/InstanceType";
 import styles from "./Viewport.module.css";
 
+const ViewportElement = forwardRef<HTMLCanvasElement | SVGSVGElement>(
+  (_, ref) => {
+    const { illu } = useZdog();
+    const element = useRef(illu.element);
+
+    useEffect(() => {
+      if (!ref) return;
+      if (typeof ref === "function") ref(element.current);
+      else ref.current = element.current;
+    }, [ref]);
+
+    return null;
+  },
+);
+
 const Viewport = ({ children }: PropsWithChildren) => {
   const { registerDolly } = useDolly();
   const { zoom, rotation, position } = useCamera();
   const { objects, selected, select, del } = useScene();
+  const mainViewport = useRef<HTMLCanvasElement | SVGSVGElement>(null);
 
-  const handleMouseDown = useCallback(
+  const handleCanvasClick = useCallback(
+    (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
+      if (e.buttons !== 1 && !selected) return;
+      select(null);
+    },
+    [select, selected],
+  );
+
+  const handleSelectedCanvasMouseDown = useCallback(
     (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
       if (e.buttons !== 1) return;
-      select(null);
+      if (mainViewport.current && "click" in mainViewport.current) {
+        const event = new MouseEvent("click", {
+          view: window,
+          bubbles: true,
+          cancelable: true,
+          clientX: e.clientX,
+          clientY: e.clientY,
+          screenX: e.screenX,
+          screenY: e.screenY,
+        });
+        mainViewport.current.dispatchEvent(event);
+      }
+      // select(null);
     },
     [select],
   );
@@ -45,12 +87,14 @@ const Viewport = ({ children }: PropsWithChildren) => {
       <div className={styles.viewport}>
         <Illustration
           element="canvas"
+          onClick={handleCanvasClick}
           zoom={zoom}
-          pointerEvents
           rotate={rotation}
           translate={position}
+          pointerEvents
           {...registerDolly()}
         >
+          <ViewportElement ref={mainViewport} />
           <Grid length={1000} cellSize={100} />
           <Model objects={objects} onClick={handleModelClick} />
         </Illustration>
@@ -59,8 +103,8 @@ const Viewport = ({ children }: PropsWithChildren) => {
         <div className={clsx(styles.viewport, styles.filtered)}>
           <Illustration
             element="canvas"
+            onPointerDown={handleSelectedCanvasMouseDown}
             zoom={zoom}
-            onPointerDown={handleMouseDown}
             rotate={rotation}
             translate={position}
             pointerEvents
