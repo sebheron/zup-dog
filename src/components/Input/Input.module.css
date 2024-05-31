@@ -1,0 +1,68 @@
+.container {
+  display: grid;
+  grid-template-columns: 3.5rem 1fr;
+  align-items: center;
+}
+
+.rightSide {
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+}
+
+.label {
+  font-size: 0.7rem;
+}
+
+.input {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
+  flex: 1;
+  color: var(--fg-primary);
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 5px;
+  font-size: 0.7rem;
+  color: var(--fg-secondary);
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+}
+
+.input:focus-within {
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 2px var(--accent-primary);
+}
+
+.input[data-label]::before {
+  content: attr(data-label);
+  display: block;
+  padding: 0.15rem 0.2rem;
+  font-size: 0.55rem;
+}
+
+.textbox {
+  width: 100%;
+  background-color: transparent;
+  border: none;
+  font-size: 0.7rem;
+  padding: 0.2rem 0;
+}
+
+.textbox:focus {
+  outline: none;
+}
+
+.textbox::-webkit-outer-spin-button,
+.textbox::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type="number"].textbox {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
