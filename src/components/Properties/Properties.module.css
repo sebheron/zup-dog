@@ -1,0 +1,7 @@
+.properties {
+  display: flex;
+  flex-direction: column;
+  justify-content: stretch;
+  gap: 0.5rem;
+  padding: 0.5rem;
+}
