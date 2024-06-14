@@ -1,3 +1,4 @@
+import useEdit from "@/hooks/useEdit";
 import Vector3Type from "@/types/Vector3Type";
 import titleCase from "@/utils/title";
 import types from "@/utils/types";
@@ -32,6 +33,8 @@ const VectorInput = <T extends Vector3Type>({
   value,
   onChange,
 }: Props<T>) => {
+  const [vector, setVector, submit] = useEdit(value, onChange);
+
   return (
     <div className={styles.container}>
       <label className={styles.label}>{titleCase(property)}</label>
@@ -40,30 +43,33 @@ const VectorInput = <T extends Vector3Type>({
           <input
             className={styles.textbox}
             type="number"
-            value={value.x}
+            value={vector.x}
             onChange={(e) =>
-              onChange({ ...value, x: parseFloat(e.target.value) })
+              setVector((prev) => ({ ...prev, x: parseFloat(e.target.value) }))
             }
+            onBlur={submit}
           />
         </div>
         <div className={styles.input} data-label="Y">
           <input
             className={styles.textbox}
             type="number"
-            value={value.y}
+            value={vector.y}
             onChange={(e) =>
-              onChange({ ...value, y: parseFloat(e.target.value) })
+              setVector((prev) => ({ ...prev, y: parseFloat(e.target.value) }))
             }
+            onBlur={submit}
           />
         </div>
         <div className={styles.input} data-label="Z">
           <input
             className={styles.textbox}
             type="number"
-            value={value.z}
+            value={vector.z}
             onChange={(e) =>
-              onChange({ ...value, z: parseFloat(e.target.value) })
+              setVector((prev) => ({ ...prev, z: parseFloat(e.target.value) }))
             }
+            onBlur={submit}
           />
         </div>
       </div>
