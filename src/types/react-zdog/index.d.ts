@@ -16,6 +16,7 @@ declare module "react-zdog-alt" {
     Illustration as ZIllustration,
     VectorOptions,
   } from "zdog";
+  import { TextOptions } from "zfont";
 
   export type ElementProxy = {
     renderOrigin: Required<VectorOptions>;
@@ -54,6 +55,7 @@ declare module "react-zdog-alt" {
   export const Cylinder: React.FC<AdditionalElementProps & CylinderOptions>;
   export const Cone: React.FC<AdditionalElementProps & ConeOptions>;
   export const Box: React.FC<AdditionalElementProps & BoxOptions>;
+  export const Text: React.FC<AdditionalElementProps & TextOptions<string>>;
 
   export const useRender: (fn: () => void, deps: DependencyList) => void;
   export const useZdog: () => { illu: ZIllustration };

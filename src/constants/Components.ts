@@ -12,6 +12,7 @@ import {
   Rect,
   RoundedRect,
   Shape,
+  Text,
 } from "react-zdog-alt";
 import NameType from "@/types/NameType";
 
@@ -30,6 +31,7 @@ const Components: Record<
   [NameType.Polygon]: Polygon,
   [NameType.Anchor]: Anchor,
   [NameType.Group]: Group,
+  [NameType.Text]: Text,
 };
 
 export default Components;

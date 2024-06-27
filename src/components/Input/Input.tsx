@@ -12,6 +12,22 @@ interface Props<T> {
   onChange: (value: T) => void;
 }
 
+const MultilineInput = ({ property, value, onChange }: Props<string>) => {
+  const [text, setText, submit] = useEdit(value, onChange);
+
+  return (
+    <div className={styles.container}>
+      <label className={styles.label}>{titleCase(property)}</label>
+      <textarea
+        className={styles.textarea}
+        value={text}
+        onChange={(e) => setText(e.target.value)}
+        onBlur={submit}
+      />
+    </div>
+  );
+};
+
 const BooleanInput = ({ property, value, onChange }: Props<boolean>) => {
   return (
     <div className={styles.container}>
@@ -130,6 +146,15 @@ const Input = <T,>({ property, value, onChange }: Props<T>) => {
         property={property}
         value={value}
         onChange={onChange as (value: boolean) => void}
+      />
+    );
+  }
+  if (types.isText(value) && property === "value") {
+    return (
+      <MultilineInput
+        property={property}
+        value={value}
+        onChange={onChange as (value: string) => void}
       />
     );
   }

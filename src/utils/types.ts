@@ -27,11 +27,16 @@ const isBoolean = (value: unknown): value is boolean => {
   return typeof value === "boolean";
 };
 
+const isText = (value: unknown): value is string => {
+  return typeof value === "string";
+};
+
 const types = {
   isVector,
   isNumber,
   isColor,
   isBoolean,
+  isText,
 };
 
 export default types;

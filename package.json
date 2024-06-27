@@ -24,9 +24,10 @@
     "react-dom": "^18.2.0",
     "react-icons": "^5.2.1",
     "react-tooltip": "^5.26.4",
-    "react-zdog-alt": "^1.1.2",
+    "react-zdog-alt": "^1.2.0",
     "use-resize-observer": "^9.1.0",
-    "zdog": "^1.1.3"
+    "zdog": "^1.1.3",
+    "zfont": "^1.2.8"
   },
   "devDependencies": {
     "@trivago/prettier-plugin-sort-imports": "^4.3.0",
@@ -35,6 +36,7 @@
     "@types/react": "^18.2.66",
     "@types/react-dom": "^18.2.22",
     "@types/zdog": "^1.1.7",
+    "@types/zfont": "^1.2.5",
     "@typescript-eslint/eslint-plugin": "^7.2.0",
     "@typescript-eslint/parser": "^7.2.0",
     "@vitejs/plugin-react": "^4.2.1",
