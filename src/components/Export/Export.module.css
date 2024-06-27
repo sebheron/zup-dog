@@ -1,0 +1,39 @@
+.container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 100;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.export {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  gap: 0.5rem;
+  background-color: var(--bg-secondary);
+  border-radius: 0.8rem;
+  width: 40vw;
+  height: 80vh;
+  position: relative;
+}
+
+.export > div {
+  position: unset;
+  border: 1px solid var(--border-color);
+}
+
+.export > div > button {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  border: 1px solid var(--border-color);
+}
+
+.export code > span {
+  padding: 0 8px !important;
+}

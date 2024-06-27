@@ -1,4 +1,5 @@
-import { BiSolidCameraMovie } from "react-icons/bi";
+import { useState } from "react";
+import { BiExport, BiSolidCameraMovie } from "react-icons/bi";
 import { PiPaintBrushFill } from "react-icons/pi";
 import { TbCube3dSphere } from "react-icons/tb";
 import Button from "@/components/Button/Button";
@@ -12,9 +13,11 @@ import Objects from "@/constants/Objects";
 import ToolType from "@/types/ToolType";
 import tooltip from "@/utils/tooltip";
 import ColorPicker from "../ColorPicker/ColorPicker";
+import Export from "../Export/Export";
 import styles from "./Bar.module.css";
 
 const Bar = () => {
+  const [exporting, setExporting] = useState(false);
   const { tool, paintColor, selected, add, setPaintColor, setTool } =
     useScene();
   const { reset } = useCamera();
@@ -60,7 +63,11 @@ const Bar = () => {
         >
           <Menu.Item onClick={reset}>Reset Camera</Menu.Item>
         </Menu>
+        <Button onClick={() => setExporting(true)} {...tooltip("Export")}>
+          <BiExport />
+        </Button>
       </div>
+      <Export open={exporting} onClose={() => setExporting(false)} />
     </div>
   );
 };

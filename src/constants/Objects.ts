@@ -167,9 +167,9 @@ const Objects = [
   RoundedRectangleObject,
   EllipseObject,
   PolygonObject,
+  TextObject,
   AnchorObject,
   GroupObject,
-  TextObject,
 ];
 
 export default Objects;
