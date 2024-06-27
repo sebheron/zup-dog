@@ -2,6 +2,8 @@ import useEdit from "@/hooks/useEdit";
 import Vector3Type from "@/types/Vector3Type";
 import titleCase from "@/utils/title";
 import types from "@/utils/types";
+import ColorPicker from "../ColorPicker/ColorPicker";
+import Switch from "../Switch/Switch";
 import styles from "./Input.module.css";
 
 interface Props<T> {
@@ -10,29 +12,46 @@ interface Props<T> {
   onChange: (value: T) => void;
 }
 
-// const NumericalInput = <T extends number>({
-//   property,
-//   value,
-//   onChange,
-// }: Props<T>) => {
-//   return (
-//     <div className={styles.container}>
-//       <label className={styles.label}>{titleCase(property)}</label>
-//       <input
-//         className={styles.input}
-//         type="number"
-//         value={value}
-//         onChange={(e) => onChange(parseFloat(e.target.value))}
-//       />
-//     </div>
-//   );
-// };
+const BooleanInput = ({ property, value, onChange }: Props<boolean>) => {
+  return (
+    <div className={styles.container}>
+      <label className={styles.label}>{titleCase(property)}</label>
+      <Switch onChange={onChange} checked={value} />
+    </div>
+  );
+};
 
-const VectorInput = <T extends Vector3Type>({
-  property,
-  value,
-  onChange,
-}: Props<T>) => {
+const ColorInput = ({ property, value, onChange }: Props<string>) => {
+  return (
+    <div className={styles.container}>
+      <label className={styles.label}>{titleCase(property)}</label>
+      <ColorPicker color={value} onChange={onChange}>
+        <div className={styles.box} style={{ backgroundColor: value }} />
+      </ColorPicker>
+    </div>
+  );
+};
+
+const NumericalInput = ({ property, value, onChange }: Props<number>) => {
+  const [number, setNumber, submit] = useEdit<number>(value, onChange);
+
+  return (
+    <div className={styles.container}>
+      <label className={styles.label}>{titleCase(property)}</label>
+      <div className={styles.input}>
+        <input
+          className={styles.textbox}
+          type="number"
+          value={number}
+          onChange={(e) => setNumber(parseFloat(e.target.value))}
+          onBlur={submit}
+        />
+      </div>
+    </div>
+  );
+};
+
+const VectorInput = ({ property, value, onChange }: Props<Vector3Type>) => {
   const [vector, setVector, submit] = useEdit(value, onChange);
 
   return (
@@ -80,9 +99,45 @@ const VectorInput = <T extends Vector3Type>({
 const Input = <T,>({ property, value, onChange }: Props<T>) => {
   if (types.isVector(value)) {
     return (
-      <VectorInput property={property} value={value} onChange={onChange} />
+      <VectorInput
+        property={property}
+        value={value}
+        onChange={onChange as (value: Vector3Type) => void}
+      />
+    );
+  }
+  if (types.isNumber(value)) {
+    return (
+      <NumericalInput
+        property={property}
+        value={value}
+        onChange={onChange as (value: number) => void}
+      />
+    );
+  }
+  if (types.isColor(value)) {
+    return (
+      <ColorInput
+        property={property}
+        value={value}
+        onChange={onChange as (value: string) => void}
+      />
+    );
+  }
+  if (types.isBoolean(value)) {
+    return (
+      <BooleanInput
+        property={property}
+        value={value}
+        onChange={onChange as (value: boolean) => void}
+      />
     );
   }
 };
+
+Input.Boolean = BooleanInput;
+Input.Color = ColorInput;
+Input.Numerical = NumericalInput;
+Input.Vector = VectorInput;
 
 export default Input;

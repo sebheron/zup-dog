@@ -12,4 +12,9 @@ const Card = ({ children, position }: Props) => (
   </div>
 );
 
+const CardFooter = ({ children }: PropsWithChildren) => (
+  <footer className={styles.footer}>{children}</footer>
+);
+
+Card.Footer = CardFooter;
 export default Card;

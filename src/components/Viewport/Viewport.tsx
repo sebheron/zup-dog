@@ -14,6 +14,7 @@ import useScene from "@/components/Scene/useScene";
 import SelectedModel from "@/components/SelectedModel/SelectedModel";
 import useDolly from "@/hooks/useDolly";
 import InstanceType from "@/types/InstanceType";
+import ToolType from "@/types/ToolType";
 import styles from "./Viewport.module.css";
 
 const ViewportElement = forwardRef<HTMLCanvasElement | SVGSVGElement>(
@@ -34,7 +35,7 @@ const ViewportElement = forwardRef<HTMLCanvasElement | SVGSVGElement>(
 const Viewport = ({ children }: PropsWithChildren) => {
   const { registerDolly } = useDolly();
   const { zoom, rotation, position } = useCamera();
-  const { objects, selected, select, del } = useScene();
+  const { tool, objects, selected, select, del } = useScene();
   const mainViewport = useRef<HTMLCanvasElement | SVGSVGElement>(null);
 
   const handleCanvasClick = useCallback(
@@ -99,7 +100,7 @@ const Viewport = ({ children }: PropsWithChildren) => {
           <Model objects={objects} onClick={handleModelClick} />
         </Illustration>
       </div>
-      {!!selected && (
+      {!!selected && tool === ToolType.Select && (
         <div className={clsx(styles.viewport, styles.filtered)}>
           <Illustration
             element="canvas"

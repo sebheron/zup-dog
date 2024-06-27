@@ -1,0 +1,27 @@
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 25px;
+  height: 12px;
+  border-radius: 34px;
+  border: 1px solid var(--border-color);
+  background-color: transparent;
+}
+
+.thumb {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: #c57474;
+  transition:
+    transform 0.2s,
+    background-color 0.2s;
+}
+
+.checked {
+  transform: translateX(12.5px);
+  background-color: #77d777;
+}

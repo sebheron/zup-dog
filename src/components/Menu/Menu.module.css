@@ -2,9 +2,9 @@
   position: fixed;
   display: flex;
   flex-direction: column;
-  padding: 0.5rem;
   background-color: var(--bg-secondary);
   border: 1px solid var(--border-color);
+  padding: 0.5rem;
   border-radius: 0.8rem;
   min-width: 8rem;
   max-height: 14rem;

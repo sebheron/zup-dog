@@ -1,0 +1,41 @@
+.top {
+  position: fixed;
+  width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: translateX(10px);
+  z-index: 1000;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border-color);
+  background-color: var(--bg-secondary);
+  padding: 0.5rem;
+  border-radius: 0.8rem;
+  gap: 0.5rem;
+  width: 220px;
+}
+
+.block {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+}
+
+.block::before {
+  content: "#";
+  margin-right: 0.5rem;
+  color: var(--fg-secondary);
+}
+
+.input {
+  flex: 1;
+  border-radius: 5px;
+  border: 1px solid var(--border-color);
+  background-color: var(--bg-secondary);
+}

@@ -33,4 +33,22 @@ const Menu = ({ children, buttonContent, ...props }: Props) => (
   </HeadlessMenu>
 );
 
+interface MenuItemProps extends PropsWithChildren {
+  disabled?: boolean;
+  onClick?: () => void;
+}
+
+const MenuItem = ({ children, disabled, onClick }: MenuItemProps) => (
+  <HeadlessMenu.Item
+    as={Button}
+    disabled={disabled}
+    onClick={onClick}
+    size="small"
+    alignment="left"
+  >
+    {children}
+  </HeadlessMenu.Item>
+);
+
+Menu.Item = MenuItem;
 export default Menu;

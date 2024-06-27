@@ -16,21 +16,21 @@ import ObjectType from "@/types/ObjectType";
 
 const defaultAnchor: AnchorOptions = {
   addTo: undefined,
+  scale: 1,
   translate: { x: 0, y: 0, z: 0 },
   rotate: { x: 0, y: 0, z: 0 },
-  scale: 1,
 };
 
 const defaultShape: ShapeOptions = {
   ...defaultAnchor,
+  front: { x: 0, y: 0, z: 1 },
+  path: [{ x: 0, y: 0, z: 0 }],
+  visible: true,
   color: "#E62",
   stroke: 0,
   fill: true,
   closed: false,
-  visible: true,
   backface: true,
-  front: { x: 0, y: 0, z: 1 },
-  path: [{ x: 0, y: 0, z: 0 }],
 };
 
 const defaultRect: RectOptions = {

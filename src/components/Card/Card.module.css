@@ -26,3 +26,12 @@
 .right {
   right: 0.5rem;
 }
+
+.footer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-evenly;
+  gap: 0.5rem;
+  padding: 0.5rem;
+}

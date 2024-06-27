@@ -7,19 +7,21 @@ import Bar from "@/components/Bar/Bar";
 import Link from "@/components/Button/Link";
 import Camera from "@/components/Camera/Camera";
 import Card from "@/components/Card/Card";
-import CardFooter from "@/components/CardFooter/CardFooter";
 import useToast from "@/components/Toast/useToast";
 import Tooltip from "@/components/Tooltip/Tooltip";
 import TreeView from "@/components/TreeView/TreeView";
 import Viewport from "@/components/Viewport/Viewport";
 import InstanceType from "@/types/InstanceType";
 import ObjectType from "@/types/ObjectType";
+import ToolType from "@/types/ToolType";
 import tooltip from "@/utils/tooltip";
 import Properties from "../Properties/Properties";
 import SceneContext from "./SceneContext";
 
 const Scene = () => {
   const toast = useToast();
+  const [tool, setTool] = useState(ToolType.Select);
+  const [paintColor, setPaintColor] = useState("#E62");
   const [objects, setObjects] = useState<InstanceType[]>([]);
   const [selected, setSelected] = useState<InstanceType | null>(null);
 
@@ -47,17 +49,26 @@ const Scene = () => {
     [],
   );
 
-  const select = useCallback((instance: InstanceType | null) => {
-    setSelected(instance);
-  }, []);
+  const select = useCallback(
+    (instance: InstanceType | null) => {
+      if (tool === ToolType.Select) setSelected(instance);
+      if (tool === ToolType.Paint && instance != null) {
+        update(instance, { color: paintColor });
+      }
+    },
+    [tool, paintColor, update],
+  );
 
   const add = useCallback(
     (obj: ObjectType, parent: InstanceType | null = null) => {
+      const newProps = { ...obj.props };
+      if (newProps.color) newProps.color = paintColor;
+
       const instance: InstanceType = {
         ...obj,
         id: nanoid(),
         name: obj.shape,
-        props: { ...obj.props },
+        props: newProps,
         parentId: parent?.id,
         children: [],
       };
@@ -69,9 +80,10 @@ const Scene = () => {
         }
         return [...filtered, instance];
       });
+      setTool(ToolType.Select);
       select(instance);
     },
-    [select, filter],
+    [select, filter, paintColor],
   );
 
   const del = useCallback(
@@ -117,14 +129,29 @@ const Scene = () => {
     () => ({
       objects,
       selected,
+      tool,
+      paintColor,
       update,
       add,
       select,
       del,
       move,
       rename,
+      setTool,
+      setPaintColor,
     }),
-    [objects, selected, update, add, select, del, move, rename],
+    [
+      objects,
+      selected,
+      tool,
+      paintColor,
+      update,
+      add,
+      select,
+      del,
+      move,
+      rename,
+    ],
   );
 
   return (
@@ -136,7 +163,7 @@ const Scene = () => {
           <Axis />
           <Card position="left">
             <TreeView />
-            <CardFooter>
+            <Card.Footer>
               <Link
                 href="https://github.com/sebheron/zup-dog"
                 {...tooltip("Github")}
@@ -149,11 +176,13 @@ const Scene = () => {
               >
                 <IoBugSharp />
               </Link>
-            </CardFooter>
+            </Card.Footer>
           </Card>
-          <Card position="right">
-            <Properties />
-          </Card>
+          {selected != null && (
+            <Card position="right">
+              <Properties />
+            </Card>
+          )}
         </Viewport>
       </SceneContext.Provider>
     </Camera>

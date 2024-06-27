@@ -123,24 +123,18 @@ const nearestPoint2d = (
   end: Vector2Type,
   point: Vector2Type,
 ) => {
-  // Direction vector of the line
   const dx = end.x - start.x;
   const dy = end.y - start.y;
 
-  // Vector from p1 to the point p
   const apx = point.x - start.x;
   const apy = point.y - start.y;
 
-  // Dot product of AP and the direction vector
   const ap_dot_d = apx * dx + apy * dy;
 
-  // Dot product of the direction vector with itself
   const d_dot_d = dx * dx + dy * dy;
 
-  // Parameter t of the projection
   const t = ap_dot_d / d_dot_d;
 
-  // Nearest point on the line
   const nearestX = start.x + t * dx;
   const nearestY = start.y + t * dy;
 

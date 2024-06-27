@@ -6,15 +6,17 @@ import useCamera from "@/components/Camera/useCamera";
 import Divider from "@/components/Divider/Divider";
 import Logo from "@/components/Logo/Logo";
 import Menu from "@/components/Menu/Menu";
-import MenuItem from "@/components/MenuItem/MenuItem";
 import useScene from "@/components/Scene/useScene";
 import Icons from "@/constants/Icons";
 import Objects from "@/constants/Objects";
+import ToolType from "@/types/ToolType";
 import tooltip from "@/utils/tooltip";
+import ColorPicker from "../ColorPicker/ColorPicker";
 import styles from "./Bar.module.css";
 
 const Bar = () => {
-  const { selected, add } = useScene();
+  const { tool, paintColor, selected, add, setPaintColor, setTool } =
+    useScene();
   const { reset } = useCamera();
 
   return (
@@ -22,12 +24,22 @@ const Bar = () => {
       <div className={styles.bar}>
         <Logo />
         <Divider />
-        <Button {...tooltip("Select")}>
+        <Button
+          {...tooltip("Select")}
+          active={tool === ToolType.Select}
+          onClick={() => setTool(ToolType.Select)}
+        >
           <TbCube3dSphere />
         </Button>
-        <Button {...tooltip("Paint")}>
+        <ColorPicker
+          {...tooltip("Paint")}
+          color={paintColor}
+          onChange={setPaintColor}
+          active={tool === ToolType.Paint}
+          onSelect={() => setTool(ToolType.Paint)}
+        >
           <PiPaintBrushFill />
-        </Button>
+        </ColorPicker>
         <Divider />
         {Objects.map((obj) => {
           const Icon = Icons[obj.shape];
@@ -46,7 +58,7 @@ const Bar = () => {
           buttonContent={<BiSolidCameraMovie />}
           {...tooltip("Camera Settings")}
         >
-          <MenuItem onClick={reset}>Reset Camera</MenuItem>
+          <Menu.Item onClick={reset}>Reset Camera</Menu.Item>
         </Menu>
       </div>
     </div>
