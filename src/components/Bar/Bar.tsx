@@ -67,7 +67,11 @@ const Bar = () => {
           <BiExport />
         </Button>
       </div>
-      <Export open={exporting} onClose={() => setExporting(false)} />
+      <Export
+        open={exporting}
+        onClose={() => setExporting(false)}
+        {...tooltip("Export")}
+      />
     </div>
   );
 };
