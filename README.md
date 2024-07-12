@@ -4,6 +4,8 @@
 
 *zup-dog* is a 3D editor utilising ZDog as its engine and built in React.
 
+![image](https://github.com/user-attachments/assets/ac7d43a6-80aa-4355-93ba-a816d77da74d)
+
 ### Why?
 
 I'm a big fan of spline and its interface for building 3d scenes is brilliant. This is my butchering attempt at recreating it for a more lightweight engine, with its own visual appeal.
