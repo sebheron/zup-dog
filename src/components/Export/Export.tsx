@@ -1,7 +1,11 @@
 import { Dialog } from "@headlessui/react";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { CopyBlock, codepen } from "react-code-blocks";
-import useScene from "../Scene/useScene";
+import stringifyObject from "stringify-object";
+import useScene from "@/components/Scene/useScene";
+import ValueType from "@/types/ValueType";
+import { ExportKey, Exports } from "@/utils/exports";
+import useCamera from "../Camera/useCamera";
 import styles from "./Export.module.css";
 
 interface ExportProps {
@@ -11,30 +15,118 @@ interface ExportProps {
 
 const Export = ({ open, onClose }: ExportProps) => {
   const { objects } = useScene();
+  const { position, rotation, zoom } = useCamera();
 
-  const appendZdogObject = useCallback(
-    (obj: Record<string, unknown>, parent?: string): string => {
-      const prefix =
-        Array.isArray(obj.children) && obj.children.length
-          ? `const ${obj.id} = `
-          : "";
-      const props = { ...(obj.props as Record<string, unknown>) };
-      if (parent) {
-        props.addTo = parent;
-      }
-      const declaration = `${prefix}new Zdog.${obj.shape}(${JSON.stringify(props, null, 2)});\n`;
-      if (Array.isArray(obj.children)) {
-        return `${declaration}${obj.children.map((child) => appendZdogObject(child, obj.id as string)).join("")}`;
-      }
-      return `${declaration}\n`;
+  const [mode, setMode] = useState<ExportKey>("canvas");
+
+  const getIllo = useCallback(() => {
+    const props = {
+      element: "zcanvas",
+      dragRotate: true,
+      zoom,
+      translate: position,
+      rotate: rotation,
+    };
+
+    return `const illo = new Zdog.Illustration(${stringifyObject(props, {
+      indent: "  ",
+      singleQuotes: false,
+      transform: transformZdogProps,
+      filter: filterZdogProps,
+    })});\n`;
+  }, [position, rotation, zoom]);
+
+  const filterZdogProps = useCallback(
+    (
+      props: Record<string | number | symbol, unknown>,
+      prop: string | number | symbol,
+    ) => {
+      return props[prop] !== undefined;
     },
     [],
   );
 
+  const transformZdogProps = useCallback(
+    (props: object, prop: string | number | symbol, originalResult: string) => {
+      if (prop === "addTo" || prop === "element") {
+        return (props as Record<string | number | symbol, unknown>)[
+          prop
+        ] as string;
+      }
+      return originalResult;
+    },
+    [],
+  );
+
+  const getPrefix = useCallback(
+    (obj: Record<string, unknown>, name: string) => {
+      return Array.isArray(obj.children) && obj.children.length
+        ? `const ${name} = `
+        : "";
+    },
+    [],
+  );
+
+  const getProps = useCallback(
+    (obj: Record<string, unknown>, parent?: string) => {
+      const props = { ...(obj.props as Record<string, unknown>) };
+      if (parent) {
+        props.addTo = parent;
+      }
+      return props;
+    },
+    [],
+  );
+
+  const getDeclaration = useCallback(
+    (
+      obj: Record<string, unknown>,
+      prefix: string,
+      props: Record<string, unknown>,
+    ) => {
+      return `${prefix}new Zdog.${obj.shape}(${stringifyObject(props, {
+        indent: "  ",
+        singleQuotes: false,
+        transform: transformZdogProps,
+        filter: filterZdogProps,
+      })});`;
+    },
+    [transformZdogProps, filterZdogProps],
+  );
+
+  const appendZdogObject = useCallback(
+    (
+      obj: Record<string, unknown>,
+      index: ValueType<number>,
+      parent: string,
+    ): string => {
+      const name = `zShape${index.value}`;
+      index.value += 1;
+
+      const prefix = getPrefix(obj, name);
+      const props = getProps(obj, parent);
+      const declaration = getDeclaration(obj, prefix, props);
+
+      if (Array.isArray(obj.children)) {
+        return `${declaration}${obj.children.map((child) => appendZdogObject(child, index, name)).join("")}`;
+      }
+      return `${declaration}\n`;
+    },
+    [getPrefix, getProps, getDeclaration],
+  );
+
   const getJSText = useCallback(() => {
-    const lines: string[] = objects.map((obj) => appendZdogObject(obj));
-    return ['import Zdog from "zdog";', "", ...lines].join("\n");
-  }, [objects]);
+    let index: ValueType<number> = { value: 0 };
+    const lines: string[] = objects.map((obj) =>
+      appendZdogObject(obj, index, "illo"),
+    );
+
+    const { getHeader, getFooter } = Exports[mode];
+
+    return [getHeader(), "", getIllo(), ...lines, getFooter()]
+      .join("\n")
+      .trim();
+  }, [objects, appendZdogObject, getIllo, mode]);
 
   return (
     <Dialog className={styles.container} open={open} onClose={onClose}>
@@ -45,7 +137,7 @@ const Export = ({ open, onClose }: ExportProps) => {
           theme={codepen}
           text={getJSText()}
           codeBlock
-          customStyle={{ height: "100%", width: "100%", overflow: "auto" }}
+          customStyle={{ flex: "1", width: "100%", overflow: "auto" }}
         />
       </Dialog.Panel>
     </Dialog>
