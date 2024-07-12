@@ -6,11 +6,13 @@ import { MdChevronRight, MdKeyboardArrowDown } from "react-icons/md";
 import useResizeObserver from "use-resize-observer";
 import useScene from "@/components/Scene/useScene";
 import Icons from "@/constants/Icons";
+import ToolType from "@/types/ToolType";
 import styles from "./TreeView.module.css";
 
 const TreeView = () => {
   const { ref, height } = useResizeObserver();
-  const { selected, objects, update, select, move, rename } = useScene();
+  const { tool, selected, objects, update, select, move, rename, setTool } =
+    useScene();
   const [search, setSearch] = useState("");
 
   return (
@@ -50,7 +52,10 @@ const TreeView = () => {
                 })}
                 style={{ paddingLeft: node.level * 22 + 15 }}
                 ref={dragHandle}
-                onClick={() => select(node.data)}
+                onClick={() => {
+                  if (tool === ToolType.Paint) setTool(ToolType.Select);
+                  else select(node.data);
+                }}
               >
                 {node.data.children?.length ? (
                   <button
