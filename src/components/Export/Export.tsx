@@ -1,6 +1,6 @@
 import { Dialog } from "@headlessui/react";
 import { useCallback, useState } from "react";
-import { CopyBlock, codepen } from "react-code-blocks";
+import { CodeBlock, CopyBlock, codepen } from "react-code-blocks";
 import stringifyObject from "stringify-object";
 import useCamera from "@/components/Camera/useCamera";
 import useScene from "@/components/Scene/useScene";
@@ -132,12 +132,12 @@ const Export = ({ open, onClose }: ExportProps) => {
     <Dialog className={styles.container} open={open} onClose={onClose}>
       <Dialog.Panel className={styles.export}>
         <CopyBlock
-          wrapLongLines
           language="javascript"
-          theme={codepen}
           text={getJSText()}
-          codeBlock
+          theme={codepen}
           customStyle={{ flex: "1", width: "100%", overflow: "auto" }}
+          wrapLongLines
+          showLineNumbers
         />
       </Dialog.Panel>
     </Dialog>
