@@ -14,6 +14,7 @@ interface SceneContextType {
   add: (obj: ObjectType, parent?: InstanceType | null) => void;
   del: (instances: InstanceType[]) => void;
   rename: (instance: InstanceType, name: string) => void;
+  setObjects: (objects: InstanceType[]) => void;
   setTool: (tool: ToolType) => void;
   setPaintColor: (color: string) => void;
 }

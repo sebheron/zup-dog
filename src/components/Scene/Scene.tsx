@@ -143,6 +143,7 @@ const Scene = () => {
       del,
       move,
       rename,
+      setObjects,
       setTool,
       setPaintColor,
     }),
