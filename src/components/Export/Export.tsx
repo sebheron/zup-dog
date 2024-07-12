@@ -1,6 +1,6 @@
 import { Dialog } from "@headlessui/react";
 import { useCallback, useState } from "react";
-import { CodeBlock, CopyBlock, codepen } from "react-code-blocks";
+import { CopyBlock, codepen } from "react-code-blocks";
 import stringifyObject from "stringify-object";
 import useCamera from "@/components/Camera/useCamera";
 import useScene from "@/components/Scene/useScene";
@@ -17,7 +17,7 @@ const Export = ({ open, onClose }: ExportProps) => {
   const { objects } = useScene();
   const { position, rotation, zoom } = useCamera();
 
-  const [mode, setMode] = useState<ExportKey>("canvas");
+  const [mode] = useState<ExportKey>("canvas");
 
   const getIllo = useCallback(() => {
     const props = {
