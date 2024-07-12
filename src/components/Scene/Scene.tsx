@@ -89,7 +89,6 @@ const Scene = () => {
   const del = useCallback(
     (instances: InstanceType[]) => {
       const counted = count(instances);
-      console.log(counted);
       setObjects((prev) =>
         filter(
           prev,

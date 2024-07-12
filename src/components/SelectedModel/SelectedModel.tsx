@@ -18,14 +18,16 @@ const SelectedModel = ({ objects }: Props) => {
     ? objects.map((obj) => {
         const { translate, rotate, scale } = obj.props;
 
-        if (selected.id === obj.id)
+        //TODO: Fix weird issues with selections and rotations
+
+        if (selected.id === obj.id) {
           return (
             <Anchor key={obj.id} translate={translate} scale={scale}>
               <RotationGizmo action={action} onAction={setAction} />
               <TranslationGizmo action={action} onAction={setAction} />
             </Anchor>
           );
-        else if (obj.children)
+        } else if (obj.children) {
           return (
             <Anchor
               translate={translate}
@@ -36,7 +38,7 @@ const SelectedModel = ({ objects }: Props) => {
               <SelectedModel objects={obj.children} />
             </Anchor>
           );
-        else return null;
+        } else return null;
       })
     : null;
 };
