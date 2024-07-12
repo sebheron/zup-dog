@@ -4,7 +4,9 @@ import { HexAlphaColorPicker, HexColorInput } from "react-colorful";
 import Button from "../Button/Button";
 import styles from "./ColorPicker.module.css";
 
-interface Props extends PropsWithChildren {
+interface Props
+  extends PropsWithChildren,
+    Omit<React.HTMLAttributes<HTMLButtonElement>, "className" | "onChange"> {
   active?: boolean;
   color: string;
   onSelect?: () => void;
@@ -17,6 +19,7 @@ const ColorPicker = ({
   color,
   onSelect,
   onChange,
+  ...props
 }: Props) => {
   const [localColor, setLocalColor] = useState(color);
 
@@ -37,6 +40,7 @@ const ColorPicker = ({
             size="small"
             active={open || active}
             onClick={onSelect}
+            {...props}
           >
             {children}
           </Popover.Button>
