@@ -4,7 +4,9 @@ import { PiPaintBrushFill } from "react-icons/pi";
 import { TbCube3dSphere } from "react-icons/tb";
 import Button from "@/components/Button/Button";
 import useCamera from "@/components/Camera/useCamera";
+import ColorPicker from "@/components/ColorPicker/ColorPicker";
 import Divider from "@/components/Divider/Divider";
+import Export from "@/components/Export/Export";
 import Logo from "@/components/Logo/Logo";
 import Menu from "@/components/Menu/Menu";
 import useScene from "@/components/Scene/useScene";
@@ -12,8 +14,6 @@ import Icons from "@/constants/Icons";
 import Objects from "@/constants/Objects";
 import ToolType from "@/types/ToolType";
 import tooltip from "@/utils/tooltip";
-import ColorPicker from "../ColorPicker/ColorPicker";
-import Export from "../Export/Export";
 import styles from "./Bar.module.css";
 
 const Bar = () => {

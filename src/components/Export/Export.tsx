@@ -2,10 +2,10 @@ import { Dialog } from "@headlessui/react";
 import { useCallback, useState } from "react";
 import { CopyBlock, codepen } from "react-code-blocks";
 import stringifyObject from "stringify-object";
+import useCamera from "@/components/Camera/useCamera";
 import useScene from "@/components/Scene/useScene";
 import ValueType from "@/types/ValueType";
 import { ExportKey, Exports } from "@/utils/exports";
-import useCamera from "../Camera/useCamera";
 import styles from "./Export.module.css";
 
 interface ExportProps {

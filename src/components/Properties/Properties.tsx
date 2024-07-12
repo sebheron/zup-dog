@@ -1,7 +1,7 @@
 import { MdDelete } from "react-icons/md";
-import Button from "../Button/Button";
-import Input from "../Input/Input";
-import useScene from "../Scene/useScene";
+import Button from "@/components/Button/Button";
+import Input from "@/components/Input/Input";
+import useScene from "@/components/Scene/useScene";
 import styles from "./Properties.module.css";
 
 const Properties = () => {

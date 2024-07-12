@@ -7,6 +7,7 @@ import Bar from "@/components/Bar/Bar";
 import Link from "@/components/Button/Link";
 import Camera from "@/components/Camera/Camera";
 import Card from "@/components/Card/Card";
+import Properties from "@/components/Properties/Properties";
 import useToast from "@/components/Toast/useToast";
 import Tooltip from "@/components/Tooltip/Tooltip";
 import TreeView from "@/components/TreeView/TreeView";
@@ -15,7 +16,6 @@ import InstanceType from "@/types/InstanceType";
 import ObjectType from "@/types/ObjectType";
 import ToolType from "@/types/ToolType";
 import tooltip from "@/utils/tooltip";
-import Properties from "../Properties/Properties";
 import SceneContext from "./SceneContext";
 
 const Scene = () => {
@@ -124,6 +124,13 @@ const Scene = () => {
     setObjects((prev) => [...prev]);
   }, []);
 
+  const disableKey = useCallback(
+    (e: React.KeyboardEvent) => {
+      e.stopPropagation();
+    },
+    [setTool],
+  );
+
   const sceneContext = useMemo(
     () => ({
       objects,
@@ -178,7 +185,7 @@ const Scene = () => {
             </Card.Footer>
           </Card>
           {selected != null && (
-            <Card position="right">
+            <Card position="right" onKeyDown={disableKey}>
               <Properties />
             </Card>
           )}

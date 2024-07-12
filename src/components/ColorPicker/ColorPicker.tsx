@@ -1,7 +1,7 @@
 import { Popover } from "@headlessui/react";
 import { PropsWithChildren, useCallback, useEffect, useState } from "react";
 import { HexAlphaColorPicker, HexColorInput } from "react-colorful";
-import Button from "../Button/Button";
+import Button from "@/components/Button/Button";
 import styles from "./ColorPicker.module.css";
 
 interface Props
