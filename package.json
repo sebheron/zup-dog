@@ -26,6 +26,7 @@
     "react-icons": "^5.2.1",
     "react-tooltip": "^5.26.4",
     "react-zdog-alt": "^1.2.0",
+    "stringify-object": "^5.0.0",
     "use-resize-observer": "^9.1.0",
     "zdog": "^1.1.3",
     "zfont": "^1.2.8"
@@ -36,6 +37,7 @@
     "@types/node": "^20.12.12",
     "@types/react": "^18.2.66",
     "@types/react-dom": "^18.2.22",
+    "@types/stringify-object": "^4.0.5",
     "@types/zdog": "^1.1.7",
     "@types/zfont": "^1.2.5",
     "@typescript-eslint/eslint-plugin": "^7.2.0",
