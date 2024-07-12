@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import ColorPicker from "@/components/ColorPicker/ColorPicker";
 import Switch from "@/components/Switch/Switch";
 import useEdit from "@/hooks/useEdit";
@@ -6,13 +7,47 @@ import titleCase from "@/utils/title";
 import types from "@/utils/types";
 import styles from "./Input.module.css";
 
-interface Props<T> {
+interface InputDraggerProps {
+  value: number;
+  modifier?: number;
+  onChange: (value: number) => void;
+}
+
+interface InputProps<T> {
   property: string;
   value: T;
   onChange: (value: T) => void;
 }
 
-const MultilineInput = ({ property, value, onChange }: Props<string>) => {
+const InputDragger = ({ value, modifier = 1, onChange }: InputDraggerProps) => {
+  const startValueRef = useRef<number>(value);
+  const startXRef = useRef<number>(0);
+
+  const handleMouseMove = (e: MouseEvent) => {
+    const diff = e.clientX - startXRef.current;
+    onChange(startValueRef.current + diff / modifier);
+  };
+
+  const handleMouseUp = () => {
+    document.removeEventListener("mousemove", handleMouseMove);
+    document.removeEventListener("mouseup", handleMouseUp);
+  };
+
+  return (
+    <div
+      className={styles.dragger}
+      draggable
+      onDragStart={(e) => {
+        startXRef.current = e.clientX;
+        startValueRef.current = value;
+        document.addEventListener("mousemove", handleMouseMove);
+        document.addEventListener("mouseup", handleMouseUp);
+      }}
+    />
+  );
+};
+
+const MultilineInput = ({ property, value, onChange }: InputProps<string>) => {
   const [text, setText] = useEdit(value, onChange);
 
   return (
@@ -27,7 +62,7 @@ const MultilineInput = ({ property, value, onChange }: Props<string>) => {
   );
 };
 
-const BooleanInput = ({ property, value, onChange }: Props<boolean>) => {
+const BooleanInput = ({ property, value, onChange }: InputProps<boolean>) => {
   return (
     <div className={styles.container}>
       <label className={styles.label}>{titleCase(property)}</label>
@@ -36,7 +71,7 @@ const BooleanInput = ({ property, value, onChange }: Props<boolean>) => {
   );
 };
 
-const ColorInput = ({ property, value, onChange }: Props<string>) => {
+const ColorInput = ({ property, value, onChange }: InputProps<string>) => {
   return (
     <div className={styles.container}>
       <label className={styles.label}>{titleCase(property)}</label>
@@ -47,7 +82,7 @@ const ColorInput = ({ property, value, onChange }: Props<string>) => {
   );
 };
 
-const NumericalInput = ({ property, value, onChange }: Props<number>) => {
+const NumericalInput = ({ property, value, onChange }: InputProps<number>) => {
   const [number, setNumber] = useEdit<number>(value, onChange);
 
   return (
@@ -60,12 +95,17 @@ const NumericalInput = ({ property, value, onChange }: Props<number>) => {
           value={number}
           onChange={(e) => setNumber(parseFloat(e.target.value))}
         />
+        <InputDragger value={number} onChange={setNumber} modifier={10} />
       </div>
     </div>
   );
 };
 
-const VectorInput = ({ property, value, onChange }: Props<Vector3Type>) => {
+const VectorInput = ({
+  property,
+  value,
+  onChange,
+}: InputProps<Vector3Type>) => {
   const [vector, setVector] = useEdit(value, onChange);
 
   return (
@@ -81,6 +121,10 @@ const VectorInput = ({ property, value, onChange }: Props<Vector3Type>) => {
               setVector((prev) => ({ ...prev, x: parseFloat(e.target.value) }))
             }
           />
+          <InputDragger
+            value={vector.x}
+            onChange={(x) => setVector((prev) => ({ ...prev, x }))}
+          />
         </div>
         <div className={styles.input} data-label="Y">
           <input
@@ -90,6 +134,10 @@ const VectorInput = ({ property, value, onChange }: Props<Vector3Type>) => {
             onChange={(e) =>
               setVector((prev) => ({ ...prev, y: parseFloat(e.target.value) }))
             }
+          />
+          <InputDragger
+            value={vector.y}
+            onChange={(y) => setVector((prev) => ({ ...prev, y }))}
           />
         </div>
         <div className={styles.input} data-label="Z">
@@ -101,13 +149,17 @@ const VectorInput = ({ property, value, onChange }: Props<Vector3Type>) => {
               setVector((prev) => ({ ...prev, z: parseFloat(e.target.value) }))
             }
           />
+          <InputDragger
+            value={vector.z}
+            onChange={(z) => setVector((prev) => ({ ...prev, z }))}
+          />
         </div>
       </div>
     </div>
   );
 };
 
-const Input = <T,>({ property, value, onChange }: Props<T>) => {
+const Input = <T,>({ property, value, onChange }: InputProps<T>) => {
   if (types.isVector(value)) {
     return (
       <VectorInput
