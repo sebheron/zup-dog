@@ -1,3 +1,7 @@
+.picker {
+  width: max-content;
+}
+
 .top {
   position: fixed;
   width: 0;

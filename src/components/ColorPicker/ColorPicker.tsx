@@ -32,7 +32,7 @@ const ColorPicker = ({
   }, [color]);
 
   return (
-    <Popover>
+    <Popover className={styles.picker}>
       {({ open }) => (
         <>
           <Popover.Button
