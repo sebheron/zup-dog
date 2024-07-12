@@ -16,11 +16,11 @@
 }
 
 .default:hover {
-  background-color: var(--accent-primary);
+  background-color: var(--button-interact);
 }
 
 .default:active {
-  background-color: var(--accent-secondary);
+  background-color: var(--button-interact);
 }
 
 .default.active {
