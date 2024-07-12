@@ -19,6 +19,7 @@ I'm a big fan of spline and its interface for building 3d scenes is brilliant. T
 - Spline style path editor for shapes.
 - Undo/redo.
 - Clean up property editor.
+- Implement text (semi-done).
 
 ### Building and running
 
