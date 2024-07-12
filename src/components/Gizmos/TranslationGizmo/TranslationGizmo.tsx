@@ -24,6 +24,7 @@ const TranslationGizmo = ({ action, onAction }: GizmoProps) => {
       start: ElementProxy | null,
       end: ElementProxy | null,
     ) => {
+      if (e.button !== 0) return;
       if (!start || !end || !selected || translation === action) return;
 
       const translationVector = new Vector(selected.props.translate);

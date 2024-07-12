@@ -22,6 +22,7 @@ const RotationGizmo = ({ action, onAction }: GizmoProps) => {
       center: ElementProxy | null,
       direction: ElementProxy | null,
     ) => {
+      if (e.button !== 0) return;
       if (!center || !direction || !selected || rotation === action) return;
 
       const rotationVector = new Vector(selected.props.rotate);
