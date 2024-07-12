@@ -6,8 +6,18 @@
 
 ### Why?
 
-I'm a big fan of spline and its inteface for building 3d scenes is brilliant. This is my butchering attempt at recreating it for a more lightweight engine, with its own visual appeal.
+I'm a big fan of spline and its interface for building 3d scenes is brilliant. This is my butchering attempt at recreating it for a more lightweight engine, with its own visual appeal.
 
-### Build manually
+### What's done?
+- All built in zdog shapes are supported.
+- Shape transform and rotation gizmos.
+- Property editor is 90% done.
+
+### What's todo?
+- Spline style path editor for shapes.
+- Undo/redo.
+- Clean up property editor.
+
+### Building and running
 
 After cloning the repo run `npm run dev` to start the dev server and `npm run build` to build the application.
