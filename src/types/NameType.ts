@@ -10,7 +10,7 @@ enum NameType {
   Polygon = "Polygon",
   Anchor = "Anchor",
   Group = "Group",
-  Text = "Text",
+  // Text = "Text",
 }
 
 export default NameType;

@@ -6,7 +6,6 @@ import { GiThreePointedShuriken } from "react-icons/gi";
 import { HiOutlineCube } from "react-icons/hi2";
 import { LuRectangleHorizontal } from "react-icons/lu";
 import { MdOutlineRectangle } from "react-icons/md";
-import { PiTextAa } from "react-icons/pi";
 import { TbCone, TbHemisphere, TbShape } from "react-icons/tb";
 import NameType from "@/types/NameType";
 
@@ -22,7 +21,7 @@ const Icons: Record<NameType, IconType> = {
   [NameType.Polygon]: CgShapeHexagon,
   [NameType.Anchor]: GiThreePointedShuriken,
   [NameType.Group]: FaObjectGroup,
-  [NameType.Text]: PiTextAa,
+  // [NameType.Text]: PiTextAa,
 };
 
 export default Icons;

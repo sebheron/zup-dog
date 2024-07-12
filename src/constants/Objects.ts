@@ -10,9 +10,7 @@ import {
   RectOptions,
   RoundedRectOptions,
   ShapeOptions,
-  TextOptions,
 } from "zdog";
-import Zdog from "zdog";
 import NameType from "@/types/NameType";
 import ObjectType from "@/types/ObjectType";
 
@@ -143,19 +141,19 @@ const RoundedRectangleObject: ObjectType<RoundedRectOptions> = {
   },
 };
 
-const OpenSans = new Zdog.Font({
-  src: "./OpenSans.ttf",
-});
+// const OpenSans = new Zdog.Font({
+//   src: "./OpenSans.ttf",
+// });
 
-const TextObject: ObjectType<TextOptions<string>> = {
-  shape: NameType.Text,
-  props: {
-    ...defaultShape,
-    font: OpenSans,
-    fontSize: 32,
-    value: "Text",
-  },
-};
+// const TextObject: ObjectType<TextOptions<string>> = {
+//   shape: NameType.Text,
+//   props: {
+//     ...defaultShape,
+//     font: OpenSans,
+//     fontSize: 32,
+//     value: "Text",
+//   },
+// };
 
 const Objects = [
   ShapeObject,
@@ -167,7 +165,7 @@ const Objects = [
   RoundedRectangleObject,
   EllipseObject,
   PolygonObject,
-  TextObject,
+  // TextObject,
   AnchorObject,
   GroupObject,
 ];
