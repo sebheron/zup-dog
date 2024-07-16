@@ -5,11 +5,20 @@ import useCamera from "@/components/Camera/useCamera";
 import useScene from "@/components/Scene/useScene";
 import { TranslationType, Translations } from "@/constants/Actions";
 import Colors from "@/constants/Colors";
+import Vector3Type from "@/types/Vector3Type";
 import cam from "@/utils/cam";
 import vector from "@/utils/vector";
 import GizmoProps from "../GizmoProps";
 
-const TranslationGizmo = ({ action, onAction }: GizmoProps) => {
+interface Props {
+  scaling: Vector3Type;
+}
+
+const TranslationGizmo = ({
+  action,
+  onAction,
+  scaling,
+}: GizmoProps & Props) => {
   const { zoom } = useCamera();
   const { selected, update, select } = useScene();
 
@@ -67,6 +76,11 @@ const TranslationGizmo = ({ action, onAction }: GizmoProps) => {
         //Adjust the translation vector by the difference, the direction, and the zoom
         const delta = vector.scale(translate, diff * (1 / zoom) * pointing);
 
+        //Adjust the delta by the scaling
+        delta.x *= scaling.x;
+        delta.y *= scaling.y;
+        delta.z *= scaling.z;
+
         //Add the delta to the translation vector
         translationVector.add(delta);
 
@@ -97,7 +111,7 @@ const TranslationGizmo = ({ action, onAction }: GizmoProps) => {
       document.addEventListener("mousemove", handleTranslation);
       document.addEventListener("mouseup", handleTranslationEnd);
     },
-    [selected, action, update, select, onAction, zoom],
+    [zoom, scaling, selected, action, update, select, onAction],
   );
 
   return (
