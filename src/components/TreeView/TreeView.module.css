@@ -140,10 +140,6 @@
   background-color: var(--fg-tertiary);
 }
 
-div[role="treeitem"] {
-  padding: 1px;
-}
-
 div[role="treeitem"]:has(+ div[role="treeitem"]) .placeholder::before {
   height: 100%;
   bottom: 0;
