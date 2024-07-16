@@ -3,6 +3,7 @@ import { BiExport, BiImport, BiSave, BiSolidCameraMovie } from "react-icons/bi";
 import { PiPaintBrushFill } from "react-icons/pi";
 import { TbCube3dSphere } from "react-icons/tb";
 import Button from "@/components/Button/Button";
+import Load from "@/components/Button/Load";
 import useCamera from "@/components/Camera/useCamera";
 import ColorPicker from "@/components/ColorPicker/ColorPicker";
 import Divider from "@/components/Divider/Divider";
@@ -14,7 +15,6 @@ import Icons from "@/constants/Icons";
 import Objects from "@/constants/Objects";
 import ToolType from "@/types/ToolType";
 import tooltip from "@/utils/tooltip";
-import Load from "../Button/Load";
 import styles from "./Bar.module.css";
 
 const Bar = () => {
