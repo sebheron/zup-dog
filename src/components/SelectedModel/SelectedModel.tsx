@@ -6,6 +6,7 @@ import useScene from "@/components/Scene/useScene";
 import { ActionType } from "@/constants/Actions";
 import InstanceType from "@/types/InstanceType";
 import Vector3Type from "@/types/Vector3Type";
+import ScaleGizmo from "../Gizmos/ScaleGizmo/ScaleGizmo";
 
 interface Props {
   objects: InstanceType[];
@@ -41,6 +42,11 @@ const SelectedModel = ({ objects, scaler = [] }: Props) => {
             <Anchor key={obj.id} translate={translate} scale={invertedScale}>
               <RotationGizmo action={action} onAction={setAction} />
               <TranslationGizmo
+                action={action}
+                onAction={setAction}
+                scaling={invertedScale}
+              />
+              <ScaleGizmo
                 action={action}
                 onAction={setAction}
                 scaling={invertedScale}
