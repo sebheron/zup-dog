@@ -9,7 +9,7 @@ import Vector3Type from "@/types/Vector3Type";
 
 interface Props {
   objects: InstanceType[];
-  scaler?: (number | Partial<Vector3Type> | undefined)[];
+  scaler?: Partial<Vector3Type>[];
 }
 
 const SelectedModel = ({ objects, scaler = [] }: Props) => {
@@ -20,20 +20,10 @@ const SelectedModel = ({ objects, scaler = [] }: Props) => {
     const invertedVector = { x: 1, y: 1, z: 1 };
 
     for (const scale of scaler) {
-      if (typeof scale === "number") {
-        invertedVector.x *= scale;
-        invertedVector.y *= scale;
-        invertedVector.z *= scale;
-      } else if (scale != null) {
-        invertedVector.x *= scale.x ?? 1;
-        invertedVector.y *= scale.y ?? 1;
-        invertedVector.z *= scale.z ?? 1;
-      }
+      invertedVector.x *= 1 / (scale.x ?? 1);
+      invertedVector.y *= 1 / (scale.y ?? 1);
+      invertedVector.z *= 1 / (scale.z ?? 1);
     }
-
-    invertedVector.x = 1 / invertedVector.x;
-    invertedVector.y = 1 / invertedVector.y;
-    invertedVector.z = 1 / invertedVector.z;
 
     return invertedVector;
   }, [scaler]);
@@ -67,7 +57,7 @@ const SelectedModel = ({ objects, scaler = [] }: Props) => {
             >
               <SelectedModel
                 objects={obj.children}
-                scaler={[...scaler, scale]}
+                scaler={[...scaler, scale as Vector3Type]}
               />
             </Anchor>
           );

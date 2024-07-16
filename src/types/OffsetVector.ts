@@ -1,4 +1,5 @@
-import { Vector, VectorOptions } from "zdog";
+import { Vector } from "zdog";
+import Vector3Type from "./Vector3Type";
 
 class OffsetVector {
   private value: Vector;
@@ -9,11 +10,11 @@ class OffsetVector {
     this.offset = offset ?? new Vector();
   }
 
-  set(vec: VectorOptions) {
+  set(vec: Partial<Vector3Type>) {
     this.value.set(vec);
   }
 
-  add(vec: VectorOptions) {
+  add(vec: Partial<Vector3Type>) {
     this.value.add(vec);
   }
 
