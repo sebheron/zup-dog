@@ -5,20 +5,11 @@ import useCamera from "@/components/Camera/useCamera";
 import useScene from "@/components/Scene/useScene";
 import { TranslationType, Translations } from "@/constants/Actions";
 import Colors from "@/constants/Colors";
-import Vector3Type from "@/types/Vector3Type";
 import cam from "@/utils/cam";
 import vector from "@/utils/vector";
 import GizmoProps from "../GizmoProps";
 
-interface Props {
-  scaling: Vector3Type;
-}
-
-const TranslationGizmo = ({
-  action,
-  onAction,
-  scaling,
-}: GizmoProps & Props) => {
+const TranslationGizmo = ({ action, onAction, scaling }: GizmoProps) => {
   const { zoom } = useCamera();
   const { selected, update, select } = useScene();
 

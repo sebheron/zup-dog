@@ -9,7 +9,7 @@ import cam from "@/utils/cam";
 import vector from "@/utils/vector";
 import GizmoProps from "../GizmoProps";
 
-const RotationGizmo = ({ action, onAction }: GizmoProps) => {
+const RotationGizmo = ({ action, onAction }: Omit<GizmoProps, "scaling">) => {
   const { zoom } = useCamera();
   const { selected, update, select } = useScene();
 
