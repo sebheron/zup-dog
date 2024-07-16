@@ -1,9 +1,12 @@
 import { useCallback } from "react";
+import { Vector } from "zdog";
 import useCamera from "@/components/Camera/useCamera";
+import Vector3Type from "@/types/Vector3Type";
 import vector from "@/utils/vector";
 
 const useDolly = () => {
-  const { zoom, setPosition, setRotation, setZoom } = useCamera();
+  const { zoom, position, rotation, setPosition, setRotation, setZoom } =
+    useCamera();
 
   const handleZoom = useCallback(
     (event: WheelEvent) => {
@@ -15,36 +18,66 @@ const useDolly = () => {
     [setZoom],
   );
 
-  const handleTranslate = useCallback(
-    (event: MouseEvent) => {
-      event.preventDefault();
-      setPosition((position) =>
-        vector.shift(
-          position,
-          event.movementX * 0.8 * (1 / zoom),
-          event.movementY * 0.8 * (1 / zoom),
-        ),
-      );
+  const beginTranslate = useCallback(
+    (originalPosition: Vector3Type) => {
+      const translateVector = new Vector(originalPosition);
+      setPosition(translateVector);
+
+      const mouseMove = (event: MouseEvent) => {
+        event.preventDefault();
+        translateVector.set(
+          vector.shift(
+            translateVector,
+            event.movementX * 0.8 * (1 / zoom),
+            event.movementY * 0.8 * (1 / zoom),
+          ),
+        );
+      };
+
+      const mouseUp = () => {
+        document.removeEventListener("mousemove", mouseMove);
+        document.removeEventListener("mouseup", mouseUp);
+      };
+
+      document.addEventListener("mousemove", mouseMove);
+      document.addEventListener("mouseup", mouseUp);
     },
     [zoom, setPosition],
   );
 
-  const handleRotate = useCallback(
-    (event: MouseEvent) => {
-      event.preventDefault();
-      setRotation((rotation) =>
-        vector.spin(rotation, event.movementX / 600, event.movementY / 600),
-      );
+  const beginRotate = useCallback(
+    (originalRotation: Vector3Type) => {
+      const rotateVector = new Vector(originalRotation);
+      setRotation(rotateVector);
+
+      const mouseMove = (event: MouseEvent) => {
+        event.preventDefault();
+        rotateVector.set(
+          vector.spin(
+            rotateVector,
+            event.movementX / 600,
+            event.movementY / 600,
+          ),
+        );
+      };
+
+      const mouseUp = () => {
+        document.removeEventListener("mousemove", mouseMove);
+        document.removeEventListener("mouseup", mouseUp);
+      };
+
+      document.addEventListener("mousemove", mouseMove);
+      document.addEventListener("mouseup", mouseUp);
     },
     [setRotation],
   );
 
-  const handleMove = useCallback(
+  const handleMouseDown = useCallback(
     (event: MouseEvent) => {
-      if (event.buttons === 2) handleTranslate(event);
-      else if (event.buttons === 4) handleRotate(event);
+      if (event.button === 2) beginTranslate(position);
+      else if (event.button === 1) beginRotate(rotation);
     },
-    [handleTranslate, handleRotate],
+    [beginTranslate, beginRotate, position, rotation],
   );
 
   const handleContextMenu = useCallback((event: MouseEvent) => {
@@ -53,7 +86,7 @@ const useDolly = () => {
 
   const registerDolly = () => ({
     onWheel: handleZoom,
-    onMouseMove: handleMove,
+    onMouseDown: handleMouseDown,
     onContextMenu: handleContextMenu,
   });
 

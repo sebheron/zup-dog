@@ -46,6 +46,22 @@ export const Translations = {
   },
 };
 
+export const Dilations = {
+  XD: {
+    color: Colors.XAXIS,
+    direction: { x: 1, y: 0, z: 0 },
+  },
+  YD: {
+    color: Colors.YAXIS,
+    direction: { x: 0, y: -1, z: 0 },
+  },
+  ZD: {
+    color: Colors.ZAXIS,
+    direction: { x: 0, y: 0, z: 1 },
+  },
+};
+
 export type RotationType = keyof typeof Rotations;
 export type TranslationType = keyof typeof Translations;
-export type ActionType = RotationType | TranslationType;
+export type DilationType = keyof typeof Dilations;
+export type ActionType = RotationType | TranslationType | DilationType;

@@ -1,0 +1,59 @@
+.accordion {
+}
+
+.entry {
+  border-bottom: 1px solid var(--border-color);
+}
+
+.entry:hover {
+  background-color: var(--bg-primary);
+}
+
+.label {
+  display: flex;
+  cursor: pointer;
+}
+
+.label {
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0.8rem;
+  font-size: 0.8rem;
+}
+
+.icon {
+  transition: transform 0.2s;
+}
+
+.entry > input:checked + .label > .icon {
+  transform: rotate(90deg);
+}
+
+.entry > input:checked ~ .container {
+  max-height: 15rem;
+}
+
+.entry:has(> .container > .content:empty) {
+  display: none;
+}
+
+.entry > input {
+  position: absolute;
+  opacity: 0;
+  z-index: -1;
+}
+
+.container {
+  max-height: 0;
+  overflow: hidden;
+  transition: all 0.35s;
+}
+
+.content {
+  margin: 0;
+  padding: 0.2rem 0.8rem 0.8rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: stretch;
+  gap: 0.5rem;
+}
