@@ -75,7 +75,7 @@ const ColorInput = ({ property, value, onChange }: InputProps<string>) => {
   return (
     <div className={styles.container}>
       <label className={styles.label}>{titleCase(property)}</label>
-      <ColorPicker color={value} onChange={onChange}>
+      <ColorPicker color={value} onChange={onChange} inline>
         <div className={styles.box} style={{ backgroundColor: value }} />
       </ColorPicker>
     </div>
