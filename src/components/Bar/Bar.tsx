@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { BiExport, BiSave, BiSolidCameraMovie } from "react-icons/bi";
-import { FaRegFolderOpen } from "react-icons/fa";
+import { FaRegFolderOpen, FaUndoAlt, FaRedoAlt } from "react-icons/fa";
 import { PiPaintBrushFill } from "react-icons/pi";
 import { TbCube3dSphere } from "react-icons/tb";
 import Button from "@/components/Button/Button";
@@ -12,6 +12,7 @@ import Export from "@/components/Export/Export";
 import Logo from "@/components/Logo/Logo";
 import Menu from "@/components/Menu/Menu";
 import useScene from "@/components/Scene/useScene";
+import useUndo from "@/components/Scene/useUndo";
 import Icons from "@/constants/Icons";
 import Objects from "@/constants/Objects";
 import ToolType from "@/types/ToolType";
@@ -20,6 +21,7 @@ import styles from "./Bar.module.css";
 
 const Bar = () => {
   const [exporting, setExporting] = useState(false);
+  const { undo, redo, canUndo, canRedo } = useUndo();
   const {
     tool,
     paintColor,
@@ -79,6 +81,13 @@ const Bar = () => {
     <div className={styles.container}>
       <div className={styles.bar}>
         <Logo />
+        <Divider />
+        <Button onClick={undo} disabled={!canUndo} {...tooltip("Undo")}>
+          <FaUndoAlt />
+        </Button>
+        <Button onClick={redo} disabled={!canRedo} {...tooltip("Redo")}>
+          <FaRedoAlt />
+        </Button>
         <Divider />
         <Button
           {...tooltip("Select")}

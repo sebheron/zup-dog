@@ -8,6 +8,7 @@ interface Props
   size?: "small" | "medium" | "large";
   alignment?: "left" | "center" | "right";
   active?: boolean;
+  disabled?: boolean;
 }
 
 const Button = forwardRef<HTMLButtonElement, Props>(

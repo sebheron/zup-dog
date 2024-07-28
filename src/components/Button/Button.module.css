@@ -16,6 +16,14 @@
   box-shadow: 0 0 0 0.1rem var(--accent-primary);
 }
 
+.button:disabled {
+  opacity: 0.5;
+}
+
+.button:disabled:hover {
+  background-color: unset;
+}
+
 .default:hover {
   background-color: var(--button-interact);
 }
