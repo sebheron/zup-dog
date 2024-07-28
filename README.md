@@ -20,11 +20,6 @@ I'm a big fan of spline and its interface for building 3d scenes is brilliant. Z
 - [ ] Spline style path editor for shapes.
 - [ ] Undo/redo.
 
-### Known issues
-- 🪲 Groups don't render their children until a child is removed from the group.
-- 🪲 Sometimes the gizmos fail to update their rotation.
-- 🪲 Non-uniform scaling causes issues due to underlying math. See [zdog known issues](https://zzz.dog/extras#known-bugs-hemisphere-cylinder-cone-scale-bug) for more info.
-
 ### Building and running
 
 After cloning the repo run `npm run dev` to start the dev server and `npm run build` to build the application.

@@ -46,12 +46,11 @@ const SelectedModel = ({ objects, scaler = [] }: Props) => {
                 onAction={setAction}
                 scaling={invertedScale}
               />
-              {/* Comment out scale gizmo, as scaling is weird in zdog */}
-              {/* <ScaleGizmo
+              <ScaleGizmo
                 action={action}
                 onAction={setAction}
                 scaling={invertedScale}
-              /> */}
+              />
             </Anchor>
           );
         } else if (obj.children) {

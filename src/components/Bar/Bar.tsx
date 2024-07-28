@@ -1,6 +1,5 @@
 import { useState } from "react";
-import { BiExport, BiSave, BiSolidCameraMovie } from "react-icons/bi";
-import { FaRegFolderOpen } from "react-icons/fa";
+import { BiExport, BiImport, BiSave, BiSolidCameraMovie } from "react-icons/bi";
 import { PiPaintBrushFill } from "react-icons/pi";
 import { TbCube3dSphere } from "react-icons/tb";
 import Button from "@/components/Button/Button";
@@ -121,7 +120,7 @@ const Bar = () => {
           {...tooltip("Load")}
           accept="application/json"
         >
-          <FaRegFolderOpen />
+          <BiImport />
         </Load>
         <Button onClick={() => saveToFile()} {...tooltip("Save")}>
           <BiSave />

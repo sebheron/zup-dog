@@ -1,28 +1,27 @@
-.container {
-  height: 100%;
-  position: relative;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-}
-
-.button {
-  position: relative;
-  border: none;
-  font-size: 0.7rem;
-  background-color: transparent;
-  max-height: 1.5rem;
-}
-
 .switch {
-  position: absolute;
-  width: 50%;
-  height: 100%;
-  background-color: var(--accent-primary);
-  border-radius: 0.5rem;
-  transition: transform 0.2s;
-  max-height: 1.5rem;
+  position: relative;
+  display: inline-block;
+  width: 25px;
+  height: 12px;
+  border-radius: 34px;
+  border: 1px solid var(--border-color);
+  background-color: transparent;
 }
 
-.switch.checked {
-  transform: translateX(100%);
+.thumb {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: #c57474;
+  transition:
+    transform 0.2s,
+    background-color 0.2s;
+}
+
+.checked {
+  transform: translateX(12.5px);
+  background-color: #77d777;
 }

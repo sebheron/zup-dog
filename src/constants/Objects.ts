@@ -14,18 +14,18 @@ import {
 import NameType from "@/types/NameType";
 import ObjectType from "@/types/ObjectType";
 
-const defaultAnchor: AnchorOptions & {visible: true} = {
+const defaultAnchor: AnchorOptions = {
   addTo: undefined,
   scale: { x: 1, y: 1, z: 1 },
   translate: { x: 0, y: 0, z: 0 },
   rotate: { x: 0, y: 0, z: 0 },
-  visible: true,
 };
 
 const defaultShape: ShapeOptions = {
   ...defaultAnchor,
   front: { x: 0, y: 0, z: 1 },
   path: [{ x: 0, y: 0, z: 0 }],
+  visible: true,
   color: "#E62",
   stroke: 0,
   fill: true,
