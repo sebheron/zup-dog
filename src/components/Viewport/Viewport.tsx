@@ -98,7 +98,11 @@ const Viewport = ({ children }: PropsWithChildren) => {
           <ViewportElement ref={mainViewport} />
           <Grid length={1000} cellSize={100} />
           {objects.map((obj) => (
-            <Model key={obj.id} object={obj} onClick={handleModelClick} />
+            <Model
+              key={JSON.stringify(obj)}
+              object={obj}
+              onClick={handleModelClick}
+            />
           ))}
         </Illustration>
       </div>

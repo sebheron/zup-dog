@@ -23,7 +23,7 @@ const Scene = () => {
   const [tool, setTool] = useState(ToolType.Select);
   const [paintColor, setPaintColor] = useState("#E62");
   const [objects, setObjects] = useState<InstanceType[]>([]);
-  const [selected, setSelected] = useState<InstanceType | null>(null);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
 
   const count = useCallback((instances: InstanceType[]): number => {
     return instances.reduce((acc, obj) => {
@@ -43,15 +43,23 @@ const Scene = () => {
 
   const update = useCallback(
     (instance: InstanceType, props: Record<string, unknown>) => {
-      instance.props = { ...instance.props, ...props };
-      setObjects((prev) => [...prev]);
+      const newProps = { ...instance.props, ...props };
+      setObjects((prev) => {
+        const originalInstanceIndex = prev.findIndex(
+          (obj) => obj.id === instance.id,
+        );
+        prev.splice(originalInstanceIndex, 1);
+        prev.splice(originalInstanceIndex, 0, {...instance, props: newProps});
+
+        return [...prev];
+      });
     },
     [],
   );
 
   const select = useCallback(
     (instance: InstanceType | null) => {
-      if (tool === ToolType.Select) setSelected(instance);
+      if (tool === ToolType.Select) setSelectedId(instance?.id ?? null);
       if (tool === ToolType.Paint && instance != null) {
         update(instance, { color: paintColor });
       }
@@ -131,6 +139,11 @@ const Scene = () => {
     [setTool],
   );
 
+  const selected = useMemo(
+    () => objects.find((obj) => obj.id === selectedId) ?? null,
+    [objects, selectedId],
+  );
+
   const sceneContext = useMemo(
     () => ({
       objects,
@@ -149,7 +162,7 @@ const Scene = () => {
     }),
     [
       objects,
-      selected,
+      selectedId,
       tool,
       paintColor,
       update,
@@ -185,7 +198,7 @@ const Scene = () => {
               </Link>
             </Card.Footer>
           </Card>
-          {selected != null && (
+          {selectedId != null && (
             <Card position="right" onKeyDown={disableKey}>
               <Properties />
             </Card>

@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import Components from "@/constants/Components";
 import InstanceType from "@/types/InstanceType";
 
@@ -24,7 +24,7 @@ const Model = ({ object, hide, onClick }: Props) => {
     <Component {...props} onClick={(e) => handleModelClick(e, object)}>
       {object.children?.map((child) => (
         <Model
-          key={child.id}
+          key={JSON.stringify(child)}
           object={child}
           onClick={onClick}
           hide={hide || !object.props.visible}
