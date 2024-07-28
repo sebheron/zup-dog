@@ -25,7 +25,7 @@ const InputDragger = ({ value, modifier = 1, onChange }: InputDraggerProps) => {
 
   const handleMouseMove = (e: MouseEvent) => {
     const diff = e.clientX - startXRef.current;
-    onChange(startValueRef.current + diff / modifier);
+    onChange(Math.round((startValueRef.current + diff / modifier) * 1000) / 1000);
   };
 
   const handleMouseUp = () => {
@@ -52,8 +52,11 @@ const MultilineInput = ({ property, value, onChange }: InputProps<string>) => {
 
   return (
     <div className={styles.container}>
-      <label className={styles.label}>{titleCase(property)}</label>
+      <label className={styles.label}>
+        {titleCase(property)}
+      </label>
       <textarea
+        autoComplete="off"
         className={styles.textarea}
         value={text}
         onChange={(e) => setText(e.target.value)}
@@ -64,17 +67,22 @@ const MultilineInput = ({ property, value, onChange }: InputProps<string>) => {
 
 const BooleanInput = ({ property, value, onChange }: InputProps<boolean>) => {
   return (
-    <div className={styles.container}>
-      <label className={styles.label}>{titleCase(property)}</label>
+    <div className={styles.container} role="switch" aria-checked={value}>
+      <label className={styles.label}>
+        {titleCase(property)}
+      </label>
       <Switch onChange={onChange} checked={value} />
     </div>
   );
 };
 
 const ColorInput = ({ property, value, onChange }: InputProps<string>) => {
+
   return (
     <div className={styles.container}>
-      <label className={styles.label}>{titleCase(property)}</label>
+      <label className={styles.label}>
+        {titleCase(property)}
+      </label>
       <ColorPicker color={value} onChange={onChange}>
         <div className={styles.box} style={{ backgroundColor: value }} />
       </ColorPicker>
@@ -87,9 +95,12 @@ const NumericalInput = ({ property, value, onChange }: InputProps<number>) => {
 
   return (
     <div className={styles.container}>
-      <label className={styles.label}>{titleCase(property)}</label>
+      <label className={styles.label}>
+        {titleCase(property)}
+      </label>
       <div className={styles.input}>
         <input
+          autoComplete="off"
           className={styles.textbox}
           type="number"
           value={number}
@@ -110,10 +121,13 @@ const VectorInput = ({
 
   return (
     <div className={styles.container}>
-      <label className={styles.label}>{titleCase(property)}</label>
+      <label className={styles.label}>
+        {titleCase(property)}
+      </label>
       <div className={styles.rightSide}>
         <div className={styles.input} data-label="X">
           <input
+            autoComplete="off"
             className={styles.textbox}
             type="number"
             value={vector.x}
@@ -128,6 +142,7 @@ const VectorInput = ({
         </div>
         <div className={styles.input} data-label="Y">
           <input
+            autoComplete="off"
             className={styles.textbox}
             type="number"
             value={vector.y}
@@ -142,6 +157,7 @@ const VectorInput = ({
         </div>
         <div className={styles.input} data-label="Z">
           <input
+            autoComplete="off"
             className={styles.textbox}
             type="number"
             value={vector.z}
