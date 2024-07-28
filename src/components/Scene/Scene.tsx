@@ -41,20 +41,39 @@ const Scene = () => {
       });
   }, []);
 
+  const find = useCallback(
+    (instances: InstanceType[], id: string): InstanceType | null => {
+      for (const instance of instances) {
+        if (instance.id === id) return instance;
+        if (instance.children) {
+          const found = find(instance.children, id);
+          if (found) return found;
+        }
+      }
+      return null;
+    },
+    [],
+  );
+
   const update = useCallback(
     (instance: InstanceType, props: Record<string, unknown>) => {
       const newProps = { ...instance.props, ...props };
-      setObjects((prev) => {
-        const originalInstanceIndex = prev.findIndex(
-          (obj) => obj.id === instance.id,
-        );
-        prev.splice(originalInstanceIndex, 1);
-        prev.splice(originalInstanceIndex, 0, {...instance, props: newProps});
+      const newInstance = { ...instance, props: newProps };
 
+      setObjects((prev) => {
+        //Find the parent of the instance
+        const parent = instance.parentId ? find(prev, instance.parentId) : null;
+        if (parent) {
+          const index = parent.children.findIndex((obj) => obj.id === instance.id);
+          parent.children = parent.children.map((obj, i) => (i === index ? newInstance : obj));
+          return [...prev];
+        }
+        const index = prev.findIndex((obj) => obj.id === instance.id);
+        prev[index] = newInstance;
         return [...prev];
       });
     },
-    [],
+    [find, objects],
   );
 
   const select = useCallback(
@@ -116,11 +135,17 @@ const Scene = () => {
           prev,
           instances.map((obj) => obj.id),
         );
+
+        instances.forEach((obj) => {
+          obj.parentId = parent?.id;
+        });
+
         if (parent) {
           if (!parent.children) parent.children = [];
           parent.children.push(...instances);
           return [...filtered];
         }
+        
         return [...filtered, ...instances];
       });
     },
@@ -140,8 +165,8 @@ const Scene = () => {
   );
 
   const selected = useMemo(
-    () => objects.find((obj) => obj.id === selectedId) ?? null,
-    [objects, selectedId],
+    () => (selectedId != null ? find(objects, selectedId) : null),
+    [find, objects, selectedId],
   );
 
   const sceneContext = useMemo(
