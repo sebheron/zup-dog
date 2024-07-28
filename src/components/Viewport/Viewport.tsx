@@ -97,7 +97,9 @@ const Viewport = ({ children }: PropsWithChildren) => {
         >
           <ViewportElement ref={mainViewport} />
           <Grid length={1000} cellSize={100} />
-          <Model objects={objects} onClick={handleModelClick} />
+          {objects.map((obj) => (
+            <Model key={obj.id} object={obj} onClick={handleModelClick} />
+          ))}
         </Illustration>
       </div>
       {!!selected && tool === ToolType.Select && (
