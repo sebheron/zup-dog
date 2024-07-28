@@ -23,7 +23,7 @@ const Scene = () => {
   const [tool, setTool] = useState(ToolType.Select);
   const [paintColor, setPaintColor] = useState("#E62");
   const [objects, setObjects] = useState<InstanceType[]>([]);
-  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [selected, setSelected] = useState<InstanceType | null>(null);
 
   const count = useCallback((instances: InstanceType[]): number => {
     return instances.reduce((acc, obj) => {
@@ -41,44 +41,17 @@ const Scene = () => {
       });
   }, []);
 
-  const find = useCallback(
-    (instances: InstanceType[], id: string): InstanceType | null => {
-      for (const instance of instances) {
-        if (instance.id === id) return instance;
-        if (instance.children) {
-          const found = find(instance.children, id);
-          if (found) return found;
-        }
-      }
-      return null;
+  const update = useCallback(
+    (instance: InstanceType, props: Record<string, unknown>) => {
+      instance.props = { ...instance.props, ...props };
+      setObjects((prev) => [...prev]);
     },
     [],
   );
 
-  const update = useCallback(
-    (instance: InstanceType, props: Record<string, unknown>) => {
-      const newProps = { ...instance.props, ...props };
-      const newInstance = { ...instance, props: newProps };
-
-      setObjects((prev) => {
-        //Find the parent of the instance
-        const parent = instance.parentId ? find(prev, instance.parentId) : null;
-        if (parent) {
-          const index = parent.children.findIndex((obj) => obj.id === instance.id);
-          parent.children = parent.children.map((obj, i) => (i === index ? newInstance : obj));
-          return [...prev];
-        }
-        const index = prev.findIndex((obj) => obj.id === instance.id);
-        prev[index] = newInstance;
-        return [...prev];
-      });
-    },
-    [find, objects],
-  );
-
   const select = useCallback(
     (instance: InstanceType | null) => {
-      if (tool === ToolType.Select) setSelectedId(instance?.id ?? null);
+      if (tool === ToolType.Select) setSelected(instance);
       if (tool === ToolType.Paint && instance != null) {
         update(instance, { color: paintColor });
       }
@@ -135,17 +108,11 @@ const Scene = () => {
           prev,
           instances.map((obj) => obj.id),
         );
-
-        instances.forEach((obj) => {
-          obj.parentId = parent?.id;
-        });
-
         if (parent) {
           if (!parent.children) parent.children = [];
           parent.children.push(...instances);
           return [...filtered];
         }
-        
         return [...filtered, ...instances];
       });
     },
@@ -162,11 +129,6 @@ const Scene = () => {
       e.stopPropagation();
     },
     [setTool],
-  );
-
-  const selected = useMemo(
-    () => (selectedId != null ? find(objects, selectedId) : null),
-    [find, objects, selectedId],
   );
 
   const sceneContext = useMemo(
@@ -187,7 +149,7 @@ const Scene = () => {
     }),
     [
       objects,
-      selectedId,
+      selected,
       tool,
       paintColor,
       update,
@@ -223,7 +185,7 @@ const Scene = () => {
               </Link>
             </Card.Footer>
           </Card>
-          {selectedId != null && (
+          {selected != null && (
             <Card position="right" onKeyDown={disableKey}>
               <Properties />
             </Card>

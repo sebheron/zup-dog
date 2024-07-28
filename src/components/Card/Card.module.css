@@ -11,6 +11,7 @@
   background-color: var(--bg-secondary);
   box-shadow: 0 0 0.5rem 0.25rem var(--shadow-color);
   backdrop-filter: blur(0.4rem) brightness(0.8);
+  overflow: hidden;
 }
 
 .container {

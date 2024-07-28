@@ -4,8 +4,6 @@
   justify-content: stretch;
   height: 100%;
   overflow-y: auto;
-  border-top-left-radius: 0.8rem;
-  border-top-right-radius: 0.8rem;
 }
 
 .header {

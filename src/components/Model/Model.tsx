@@ -1,17 +1,14 @@
-import { useCallback, useEffect } from "react";
+import { Fragment, useCallback } from "react";
 import Components from "@/constants/Components";
 import InstanceType from "@/types/InstanceType";
 
 interface Props {
-  object: InstanceType;
+  objects: InstanceType[];
   hide?: unknown;
   onClick: (instance: InstanceType) => void;
 }
 
-const Model = ({ object, hide, onClick }: Props) => {
-  const Component = Components[object.shape];
-  const props = { ...object.props, visible: object.props.visible && !hide };
-
+const Model = ({ objects, hide, onClick }: Props) => {
   const handleModelClick = useCallback(
     (e: React.MouseEvent<HTMLElement, MouseEvent>, instance: InstanceType) => {
       e.stopPropagation();
@@ -20,18 +17,23 @@ const Model = ({ object, hide, onClick }: Props) => {
     [onClick],
   );
 
-  return (
-    <Component {...props} onClick={(e) => handleModelClick(e, object)}>
-      {object.children?.map((child) => (
-        <Model
-          key={JSON.stringify(child)}
-          object={child}
-          onClick={onClick}
-          hide={hide || !object.props.visible}
-        />
-      ))}
-    </Component>
-  );
+  return objects.map((obj) => {
+    const Component = Components[obj.shape];
+    const props = { ...obj.props, visible: obj.props.visible && !hide };
+    return (
+      <Fragment key={obj.id}>
+        <Component {...props} onClick={(e) => handleModelClick(e, obj)}>
+          {obj.children && (
+            <Model
+              objects={obj.children}
+              onClick={onClick}
+              hide={hide || !obj.props.visible}
+            />
+          )}
+        </Component>
+      </Fragment>
+    );
+  });
 };
 
 export default Model;
